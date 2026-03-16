@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Activities · Logic and Set Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e0e16;--surface:#14141f;--card:#1a1a2c;--card2:#20203a;
+  --v1:#7c3aed;--v2:#06b6d4;--v3:#f59e0b;--v4:#10b981;--v5:#ef4444;--v6:#f0abfc;
+  --ink:#e2e8f0;--muted:#64748b;--border:#2a2a42;
+  --v1s:rgba(124,58,237,.15);--v2s:rgba(6,182,212,.15);--v3s:rgba(245,158,11,.15);
+  --v4s:rgba(16,185,129,.15);--v5s:rgba(239,68,68,.15);--v6s:rgba(240,171,252,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--v1);border-radius:3px;}
+
+/* NAV */
+nav{background:rgba(14,14,22,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:'Space Mono',monospace;font-size:.85rem;color:#a78bfa;}
+.nav-home{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:.3rem .7rem;border-radius:.3rem;transition:all .2s;}
+.nav-home:hover{border-color:var(--v1);color:#a78bfa;}
+
+/* HERO */
+.hero{padding:5rem 2rem 3rem;text-align:center;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(124,58,237,.18),transparent);}
+.hero-badge{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#a78bfa;padding:.35rem .9rem;border-radius:2rem;display:inline-block;margin-bottom:1.2rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:900;background:linear-gradient(135deg,#e2e8f0 30%,#a78bfa 65%,#67e8f9 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.8rem;}
+.hero p{color:var(--muted);max-width:560px;margin:0 auto 2rem;line-height:1.75;font-size:.97rem;}
+
+/* MODULE NAV PILLS */
+.module-nav{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:3rem;}
+.mod-pill{font-family:'Space Mono',monospace;font-size:.7rem;padding:.4rem 1rem;border-radius:2rem;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .25s;}
+.mod-pill:hover,.mod-pill.active{color:#fff;border-color:var(--c,var(--v1));background:rgba(var(--cr,124,58,237),.2);}
+.mod-pill[data-mod="1"]{--c:var(--v1);}
+.mod-pill[data-mod="2"]{--c:var(--v2);}
+.mod-pill[data-mod="3"]{--c:var(--v3);}
+.mod-pill[data-mod="4"]{--c:var(--v4);}
+
+/* MAIN */
+main{max-width:1000px;margin:0 auto;padding:0 1.5rem 5rem;}
+
+/* SECTION HEADER */
+.mod-header{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);}
+.mod-dot{width:12px;height:12px;border-radius:50%;}
+.mod-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;}
+.mod-sub{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+
+/* ACTIVITY CARD */
+.act-card{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:1.6rem;margin-bottom:1.2rem;transition:border-color .2s;}
+.act-card:hover{border-color:var(--ac,var(--v1));}
+.act-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;}
+.act-icon{width:2.4rem;height:2.4rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.act-meta{flex:1;}
+.act-type{font-family:'Space Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;}
+.act-name{font-size:1rem;font-weight:600;}
+.act-score{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--muted);margin-left:auto;}
+
+/* ── DRAG-AND-DROP MATCH ── */
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.match-col h5{font-family:'Space Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+.match-items{display:flex;flex-direction:column;gap:.45rem;}
+.match-item{background:var(--surface);border:1.5px solid var(--border);border-radius:.5rem;padding:.55rem .9rem;font-size:.88rem;cursor:grab;user-select:none;transition:all .2s;position:relative;}
+.match-item:active{cursor:grabbing;}
+.match-item.dragging{opacity:.5;transform:scale(.97);}
+.match-item.drag-over{border-color:var(--v2);background:var(--v2s);}
+.match-slot{background:rgba(255,255,255,.03);border:1.5px dashed var(--border);border-radius:.5rem;padding:.55rem .9rem;font-size:.88rem;min-height:2.8rem;transition:all .2s;display:flex;align-items:center;position:relative;}
+.match-slot.filled{border-style:solid;}
+.match-slot.correct{border-color:var(--v4)!important;background:var(--v4s)!important;}
+.match-slot.wrong{border-color:var(--v5)!important;background:var(--v5s)!important;}
+.match-slot .slot-label{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);position:absolute;top:.2rem;right:.4rem;}
+.btn-check{font-family:'Space Mono',monospace;font-size:.72rem;padding:.45rem 1.1rem;border-radius:.4rem;background:var(--v1);color:#fff;border:none;cursor:pointer;margin-top:.9rem;transition:opacity .2s;letter-spacing:.04em;}
+.btn-check:hover{opacity:.85;}
+.btn-reset{font-family:'Space Mono',monospace;font-size:.72rem;padding:.45rem 1.1rem;border-radius:.4rem;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;margin-top:.9rem;margin-left:.5rem;transition:all .2s;}
+.btn-reset:hover{border-color:var(--v2);color:var(--v2);}
+.match-feedback{font-size:.83rem;margin-top:.6rem;padding:.5rem .8rem;border-radius:.4rem;display:none;font-family:'Space Mono',monospace;}
+.match-feedback.show{display:block;}
+.match-feedback.ok{background:var(--v4s);color:var(--v4);}
+.match-feedback.partial{background:var(--v3s);color:var(--v3);}
+.match-feedback.bad{background:var(--v5s);color:var(--v5);}
+
+/* ── FILL IN THE BLANK ── */
+.fib-item{background:var(--surface);border-radius:.6rem;padding:1rem 1.2rem;margin-bottom:.7rem;line-height:2;}
+.fib-text{font-size:.93rem;color:var(--ink);line-height:2.2;}
+.fib-in{background:var(--card2);border:1.5px solid var(--border);border-radius:.35rem;padding:.18rem .6rem;color:var(--ink);font-family:'Space Mono',monospace;font-size:.82rem;width:140px;transition:border-color .2s;outline:none;}
+.fib-in:focus{border-color:var(--v1);}
+.fib-in.correct{border-color:var(--v4)!important;background:var(--v4s)!important;color:var(--v4)!important;}
+.fib-in.wrong{border-color:var(--v5)!important;background:var(--v5s)!important;color:var(--v5)!important;}
+.fib-hint{font-size:.75rem;color:var(--muted);margin-top:.2rem;font-style:italic;display:none;}
+.fib-hint.show{display:block;}
+
+/* ── WALKTHROUGH ── */
+.wt-wrap{position:relative;}
+.wt-step{display:none;animation:fadeIn .3s ease;}
+.wt-step.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.wt-num{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:.4rem;}
+.wt-title{font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--ink);}
+.wt-body{font-size:.9rem;color:#cbd5e1;line-height:1.75;}
+.wt-math{font-family:'Space Mono',monospace;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:.5rem;padding:.8rem 1.1rem;margin:.6rem 0;font-size:.85rem;color:#f0c060;line-height:1.8;white-space:pre-wrap;}
+.wt-nav{display:flex;align-items:center;gap:.6rem;margin-top:1rem;}
+.wt-btn{font-family:'Space Mono',monospace;font-size:.7rem;padding:.42rem 1rem;border-radius:.35rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.wt-btn:hover:not(:disabled){border-color:var(--v1);color:#a78bfa;}
+.wt-btn:disabled{opacity:.3;cursor:not-allowed;}
+.wt-btn.primary{background:var(--v1);border-color:var(--v1);color:#fff;}
+.wt-btn.primary:hover{opacity:.85;}
+.wt-dots{display:flex;gap:.35rem;margin-left:auto;}
+.wt-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:all .2s;}
+.wt-dot.active{background:var(--v1);}
+
+/* ── TRUE / FALSE ── */
+.tf-item{background:var(--surface);border-radius:.6rem;padding:1rem 1.2rem;margin-bottom:.6rem;border:1.5px solid var(--border);transition:all .2s;}
+.tf-stmt{font-size:.92rem;color:var(--ink);margin-bottom:.7rem;line-height:1.6;}
+.tf-btns{display:flex;gap:.5rem;}
+.tf-btn{flex:1;padding:.5rem;border-radius:.4rem;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.04em;transition:all .2s;color:var(--muted);}
+.tf-btn[data-v="true"]:hover{background:var(--v4s);border-color:var(--v4);color:var(--v4);}
+.tf-btn[data-v="false"]:hover{background:var(--v5s);border-color:var(--v5);color:var(--v5);}
+.tf-btn.selected-t{background:var(--v4s);border-color:var(--v4);color:var(--v4);}
+.tf-btn.selected-f{background:var(--v5s);border-color:var(--v5);color:var(--v5);}
+.tf-btn.correct-t{background:var(--v4s)!important;border-color:var(--v4)!important;color:var(--v4)!important;}
+.tf-btn.correct-f{background:var(--v5s)!important;border-color:var(--v5)!important;color:var(--v5)!important;}
+.tf-fb{font-size:.8rem;margin-top:.5rem;color:var(--muted);display:none;line-height:1.55;}
+.tf-fb.show{display:block;}
+.tf-fb.ok{color:var(--v4);}
+.tf-fb.bad{color:var(--v5);}
+
+/* ── SORT ACTIVITY ── */
+.sort-pool{display:flex;flex-wrap:wrap;gap:.5rem;min-height:2.5rem;background:rgba(255,255,255,.02);border:1.5px dashed var(--border);border-radius:.5rem;padding:.5rem;margin:.5rem 0;}
+.sort-item{font-family:'Space Mono',monospace;font-size:.78rem;padding:.32rem .7rem;border-radius:.35rem;border:1.5px solid var(--border);background:var(--surface);cursor:grab;user-select:none;transition:all .2s;color:var(--ink);}
+.sort-item:hover{border-color:var(--v2);background:var(--v2s);}
+.sort-item.dragging{opacity:.45;}
+.sort-item.placed{cursor:default;}
+.sort-zones{display:flex;flex-wrap:wrap;gap:.7rem;margin:.5rem 0;}
+.sort-zone{flex:1;min-width:130px;background:rgba(255,255,255,.02);border:1.5px dashed var(--border);border-radius:.5rem;padding:.6rem;min-height:80px;}
+.sort-zone-title{font-family:'Space Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;}
+.sort-zone.drag-over{border-color:var(--v2);background:var(--v2s);}
+.sort-zone.correct-zone{border-color:var(--v4)!important;background:var(--v4s)!important;}
+.sort-zone.wrong-zone{border-color:var(--v5)!important;background:var(--v5s)!important;}
+
+/* SCORE BANNER */
+.score-banner{background:var(--card2);border:1px solid var(--border);border-radius:.6rem;padding:.8rem 1.2rem;margin-top:1rem;font-family:'Space Mono',monospace;font-size:.82rem;display:none;text-align:center;}
+.score-banner.show{display:block;}
+
+/* PROGRESS */
+.act-progress{height:3px;background:var(--border);border-radius:2px;margin:2.5rem 0 .5rem;}
+.act-progress-fill{height:100%;border-radius:2px;transition:width .5s;background:linear-gradient(90deg,var(--v1),var(--v2));}
+.progress-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--muted);text-align:right;margin-bottom:2rem;}
+
+/* RESPONSIVE */
+@media(max-width:600px){.match-wrap{grid-template-columns:1fr;}.sort-zones{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🎮 Activity Hub</div>
+  <a href="index.html" class="nav-home">← Back to Modules</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Interactive Practice · All Modules</div>
+  <h1>Activities Hub</h1>
+  <p>Drag-and-drop matching, fill-in-the-blank, step walkthroughs, true/false, and sorting exercises — covering every topic across all four modules.</p>
+  <div class="module-nav">
+    <div class="mod-pill active" data-mod="1" onclick="scrollTo('mod1',this)">📐 Relations &amp; Functions</div>
+    <div class="mod-pill" data-mod="2" onclick="scrollTo('mod2',this)">∞ Cardinal Numbers</div>
+    <div class="mod-pill" data-mod="3" onclick="scrollTo('mod3',this)">⚛ Axiom &amp; Number Systems</div>
+    <div class="mod-pill" data-mod="4" onclick="scrollTo('mod4',this)">Ω Ordinals</div>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════
+     MODULE 1 — RELATIONS & FUNCTIONS
+═══════════════════════════════════ -->
+<div id="mod1">
+  <div class="mod-header">
+    <div class="mod-dot" style="background:var(--v1)"></div>
+    <div><div class="mod-title">Relations &amp; Functions</div><div class="mod-sub">Topics: relations · functions · domain/range · equivalence · injective/surjective/bijective</div></div>
+  </div>
+
+  <!-- A1.1 DRAG-AND-DROP MATCH: Terms to Definitions -->
+  <div class="act-card" style="--ac:var(--v1)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v1s);color:var(--v1)">🔗</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v1)">Drag-and-Drop Match</div>
+        <div class="act-name">Match Terms to Definitions</div>
+      </div>
+      <div class="act-score" id="m1-score">0 / 5</div>
+    </div>
+    <div class="match-wrap">
+      <div>
+        <h5>Terms — drag these</h5>
+        <div class="match-items" id="m1-terms">
+          <div class="match-item" draggable="true" data-id="relation">Relation R ⊆ A×B</div>
+          <div class="match-item" draggable="true" data-id="function">Function f: A→B</div>
+          <div class="match-item" draggable="true" data-id="injective">Injective function</div>
+          <div class="match-item" draggable="true" data-id="surjective">Surjective function</div>
+          <div class="match-item" draggable="true" data-id="bijective">Bijective function</div>
+        </div>
+      </div>
+      <div>
+        <h5>Definitions — drop here</h5>
+        <div class="match-items" id="m1-slots">
+          <div class="match-slot" data-answer="bijective"><span class="slot-label">A</span>Both one-to-one AND onto; has an inverse</div>
+          <div class="match-slot" data-answer="injective"><span class="slot-label">B</span>f(a₁)=f(a₂) implies a₁=a₂; no two inputs share output</div>
+          <div class="match-slot" data-answer="function"><span class="slot-label">C</span>Every element of A maps to exactly one element of B</div>
+          <div class="match-slot" data-answer="relation"><span class="slot-label">D</span>Any subset of the Cartesian product A×B</div>
+          <div class="match-slot" data-answer="surjective"><span class="slot-label">E</span>Every element of B is the image of some element of A</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkMatch('m1')">Check Answers</button>
+    <button class="btn-reset" onclick="resetMatch('m1')">Reset</button>
+    <div class="match-feedback" id="m1-fb"></div>
+  </div>
+
+  <!-- A1.2 FILL IN THE BLANK: Relations -->
+  <div class="act-card" style="--ac:var(--v1)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v1s);color:var(--v1)">✍️</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v1)">Fill in the Blank</div>
+        <div class="act-name">Complete the Statements</div>
+      </div>
+    </div>
+    <div id="fib-m1">
+      <div class="fib-item">
+        <div class="fib-text">1. For f: A→B, the <input class="fib-in" data-ans="range" placeholder="?"> is the set of all actual outputs f(a), while the <input class="fib-in" data-ans="codomain" placeholder="?"> is the declared target set B.</div>
+        <div class="fib-hint">Hints: "range" and "codomain"</div>
+      </div>
+      <div class="fib-item">
+        <div class="fib-text">2. If A = {1,2,3} and B = {a,b,c}, then |A×B| = <input class="fib-in" data-ans="9" placeholder="?" style="width:70px">.</div>
+      </div>
+      <div class="fib-item">
+        <div class="fib-text">3. A relation R on A is an equivalence relation iff it is reflexive, <input class="fib-in" data-ans="symmetric" placeholder="?"> and <input class="fib-in" data-ans="transitive" placeholder="?">.</div>
+      </div>
+      <div class="fib-item">
+        <div class="fib-text">4. The equivalence class of a is [a] = { x ∈ A | x <input class="fib-in" data-ans="~" placeholder="?" style="width:60px"> a }.</div>
+      </div>
+      <div class="fib-item">
+        <div class="fib-text">5. If f is bijective and g∘f is defined, then (g∘f)⁻¹ = <input class="fib-in" data-ans="f⁻¹∘g⁻¹" placeholder="?" style="width:120px">.</div>
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkFib('fib-m1')">Check Answers</button>
+    <button class="btn-reset" onclick="resetFib('fib-m1')">Reset</button>
+    <div class="match-feedback" id="fib-m1-fb"></div>
+  </div>
+
+  <!-- A1.3 WALKTHROUGH: Is this a function? -->
+  <div class="act-card" style="--ac:var(--v2)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v2s);color:var(--v2)">👣</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v2)">Step-by-Step Walkthrough</div>
+        <div class="act-name">Classifying Functions: Is it Injective, Surjective, or Bijective?</div>
+      </div>
+    </div>
+    <div class="wt-wrap" id="wt-m1">
+      <div class="wt-step active" data-step="0">
+        <div class="wt-num">Step 1 of 5</div>
+        <div class="wt-title">🎯 The Problem</div>
+        <div class="wt-body">Let f: {1,2,3} → {a,b,c} with f(1)=a, f(2)=b, f(3)=c.<br>Let g: {1,2,3} → {a,b} with g(1)=a, g(2)=b, g(3)=a.<br>Let h: {1,2,3,4} → {a,b,c} with h(1)=a, h(2)=b, h(3)=c, h(4)=a.<br><br>We will classify each as injective, surjective, or bijective.</div>
+      </div>
+      <div class="wt-step" data-step="1">
+        <div class="wt-num">Step 2 of 5</div>
+        <div class="wt-title">🔍 Test f for Injectivity</div>
+        <div class="wt-body">Injectivity means: no two different inputs share the same output.</div>
+        <div class="wt-math">f(1)=a,  f(2)=b,  f(3)=c
+All outputs are DIFFERENT → f is INJECTIVE ✅
+
+Contrapositive check: a₁≠a₂ ⟹ f(a₁)≠f(a₂)
+1≠2: f(1)=a ≠ b=f(2) ✓
+1≠3: f(1)=a ≠ c=f(3) ✓
+2≠3: f(2)=b ≠ c=f(3) ✓</div>
+      </div>
+      <div class="wt-step" data-step="2">
+        <div class="wt-num">Step 3 of 5</div>
+        <div class="wt-title">🔍 Test f for Surjectivity</div>
+        <div class="wt-body">Surjectivity means: every element of the codomain is hit.</div>
+        <div class="wt-math">Codomain = {a, b, c}
+a is hit by 1 ✓
+b is hit by 2 ✓
+c is hit by 3 ✓
+Every element is hit → f is SURJECTIVE ✅
+
+f is BIJECTIVE (injective AND surjective) ✅</div>
+      </div>
+      <div class="wt-step" data-step="3">
+        <div class="wt-num">Step 4 of 5</div>
+        <div class="wt-title">🔍 Classify g: {1,2,3} → {a,b}</div>
+        <div class="wt-body">g(1)=a, g(2)=b, g(3)=a</div>
+        <div class="wt-math">Injectivity: g(1)=g(3)=a but 1≠3 → NOT injective ❌
+
+Surjectivity:
+  a is hit by 1 (and 3) ✓
+  b is hit by 2 ✓
+  All codomain elements hit → SURJECTIVE ✅
+
+g is SURJECTIVE ONLY (not injective, not bijective)</div>
+      </div>
+      <div class="wt-step" data-step="4">
+        <div class="wt-num">Step 5 of 5</div>
+        <div class="wt-title">🔍 Classify h: {1,2,3,4} → {a,b,c}</div>
+        <div class="wt-body">h(1)=a, h(2)=b, h(3)=c, h(4)=a</div>
+        <div class="wt-math">Injectivity: h(1)=h(4)=a but 1≠4 → NOT injective ❌
+
+Surjectivity:
+  a is hit by 1,4 ✓   b is hit by 2 ✓   c is hit by 3 ✓
+  All codomain elements hit → SURJECTIVE ✅
+
+Summary:
+  f → BIJECTIVE    (injective + surjective)
+  g → SURJECTIVE   (onto but not one-to-one)
+  h → SURJECTIVE   (onto but not one-to-one)
+
+Key insight: when |domain| > |codomain|, injectivity is impossible.
+When |domain| < |codomain|, surjectivity is impossible.</div>
+      </div>
+    </div>
+    <div class="wt-nav">
+      <button class="wt-btn" id="wt-m1-prev" onclick="wtPrev('wt-m1')" disabled>← Prev</button>
+      <button class="wt-btn primary" id="wt-m1-next" onclick="wtNext('wt-m1',5)">Next →</button>
+      <div class="wt-dots" id="wt-m1-dots"></div>
+    </div>
+  </div>
+
+  <!-- A1.4 TRUE/FALSE -->
+  <div class="act-card" style="--ac:var(--v3)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v3s);color:var(--v3)">⚡</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v3)">True / False</div>
+        <div class="act-name">Quick-Fire: Relations &amp; Functions</div>
+      </div>
+    </div>
+    <div id="tf-m1">
+      <div class="tf-item">
+        <div class="tf-stmt">1. Every function is a relation, but not every relation is a function.</div>
+        <div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','Every function f: A→B is a subset of A×B — that makes it a relation. But not every subset of A×B is single-valued.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','Every function f: A→B is a subset of A×B — that makes it a relation. But not every subset of A×B is single-valued.')">FALSE</button></div>
+        <div class="tf-fb"></div>
+      </div>
+      <div class="tf-item">
+        <div class="tf-stmt">2. The function f: ℝ→ℝ, f(x) = x² is injective.</div>
+        <div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','f(-2)=f(2)=4. Two different inputs share the same output — NOT injective.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','f(-2)=f(2)=4. Two different inputs share the same output — NOT injective.')">FALSE</button></div>
+        <div class="tf-fb"></div>
+      </div>
+      <div class="tf-item">
+        <div class="tf-stmt">3. If g∘f is injective, then f must be injective.</div>
+        <div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','If f(a₁)=f(a₂), then g(f(a₁))=g(f(a₂)), so (g∘f)(a₁)=(g∘f)(a₂). Since g∘f is injective, a₁=a₂. So f is injective.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','If f(a₁)=f(a₂), then g(f(a₁))=g(f(a₂)), so (g∘f)(a₁)=(g∘f)(a₂). Since g∘f is injective, a₁=a₂. So f is injective.')">FALSE</button></div>
+        <div class="tf-fb"></div>
+      </div>
+      <div class="tf-item">
+        <div class="tf-stmt">4. The equivalence classes of an equivalence relation on A always partition A.</div>
+        <div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','Reflexivity ensures every element is in some class; symmetry+transitivity ensure classes are disjoint; together they cover all of A.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','Reflexivity ensures every element is in some class; symmetry+transitivity ensure classes are disjoint; together they cover all of A.')">FALSE</button></div>
+        <div class="tf-fb"></div>
+      </div>
+      <div class="tf-item">
+        <div class="tf-stmt">5. f(S₁ ∩ S₂) = f(S₁) ∩ f(S₂) always holds for any function f.</div>
+        <div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','Only ⊆ holds in general. Counter-example: f(1)=f(2)=a, S₁={1}, S₂={2}. Then S₁∩S₂=∅ but f(S₁)∩f(S₂)={a}.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','Only ⊆ holds in general. Counter-example: f(1)=f(2)=a, S₁={1}, S₂={2}. Then S₁∩S₂=∅ but f(S₁)∩f(S₂)={a}.')">FALSE</button></div>
+        <div class="tf-fb"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A1.5 SORT: Classify Relation Properties -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">🗂️</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v4)">Sorting Activity</div>
+        <div class="act-name">Classify Relation Properties</div>
+      </div>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:.8rem">Drag each relation description into the correct category.</p>
+    <div class="sort-pool" id="sort-m1-pool">
+      <div class="sort-item" draggable="true" data-cat="equiv">a~b iff a-b ∈ ℤ on ℝ</div>
+      <div class="sort-item" draggable="true" data-cat="partial">a|b (divides) on ℕ</div>
+      <div class="sort-item" draggable="true" data-cat="neither">a R b iff a &lt; b on ℝ</div>
+      <div class="sort-item" draggable="true" data-cat="equiv">a~b iff a≡b mod 5 on ℤ</div>
+      <div class="sort-item" draggable="true" data-cat="partial">A⊆B on 𝒫(S)</div>
+      <div class="sort-item" draggable="true" data-cat="neither">a R b iff |a-b|=1 on ℤ</div>
+    </div>
+    <div class="sort-zones" id="sort-m1-zones">
+      <div class="sort-zone" data-cat="equiv"><div class="sort-zone-title" style="color:var(--v4)">Equivalence Relation</div></div>
+      <div class="sort-zone" data-cat="partial"><div class="sort-zone-title" style="color:var(--v2)">Partial Order</div></div>
+      <div class="sort-zone" data-cat="neither"><div class="sort-zone-title" style="color:var(--v3)">Neither</div></div>
+    </div>
+    <button class="btn-check" onclick="checkSort('sort-m1')">Check</button>
+    <button class="btn-reset" onclick="resetSort('sort-m1')">Reset</button>
+    <div class="match-feedback" id="sort-m1-fb"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MODULE 2 — CARDINAL NUMBERS
+═══════════════════════════════════ -->
+<div id="mod2">
+  <div class="mod-header">
+    <div class="mod-dot" style="background:var(--v2)"></div>
+    <div><div class="mod-title">Cardinal Numbers</div><div class="mod-sub">Topics: equinumerosity · countability · cardinality · cardinal arithmetic</div></div>
+  </div>
+
+  <!-- A2.1 MATCH: Cardinalities -->
+  <div class="act-card" style="--ac:var(--v2)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v2s);color:var(--v2)">🔗</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v2)">Drag-and-Drop Match</div>
+        <div class="act-name">Match Each Set to Its Cardinality</div>
+      </div>
+      <div class="act-score" id="m2-score">0 / 5</div>
+    </div>
+    <div class="match-wrap">
+      <div>
+        <h5>Sets</h5>
+        <div class="match-items" id="m2-terms">
+          <div class="match-item" draggable="true" data-id="nat">ℕ = {0,1,2,3,…}</div>
+          <div class="match-item" draggable="true" data-id="real">ℝ (real numbers)</div>
+          <div class="match-item" draggable="true" data-id="fin">{Monday, Tuesday, Wednesday}</div>
+          <div class="match-item" draggable="true" data-id="rat">ℚ (rational numbers)</div>
+          <div class="match-item" draggable="true" data-id="pownat">𝒫(ℕ) (power set of ℕ)</div>
+        </div>
+      </div>
+      <div>
+        <h5>Cardinalities</h5>
+        <div class="match-items" id="m2-slots">
+          <div class="match-slot" data-answer="fin"><span class="slot-label">A</span>Finite — cardinality 3</div>
+          <div class="match-slot" data-answer="nat"><span class="slot-label">B</span>ℵ₀ — countably infinite</div>
+          <div class="match-slot" data-answer="rat"><span class="slot-label">C</span>ℵ₀ — same as ℕ (Cantor diagonal)</div>
+          <div class="match-slot" data-answer="real"><span class="slot-label">D</span>𝔠 = 2^{ℵ₀} — uncountably infinite</div>
+          <div class="match-slot" data-answer="pownat"><span class="slot-label">E</span>2^{ℵ₀} = 𝔠 — strictly greater than ℵ₀</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkMatch('m2')">Check Answers</button>
+    <button class="btn-reset" onclick="resetMatch('m2')">Reset</button>
+    <div class="match-feedback" id="m2-fb"></div>
+  </div>
+
+  <!-- A2.2 FILL IN THE BLANK -->
+  <div class="act-card" style="--ac:var(--v2)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v2s);color:var(--v2)">✍️</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v2)">Fill in the Blank</div>
+        <div class="act-name">Cardinal Arithmetic Completions</div>
+      </div>
+    </div>
+    <div id="fib-m2">
+      <div class="fib-item"><div class="fib-text">1. ℵ₀ + ℵ₀ = <input class="fib-in" data-ans="ℵ₀" placeholder="?" style="width:80px">. (Two countable sets combined are still countable.)</div></div>
+      <div class="fib-item"><div class="fib-text">2. ℵ₀ × ℵ₀ = <input class="fib-in" data-ans="ℵ₀" placeholder="?" style="width:80px">. (ℕ×ℕ is countable via Cantor's diagonal grid.)</div></div>
+      <div class="fib-item"><div class="fib-text">3. 2^{ℵ₀} = <input class="fib-in" data-ans="𝔠" placeholder="?" style="width:80px"> = |ℝ|. This is STRICTLY greater than ℵ₀.</div></div>
+      <div class="fib-item"><div class="fib-text">4. Sets A and B are equinumerous iff there exists a <input class="fib-in" data-ans="bijection" placeholder="?"> from A to B.</div></div>
+      <div class="fib-item"><div class="fib-text">5. |A| ≤ |B| means there exists an <input class="fib-in" data-ans="injection" placeholder="?"> from A to B.</div></div>
+    </div>
+    <button class="btn-check" onclick="checkFib('fib-m2')">Check Answers</button>
+    <button class="btn-reset" onclick="resetFib('fib-m2')">Reset</button>
+    <div class="match-feedback" id="fib-m2-fb"></div>
+  </div>
+
+  <!-- A2.3 WALKTHROUGH: Cantor's Diagonal -->
+  <div class="act-card" style="--ac:var(--v2)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v2s);color:var(--v2)">👣</div>
+      <div class="act-meta">
+        <div class="act-type" style="color:var(--v2)">Step-by-Step Walkthrough</div>
+        <div class="act-name">Cantor's Diagonal Argument — Why ℝ is Uncountable</div>
+      </div>
+    </div>
+    <div class="wt-wrap" id="wt-m2">
+      <div class="wt-step active" data-step="0"><div class="wt-num">Step 1 of 4</div><div class="wt-title">Assume a complete list exists</div><div class="wt-body">We proceed by <strong>contradiction</strong>. Suppose all real numbers in [0,1] can be listed as r₁, r₂, r₃, … We write each in decimal form.</div><div class="wt-math">r₁ = 0.d₁₁ d₁₂ d₁₃ d₁₄ ...
+r₂ = 0.d₂₁ d₂₂ d₂₃ d₂₄ ...
+r₃ = 0.d₃₁ d₃₂ d₃₃ d₃₄ ...
+r₄ = 0.d₄₁ d₄₂ d₄₃ d₄₄ ...
+...</div></div>
+      <div class="wt-step" data-step="1"><div class="wt-num">Step 2 of 4</div><div class="wt-title">Build the diagonal number</div><div class="wt-body">Construct a number d by looking at the diagonal digit dₙₙ and changing it: if dₙₙ ≠ 5, use 5; if dₙₙ = 5, use 4.</div><div class="wt-math">d = 0.e₁ e₂ e₃ e₄ ...
+
+where eₙ ≠ dₙₙ for every n
+
+Example: if diagonal is 3,7,1,5,...
+Then d = 0.5 5 5 4 ...
+(5 when diagonal≠5, else 4)</div></div>
+      <div class="wt-step" data-step="2"><div class="wt-num">Step 3 of 4</div><div class="wt-title">d is not on the list</div><div class="wt-body">Why is d not equal to any rₙ in our list?</div><div class="wt-math">Is d = r₁? NO — d differs from r₁ in position 1 (e₁ ≠ d₁₁)
+Is d = r₂? NO — d differs from r₂ in position 2 (e₂ ≠ d₂₂)
+Is d = rₙ? NO — d differs from rₙ in position n (eₙ ≠ dₙₙ)
+
+For EVERY n: d ≠ rₙ
+Therefore d is not anywhere on our "complete" list!</div></div>
+      <div class="wt-step" data-step="3"><div class="wt-num">Step 4 of 4</div><div class="wt-title">Contradiction — ℝ is uncountable</div><div class="wt-body">We assumed our list was complete, but we just found a real number d ∈ [0,1] that isn't on it. Contradiction!</div><div class="wt-math">Conclusion: No complete list of real numbers can exist.
+Therefore ℝ is UNCOUNTABLE.
+
+|ℝ| = 𝔠 = 2^{ℵ₀}  >  ℵ₀ = |ℕ|
+
+This shows there are genuinely different sizes of infinity —
+the real numbers are a "bigger" infinity than the naturals.</div></div>
+    </div>
+    <div class="wt-nav">
+      <button class="wt-btn" id="wt-m2-prev" onclick="wtPrev('wt-m2')" disabled>← Prev</button>
+      <button class="wt-btn primary" id="wt-m2-next" onclick="wtNext('wt-m2',4)">Next →</button>
+      <div class="wt-dots" id="wt-m2-dots"></div>
+    </div>
+  </div>
+
+  <!-- A2.4 TRUE/FALSE -->
+  <div class="act-card" style="--ac:var(--v3)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v3s);color:var(--v3)">⚡</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v3)">True / False</div><div class="act-name">Quick-Fire: Cardinal Numbers</div></div>
+    </div>
+    <div id="tf-m2">
+      <div class="tf-item"><div class="tf-stmt">1. The set of even natural numbers is equinumerous to ℕ.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','The bijection f(n)=2n maps ℕ→evens perfectly. Both have cardinality ℵ₀.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','The bijection f(n)=2n maps ℕ→evens perfectly. Both have cardinality ℵ₀.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">2. ℚ is uncountable because there are infinitely many fractions between any two integers.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','ℚ is actually COUNTABLE — Cantor\'s diagonal enumeration lists all rationals. Density does not imply uncountability.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','ℚ is actually COUNTABLE — Cantor\'s diagonal enumeration lists all rationals. Density does not imply uncountability.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">3. 𝔠 + 𝔠 = 2𝔠, which is strictly greater than 𝔠.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','𝔠 + 𝔠 = 𝔠. Cardinal addition for infinite cardinals satisfies κ+κ=κ. Only EXPONENTIATION gives a strictly larger cardinal: 2^𝔠 > 𝔠.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','𝔠 + 𝔠 = 𝔠. Cardinal addition for infinite cardinals satisfies κ+κ=κ. Only EXPONENTIATION gives a strictly larger cardinal: 2^𝔠 > 𝔠.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">4. Cantor's Theorem states that |A| &lt; |𝒫(A)| for every set A.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','Correct! The power set is always strictly larger. This means there is no largest cardinal — we can always go higher.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','Correct! The power set is always strictly larger. This means there is no largest cardinal — we can always go higher.')">FALSE</button></div><div class="tf-fb"></div></div>
+    </div>
+  </div>
+
+  <!-- A2.5 SORT: Countable vs Uncountable -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">🗂️</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v4)">Sorting Activity</div><div class="act-name">Countable or Uncountable?</div></div>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:.8rem">Sort each set into the correct category.</p>
+    <div class="sort-pool" id="sort-m2-pool">
+      <div class="sort-item" draggable="true" data-cat="countable">ℕ</div>
+      <div class="sort-item" draggable="true" data-cat="uncountable">ℝ</div>
+      <div class="sort-item" draggable="true" data-cat="countable">ℤ</div>
+      <div class="sort-item" draggable="true" data-cat="uncountable">(0,1)</div>
+      <div class="sort-item" draggable="true" data-cat="countable">ℚ</div>
+      <div class="sort-item" draggable="true" data-cat="uncountable">𝒫(ℕ)</div>
+      <div class="sort-item" draggable="true" data-cat="countable">Prime numbers</div>
+      <div class="sort-item" draggable="true" data-cat="uncountable">Irrational numbers</div>
+    </div>
+    <div class="sort-zones" id="sort-m2-zones">
+      <div class="sort-zone" data-cat="countable"><div class="sort-zone-title" style="color:var(--v4)">Countable (finite or |·|=ℵ₀)</div></div>
+      <div class="sort-zone" data-cat="uncountable"><div class="sort-zone-title" style="color:var(--v5)">Uncountable (|·| ≥ 𝔠)</div></div>
+    </div>
+    <button class="btn-check" onclick="checkSort('sort-m2')">Check</button>
+    <button class="btn-reset" onclick="resetSort('sort-m2')">Reset</button>
+    <div class="match-feedback" id="sort-m2-fb"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MODULE 3 — AXIOM & NUMBER SYSTEMS
+═══════════════════════════════════ -->
+<div id="mod3">
+  <div class="mod-header">
+    <div class="mod-dot" style="background:var(--v3)"></div>
+    <div><div class="mod-title">Axiom of Choice &amp; Number Systems</div><div class="mod-sub">Topics: axiom of choice · continuum hypothesis · constructing ℤ, ℚ, ℝ</div></div>
+  </div>
+
+  <!-- A3.1 MATCH -->
+  <div class="act-card" style="--ac:var(--v3)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v3s);color:var(--v3)">🔗</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v3)">Drag-and-Drop Match</div><div class="act-name">Match Each Construction to Its Method</div></div>
+      <div class="act-score" id="m3-score">0 / 5</div>
+    </div>
+    <div class="match-wrap">
+      <div>
+        <h5>Number System</h5>
+        <div class="match-items" id="m3-terms">
+          <div class="match-item" draggable="true" data-id="Z">ℤ (integers)</div>
+          <div class="match-item" draggable="true" data-id="Q">ℚ (rationals)</div>
+          <div class="match-item" draggable="true" data-id="R_ded">ℝ via Dedekind cuts</div>
+          <div class="match-item" draggable="true" data-id="R_cau">ℝ via Cauchy sequences</div>
+          <div class="match-item" draggable="true" data-id="N">ℕ (natural numbers)</div>
+        </div>
+      </div>
+      <div>
+        <h5>Construction</h5>
+        <div class="match-items" id="m3-slots">
+          <div class="match-slot" data-answer="N"><span class="slot-label">A</span>Von Neumann: 0=∅, 1={∅}, 2={∅,{∅}}, … via Peano axioms</div>
+          <div class="match-slot" data-answer="Z"><span class="slot-label">B</span>(ℕ×ℕ)/~ where (a,b)~(c,d) iff a+d=b+c; pair (a,b) means a−b</div>
+          <div class="match-slot" data-answer="Q"><span class="slot-label">C</span>(ℤ×ℤ*)/~ where (p,q)~(r,s) iff ps=qr; pair (p,q) means p/q</div>
+          <div class="match-slot" data-answer="R_ded"><span class="slot-label">D</span>Partition (A,B) of ℚ where A has no max, every a∈A &lt; every b∈B</div>
+          <div class="match-slot" data-answer="R_cau"><span class="slot-label">E</span>Equivalence classes of sequences (qₙ) where |qₙ−qₘ|→0</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkMatch('m3')">Check Answers</button>
+    <button class="btn-reset" onclick="resetMatch('m3')">Reset</button>
+    <div class="match-feedback" id="m3-fb"></div>
+  </div>
+
+  <!-- A3.2 FILL IN THE BLANK -->
+  <div class="act-card" style="--ac:var(--v3)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v3s);color:var(--v3)">✍️</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v3)">Fill in the Blank</div><div class="act-name">Integer and Rational Constructions</div></div>
+    </div>
+    <div id="fib-m3">
+      <div class="fib-item"><div class="fib-text">1. In the construction of ℤ, the pair (7, 3) represents the integer <input class="fib-in" data-ans="4" placeholder="?" style="width:70px">.</div></div>
+      <div class="fib-item"><div class="fib-text">2. In the construction of ℤ, (2, 5) ~ (0, 3) because 2 + <input class="fib-in" data-ans="3" placeholder="?" style="width:70px"> = 5 + <input class="fib-in" data-ans="0" placeholder="?" style="width:70px">.</div></div>
+      <div class="fib-item"><div class="fib-text">3. In the construction of ℚ, (3, 9) and (1, 3) are equivalent because 3 × <input class="fib-in" data-ans="3" placeholder="?" style="width:70px"> = 9 × <input class="fib-in" data-ans="1" placeholder="?" style="width:70px">. Both represent the fraction <input class="fib-in" data-ans="1/3" placeholder="?" style="width:80px">.</div></div>
+      <div class="fib-item"><div class="fib-text">4. The Continuum Hypothesis states that 2^{ℵ₀} = <input class="fib-in" data-ans="ℵ₁" placeholder="?" style="width:80px">.</div></div>
+      <div class="fib-item"><div class="fib-text">5. The Axiom of Choice is <input class="fib-in" data-ans="independent" placeholder="?"> of ZF — it can neither be proved nor disproved from ZF alone.</div></div>
+    </div>
+    <button class="btn-check" onclick="checkFib('fib-m3')">Check Answers</button>
+    <button class="btn-reset" onclick="resetFib('fib-m3')">Reset</button>
+    <div class="match-feedback" id="fib-m3-fb"></div>
+  </div>
+
+  <!-- A3.3 WALKTHROUGH: Constructing ℤ -->
+  <div class="act-card" style="--ac:var(--v3)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v3s);color:var(--v3)">👣</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v3)">Step-by-Step Walkthrough</div><div class="act-name">Constructing ℤ from ℕ — A Complete Example</div></div>
+    </div>
+    <div class="wt-wrap" id="wt-m3">
+      <div class="wt-step active" data-step="0"><div class="wt-num">Step 1 of 5</div><div class="wt-title">The Problem with ℕ</div><div class="wt-body">The natural numbers ℕ = {0,1,2,3,…} cannot solve equations like x + 5 = 2. We need negative numbers. How do we build them from sets alone?</div><div class="wt-math">Goal: Construct ℤ = {…,-2,-1,0,1,2,…}
+Starting from: ℕ = {0,1,2,3,…}
+Method: Encode an integer as a DIFFERENCE of two naturals</div></div>
+      <div class="wt-step" data-step="1"><div class="wt-num">Step 2 of 5</div><div class="wt-title">Form ℕ × ℕ</div><div class="wt-body">Consider all ordered pairs (a,b) with a,b ∈ ℕ. Think of (a,b) as representing "a − b".</div><div class="wt-math">Examples:
+(5, 2) represents 5 − 2 = +3
+(2, 7) represents 2 − 7 = −5
+(4, 4) represents 4 − 4 = 0
+
+Problem: Many pairs represent the SAME integer:
+(3,0), (4,1), (5,2) all represent +3
+We need to identify them!</div></div>
+      <div class="wt-step" data-step="2"><div class="wt-num">Step 3 of 5</div><div class="wt-title">Define the Equivalence Relation</div><div class="wt-body">Two pairs represent the same integer when their "differences" are equal: a−b = c−d, which (avoiding subtraction!) means a+d = b+c.</div><div class="wt-math">Define: (a,b) ~ (c,d)  iff  a + d = b + c
+
+Examples:
+(5,2) ~ (6,3)?  5+3 = 2+6 → 8=8 ✓  (both = +3)
+(5,2) ~ (3,0)?  5+0 = 2+3 → 5=5 ✓  (both = +3)
+(5,2) ~ (1,4)?  5+4 = 2+1 → 9≠3 ✗  (not same integer)</div></div>
+      <div class="wt-step" data-step="3"><div class="wt-num">Step 4 of 5</div><div class="wt-title">Form the Quotient Set</div><div class="wt-body">The integers ARE the equivalence classes of (ℕ×ℕ)/~. Each class is one integer.</div><div class="wt-math">+3 = [(3,0)] = {(3,0),(4,1),(5,2),(6,3),…}
+−2 = [(0,2)] = {(0,2),(1,3),(2,4),(3,5),…}
+ 0 = [(0,0)] = {(0,0),(1,1),(2,2),(3,3),…}
++1 = [(1,0)] = {(1,0),(2,1),(3,2),(4,3),…}
+
+These classes partition ℕ×ℕ completely.</div></div>
+      <div class="wt-step" data-step="4"><div class="wt-num">Step 5 of 5</div><div class="wt-title">Arithmetic on ℤ</div><div class="wt-body">We define + and × on these classes. We must verify these are "well-defined" (same result regardless of which representative we pick).</div><div class="wt-math">Addition:  [(a,b)] + [(c,d)] = [(a+c, b+d)]
+Negation:  −[(a,b)]          = [(b,a)]   ← swap!
+Multiplication: [(a,b)]·[(c,d)] = [(ac+bd, ad+bc)]
+
+Example: (+3) + (−2) = [(3,0)] + [(0,2)]
+       = [(3+0, 0+2)] = [(3,2)] = +1 ✓
+
+This is a complete, rigorous construction of ℤ from sets!</div></div>
+    </div>
+    <div class="wt-nav">
+      <button class="wt-btn" id="wt-m3-prev" onclick="wtPrev('wt-m3')" disabled>← Prev</button>
+      <button class="wt-btn primary" id="wt-m3-next" onclick="wtNext('wt-m3',5)">Next →</button>
+      <div class="wt-dots" id="wt-m3-dots"></div>
+    </div>
+  </div>
+
+  <!-- A3.4 TRUE/FALSE -->
+  <div class="act-card" style="--ac:var(--v5)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v5s);color:var(--v5)">⚡</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v5)">True / False</div><div class="act-name">Quick-Fire: Axiom of Choice &amp; Constructions</div></div>
+    </div>
+    <div id="tf-m3">
+      <div class="tf-item"><div class="tf-stmt">1. The Axiom of Choice can be proved from the other ZF axioms.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','AC is INDEPENDENT of ZF — Cohen proved you cannot prove it, and Gödel proved you cannot disprove it. It must be assumed as an additional axiom.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','AC is INDEPENDENT of ZF — Cohen proved you cannot prove it, and Gödel proved you cannot disprove it. It must be assumed as an additional axiom.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">2. In the construction of ℤ, the pair (3,7) represents the integer −4.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','(a,b) represents a−b = 3−7 = −4. ✓')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','(a,b) represents a−b = 3−7 = −4. ✓')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">3. The Continuum Hypothesis is known to be true.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','CH is INDEPENDENT of ZFC. Both "CH is true" and "CH is false" are consistent with ZFC — neither can be proved from the standard axioms.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','CH is INDEPENDENT of ZFC. Both "CH is true" and "CH is false" are consistent with ZFC — neither can be proved from the standard axioms.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">4. In the construction of ℚ, (2,6) and (1,3) belong to the same equivalence class.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','Check: 2×3 = 6×1 → 6=6 ✓. Both represent 1/3.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','Check: 2×3 = 6×1 → 6=6 ✓. Both represent 1/3.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">5. Every Cauchy sequence of rationals converges to a rational number.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','This is EXACTLY the problem ℚ has — it is not complete! The sequence 1, 1.4, 1.41, 1.414,… is Cauchy in ℚ but converges to √2 ∉ ℚ. We build ℝ to fix this.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','This is EXACTLY the problem ℚ has — it is not complete! The sequence 1, 1.4, 1.41, 1.414,… is Cauchy in ℚ but converges to √2 ∉ ℚ. We build ℝ to fix this.')">FALSE</button></div><div class="tf-fb"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MODULE 4 — ORDINALS
+═══════════════════════════════════ -->
+<div id="mod4">
+  <div class="mod-header">
+    <div class="mod-dot" style="background:var(--v4)"></div>
+    <div><div class="mod-title">Ordering &amp; Ordinals</div><div class="mod-sub">Topics: ordinal numbers · well-orderings · transfinite induction</div></div>
+  </div>
+
+  <!-- A4.1 MATCH -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">🔗</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v4)">Drag-and-Drop Match</div><div class="act-name">Match Ordinals to Their Descriptions</div></div>
+      <div class="act-score" id="m4-score">0 / 5</div>
+    </div>
+    <div class="match-wrap">
+      <div>
+        <h5>Ordinal</h5>
+        <div class="match-items" id="m4-terms">
+          <div class="match-item" draggable="true" data-id="ord0">0</div>
+          <div class="match-item" draggable="true" data-id="ord3">3</div>
+          <div class="match-item" draggable="true" data-id="ordw">ω</div>
+          <div class="match-item" draggable="true" data-id="ordw1">ω+1</div>
+          <div class="match-item" draggable="true" data-id="ordw2">ω·2</div>
+        </div>
+      </div>
+      <div>
+        <h5>Description</h5>
+        <div class="match-items" id="m4-slots">
+          <div class="match-slot" data-answer="ord0"><span class="slot-label">A</span>The empty set ∅. Base ordinal.</div>
+          <div class="match-slot" data-answer="ord3"><span class="slot-label">B</span>{0,1,2} — set of all smaller ordinals. Finite successor.</div>
+          <div class="match-slot" data-answer="ordw"><span class="slot-label">C</span>{0,1,2,3,…} — first LIMIT ordinal; order type of ℕ</div>
+          <div class="match-slot" data-answer="ordw1"><span class="slot-label">D</span>ω∪{ω} — first SUCCESSOR ordinal after ω</div>
+          <div class="match-slot" data-answer="ordw2"><span class="slot-label">E</span>ω+ω — second limit ordinal; two copies of ω concatenated</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkMatch('m4')">Check Answers</button>
+    <button class="btn-reset" onclick="resetMatch('m4')">Reset</button>
+    <div class="match-feedback" id="m4-fb"></div>
+  </div>
+
+  <!-- A4.2 FILL IN THE BLANK -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">✍️</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v4)">Fill in the Blank</div><div class="act-name">Ordinal Arithmetic &amp; Induction</div></div>
+    </div>
+    <div id="fib-m4">
+      <div class="fib-item"><div class="fib-text">1. 1 + ω = <input class="fib-in" data-ans="ω" placeholder="?" style="width:70px">, but ω + 1 = <input class="fib-in" data-ans="ω+1" placeholder="?" style="width:80px">. This shows ordinal addition is NOT <input class="fib-in" data-ans="commutative" placeholder="?">.</div></div>
+      <div class="fib-item"><div class="fib-text">2. ω is a <input class="fib-in" data-ans="limit" placeholder="?"> ordinal because it has no immediate <input class="fib-in" data-ans="predecessor" placeholder="?>.</div></div>
+      <div class="fib-item"><div class="fib-text">3. In Von Neumann's construction, the ordinal 4 = <input class="fib-in" data-ans="{0,1,2,3}" placeholder="?" style="width:130px">.</div></div>
+      <div class="fib-item"><div class="fib-text">4. Transfinite induction has THREE cases: base, <input class="fib-in" data-ans="successor" placeholder="?"> step, and <input class="fib-in" data-ans="limit" placeholder="?"> step.</div></div>
+      <div class="fib-item"><div class="fib-text">5. A set is well-ordered if every non-empty <input class="fib-in" data-ans="subset" placeholder="?"> has a <input class="fib-in" data-ans="least" placeholder="?"> element.</div></div>
+    </div>
+    <button class="btn-check" onclick="checkFib('fib-m4')">Check Answers</button>
+    <button class="btn-reset" onclick="resetFib('fib-m4')">Reset</button>
+    <div class="match-feedback" id="fib-m4-fb"></div>
+  </div>
+
+  <!-- A4.3 WALKTHROUGH: Transfinite Induction -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">👣</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v4)">Step-by-Step Walkthrough</div><div class="act-name">Transfinite Induction — A Complete Proof</div></div>
+    </div>
+    <div class="wt-wrap" id="wt-m4">
+      <div class="wt-step active" data-step="0"><div class="wt-num">Step 1 of 5</div><div class="wt-title">The Claim</div><div class="wt-body">We prove by transfinite induction that every ordinal α satisfies P(α): <strong>"α is a transitive set"</strong>, meaning if β ∈ γ ∈ α then β ∈ α.</div><div class="wt-math">Transitive set: if something belongs to an element of α,
+then it belongs to α directly.
+
+Examples:
+  α = {0,1,2} = 3.  Is 0 ∈ 1 ∈ 3? → Is 0 ∈ 3? YES ✓
+  We need to prove this for ALL ordinals, including ω, ω+1, etc.</div></div>
+      <div class="wt-step" data-step="1"><div class="wt-num">Step 2 of 5</div><div class="wt-title">Case 1 — Base: P(0)</div><div class="wt-body">We prove P(0): 0 = ∅ is a transitive set.</div><div class="wt-math">0 = ∅ has NO elements.
+The condition "β ∈ γ ∈ ∅" is vacuously false
+(nothing belongs to ∅).
+
+So the implication β ∈ γ ∈ 0 → β ∈ 0
+is vacuously TRUE. ✅
+
+P(0) holds.</div></div>
+      <div class="wt-step" data-step="2"><div class="wt-num">Step 3 of 5</div><div class="wt-title">Case 2 — Successor: P(β) → P(β+1)</div><div class="wt-body">Assume P(β): β is transitive. We prove P(β+1): β+1 = β∪{β} is transitive.</div><div class="wt-math">Let γ ∈ δ ∈ β+1 = β∪{β}.
+
+Case A: δ = β
+  Then γ ∈ β ⊆ β+1. ✓
+
+Case B: δ ∈ β
+  Then γ ∈ δ ∈ β.
+  By P(β), β is transitive → γ ∈ β ⊆ β+1. ✓
+
+Either way, γ ∈ β+1.
+So β+1 is transitive. P(β+1) holds. ✅</div></div>
+      <div class="wt-step" data-step="3"><div class="wt-num">Step 4 of 5</div><div class="wt-title">Case 3 — Limit: P(λ) for limit ordinal λ</div><div class="wt-body">Assume P(β) for all β &lt; λ (every β &lt; λ is transitive). Prove P(λ): λ is transitive. Note λ = ∪{β | β &lt; λ}.</div><div class="wt-math">Let γ ∈ δ ∈ λ.
+
+Since δ ∈ λ = ∪{β | β < λ},
+∃ β₀ < λ such that δ ∈ β₀.
+
+By the inductive hypothesis, P(β₀) holds:
+  β₀ is transitive.
+
+γ ∈ δ ∈ β₀ and β₀ transitive → γ ∈ β₀.
+β₀ ⊆ λ, so γ ∈ λ. ✓
+
+P(λ) holds. ✅</div></div>
+      <div class="wt-step" data-step="4"><div class="wt-num">Step 5 of 5</div><div class="wt-title">Conclusion</div><div class="wt-body">All three cases are verified. By transfinite induction, every ordinal is a transitive set.</div><div class="wt-math">By transfinite induction:
+  Base case ✓
+  Successor case ✓
+  Limit case ✓
+
+∴ Every ordinal α is a transitive set. □
+
+Key takeaway: The LIMIT CASE is what makes transfinite
+induction more powerful than ordinary induction — it
+handles the "jumps" at limit ordinals like ω, ω·2, ε₀.
+Without it, we could only prove P(n) for finite n.</div></div>
+    </div>
+    <div class="wt-nav">
+      <button class="wt-btn" id="wt-m4-prev" onclick="wtPrev('wt-m4')" disabled>← Prev</button>
+      <button class="wt-btn primary" id="wt-m4-next" onclick="wtNext('wt-m4',5)">Next →</button>
+      <div class="wt-dots" id="wt-m4-dots"></div>
+    </div>
+  </div>
+
+  <!-- A4.4 TRUE/FALSE -->
+  <div class="act-card" style="--ac:var(--v6)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v6s);color:var(--v6)">⚡</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v6)">True / False</div><div class="act-name">Quick-Fire: Ordinals &amp; Induction</div></div>
+    </div>
+    <div id="tf-m4">
+      <div class="tf-item"><div class="tf-stmt">1. ω + 1 = 1 + ω (ordinal addition is commutative).</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','FALSE. 1+ω=ω but ω+1>ω. Ordinal addition is NOT commutative. The position matters: "before" ω vs "after" ω give different ordinals.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','FALSE. 1+ω=ω but ω+1>ω. Ordinal addition is NOT commutative. The position matters: "before" ω vs "after" ω give different ordinals.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">2. Every ordinal greater than 0 is either a successor ordinal or a limit ordinal.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','TRUE. Every ordinal is exactly one of: 0, a successor ordinal (α=β+1 for some β), or a limit ordinal (no predecessor). This trichotomy is provable by transfinite induction.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','TRUE. Every ordinal is exactly one of: 0, a successor ordinal (α=β+1 for some β), or a limit ordinal (no predecessor). This trichotomy is provable by transfinite induction.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">3. The ordinals ω, ω+1, and ω² all have the same cardinality ℵ₀.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'true','true','TRUE. All three are countably infinite sets — their cardinality is ℵ₀. Ordinals measure ORDER TYPE, not size. Many different ordinals share the same cardinal.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'true','true','TRUE. All three are countably infinite sets — their cardinality is ℵ₀. Ordinals measure ORDER TYPE, not size. Many different ordinals share the same cardinal.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">4. Ordinary mathematical induction can prove P(ω) if P(n) holds for all finite n.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','FALSE. Ordinary induction proves P(0) and P(n)→P(n+1), reaching every finite n. But it never crosses to ω — ω is a limit ordinal with no predecessor. The LIMIT STEP of transfinite induction is needed.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','FALSE. Ordinary induction proves P(0) and P(n)→P(n+1), reaching every finite n. But it never crosses to ω — ω is a limit ordinal with no predecessor. The LIMIT STEP of transfinite induction is needed.')">FALSE</button></div><div class="tf-fb"></div></div>
+      <div class="tf-item"><div class="tf-stmt">5. ℤ (integers) with the usual ≤ ordering is well-ordered.</div><div class="tf-btns"><button class="tf-btn" data-v="true" onclick="tfAnswer(this,'false','false','FALSE. Consider the set {...,-3,-2,-1} ⊆ ℤ. This subset has no least element — you can always go lower. A well-ordered set requires every non-empty subset to have a minimum.')">TRUE</button><button class="tf-btn" data-v="false" onclick="tfAnswer(this,'false','false','FALSE. Consider the set {...,-3,-2,-1} ⊆ ℤ. This subset has no least element — you can always go lower. A well-ordered set requires every non-empty subset to have a minimum.')">FALSE</button></div><div class="tf-fb"></div></div>
+    </div>
+  </div>
+
+  <!-- A4.5 SORT: Ordinal Types -->
+  <div class="act-card" style="--ac:var(--v4)">
+    <div class="act-header">
+      <div class="act-icon" style="background:var(--v4s);color:var(--v4)">🗂️</div>
+      <div class="act-meta"><div class="act-type" style="color:var(--v4)">Sorting Activity</div><div class="act-name">Classify Each Ordinal</div></div>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:.8rem">Sort each ordinal into: Zero, Successor Ordinal, or Limit Ordinal.</p>
+    <div class="sort-pool" id="sort-m4-pool">
+      <div class="sort-item" draggable="true" data-cat="zero">0</div>
+      <div class="sort-item" draggable="true" data-cat="successor">5</div>
+      <div class="sort-item" draggable="true" data-cat="limit">ω</div>
+      <div class="sort-item" draggable="true" data-cat="successor">ω+1</div>
+      <div class="sort-item" draggable="true" data-cat="limit">ω·2</div>
+      <div class="sort-item" draggable="true" data-cat="successor">ω·2+3</div>
+      <div class="sort-item" draggable="true" data-cat="limit">ω²</div>
+      <div class="sort-item" draggable="true" data-cat="limit">ε₀</div>
+    </div>
+    <div class="sort-zones" id="sort-m4-zones">
+      <div class="sort-zone" data-cat="zero"><div class="sort-zone-title" style="color:var(--muted)">Zero (0 = ∅)</div></div>
+      <div class="sort-zone" data-cat="successor"><div class="sort-zone-title" style="color:var(--v3)">Successor Ordinal</div></div>
+      <div class="sort-zone" data-cat="limit"><div class="sort-zone-title" style="color:var(--v2)">Limit Ordinal</div></div>
+    </div>
+    <button class="btn-check" onclick="checkSort('sort-m4')">Check</button>
+    <button class="btn-reset" onclick="resetSort('sort-m4')">Reset</button>
+    <div class="match-feedback" id="sort-m4-fb"></div>
+  </div>
+</div>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border);">
+  <p>Logic & Set Theory · Interactive Activities Hub · All Modules</p>
+</footer>
+
+<script>
+// ── SCROLL TO MODULE ──
+function scrollTo(id,pill){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.mod-pill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+}
+
+// ── DRAG AND DROP MATCH ──
+let dragItem=null;
+function initDrag(){
+  document.querySelectorAll('.match-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{dragItem=item;setTimeout(()=>item.classList.add('dragging'),0);});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});
+  });
+  document.querySelectorAll('.match-slot').forEach(slot=>{
+    slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('drag-over');});
+    slot.addEventListener('dragleave',()=>slot.classList.remove('drag-over'));
+    slot.addEventListener('drop',e=>{
+      e.preventDefault();slot.classList.remove('drag-over');
+      if(!dragItem)return;
+      // Remove from previous slot if already placed
+      document.querySelectorAll('.match-slot').forEach(s=>{if(s.dataset.placed===dragItem.dataset.id){s.dataset.placed='';s.querySelector('.placed-label')?.remove();}});
+      slot.dataset.placed=dragItem.dataset.id;
+      let pl=slot.querySelector('.placed-label');
+      if(!pl){pl=document.createElement('span');pl.className='placed-label';pl.style.cssText='background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);border-radius:.3rem;padding:.15rem .5rem;font-size:.78rem;font-family:"Space Mono",monospace;margin-left:.4rem;color:#a78bfa;';}
+      pl.textContent=dragItem.textContent;
+      slot.appendChild(pl);
+      slot.classList.add('filled');
+      dragItem.style.opacity='.4';
+    });
+  });
+}
+function checkMatch(id){
+  const slots=document.querySelectorAll(`#${id}-slots .match-slot`);
+  let correct=0;
+  slots.forEach(slot=>{
+    slot.classList.remove('correct','wrong');
+    if(slot.dataset.placed){
+      if(slot.dataset.placed===slot.dataset.answer){slot.classList.add('correct');correct++;}
+      else slot.classList.add('wrong');
+    }
+  });
+  const total=slots.length;
+  const fb=document.getElementById(`${id}-fb`);
+  const scoreEl=document.getElementById(`${id}-score`);
+  if(scoreEl)scoreEl.textContent=`${correct} / ${total}`;
+  fb.className='match-feedback show '+(correct===total?'ok':correct>=total/2?'partial':'bad');
+  fb.textContent=correct===total?`🎉 Perfect! All ${total} matches correct!`:`${correct}/${total} correct. Wrong slots are highlighted in red — try again!`;
+}
+function resetMatch(id){
+  document.querySelectorAll(`#${id}-slots .match-slot`).forEach(s=>{s.classList.remove('correct','wrong','filled');s.dataset.placed='';s.querySelector('.placed-label')?.remove();});
+  document.querySelectorAll(`#${id}-terms .match-item`).forEach(i=>i.style.opacity='1');
+  const fb=document.getElementById(`${id}-fb`);fb.className='match-feedback';
+  const scoreEl=document.getElementById(`${id}-score`);if(scoreEl)scoreEl.textContent=`0 / 5`;
+}
+initDrag();
+
+// ── FILL IN THE BLANK ──
+function checkFib(containerId){
+  const inputs=document.querySelectorAll(`#${containerId} .fib-in`);
+  let correct=0,total=0;
+  inputs.forEach(inp=>{
+    total++;
+    const ans=inp.dataset.ans.toLowerCase().replace(/\s/g,'');
+    const val=inp.value.toLowerCase().replace(/\s/g,'');
+    inp.classList.remove('correct','wrong');
+    if(val===ans){inp.classList.add('correct');correct++;}
+    else if(val)inp.classList.add('wrong');
+  });
+  const fb=document.getElementById(`${containerId}-fb`);
+  fb.className='match-feedback show '+(correct===total?'ok':correct>=total*0.6?'partial':'bad');
+  fb.textContent=correct===total?`✅ All correct!`:`${correct}/${total} correct. Red fields are wrong — check your answers.`;
+}
+function resetFib(containerId){
+  document.querySelectorAll(`#${containerId} .fib-in`).forEach(i=>{i.value='';i.classList.remove('correct','wrong');});
+  const fb=document.getElementById(`${containerId}-fb`);fb.className='match-feedback';
+}
+
+// ── WALKTHROUGH ──
+const wtState={};
+function initWt(id,total){
+  wtState[id]={cur:0,total};
+  const dotsEl=document.getElementById(`${id}-dots`);
+  if(dotsEl){dotsEl.innerHTML='';for(let i=0;i<total;i++){const d=document.createElement('div');d.className='wt-dot'+(i===0?' active':'');dotsEl.appendChild(d);}}
+}
+function wtNext(id,total){
+  if(!wtState[id])wtState[id]={cur:0,total};
+  const s=wtState[id];
+  if(s.cur<s.total-1){s.cur++;updateWt(id);}
+}
+function wtPrev(id){
+  if(!wtState[id])return;
+  const s=wtState[id];
+  if(s.cur>0){s.cur--;updateWt(id);}
+}
+function updateWt(id){
+  const s=wtState[id];
+  document.querySelectorAll(`#${id} .wt-step`).forEach((el,i)=>el.classList.toggle('active',i===s.cur));
+  const prev=document.getElementById(`${id}-prev`);const next=document.getElementById(`${id}-next`);
+  if(prev)prev.disabled=s.cur===0;
+  if(next){next.disabled=s.cur===s.total-1;next.textContent=s.cur===s.total-1?'Done ✓':'Next →';}
+  document.querySelectorAll(`#${id}-dots .wt-dot`).forEach((d,i)=>d.classList.toggle('active',i===s.cur));
+}
+// Initialize all walkthroughs
+['wt-m1','wt-m2','wt-m3','wt-m4'].forEach(id=>{
+  const steps=document.querySelectorAll(`#${id} .wt-step`).length;
+  initWt(id,steps);
+});
+
+// ── TRUE / FALSE ──
+function tfAnswer(btn,correct,val,explanation){
+  const item=btn.closest('.tf-item');
+  if(item.dataset.answered)return;
+  item.dataset.answered='1';
+  const isCorrect=(btn.dataset.v===correct);
+  btn.classList.add(btn.dataset.v==='true'?'selected-t':'selected-f');
+  // show correct answer highlighted
+  item.querySelectorAll('.tf-btn').forEach(b=>{
+    if(b.dataset.v===correct)b.classList.add(correct==='true'?'correct-t':'correct-f');
+  });
+  const fb=item.querySelector('.tf-fb');
+  fb.className='tf-fb show '+(isCorrect?'ok':'bad');
+  fb.textContent=(isCorrect?'✅ Correct! ':'✗ Incorrect. ')+explanation;
+}
+
+// ── SORT (DRAG TO ZONES) ──
+let sortDrag=null;
+function initSort(){
+  document.querySelectorAll('.sort-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{sortDrag=item;setTimeout(()=>item.classList.add('dragging'),0);});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');sortDrag=null;});
+  });
+  document.querySelectorAll('.sort-zone').forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop',e=>{
+      e.preventDefault();zone.classList.remove('drag-over');
+      if(!sortDrag)return;
+      zone.appendChild(sortDrag);
+      sortDrag.classList.add('placed');
+    });
+  });
+  // Return to pool on double-click
+  document.querySelectorAll('.sort-zone').forEach(zone=>{
+    zone.addEventListener('dblclick',e=>{
+      const item=e.target.closest('.sort-item');
+      if(item){const pool=document.getElementById(zone.id?.replace('-zones','-pool')||zone.closest('.act-card').querySelector('.sort-pool').id);pool?.appendChild(item);item.classList.remove('placed');}
+    });
+  });
+}
+function checkSort(id){
+  const zones=document.querySelectorAll(`#${id}-zones .sort-zone`);
+  let correct=0,total=0;
+  zones.forEach(zone=>{
+    zone.classList.remove('correct-zone','wrong-zone');
+    const items=[...zone.querySelectorAll('.sort-item')];
+    let zoneCorrect=true;
+    items.forEach(item=>{total++;if(item.dataset.cat===zone.dataset.cat)correct++;else zoneCorrect=false;});
+    if(items.length>0){zone.classList.add(zoneCorrect?'correct-zone':'wrong-zone');}
+  });
+  // Count items still in pool
+  const pool=document.getElementById(`${id}-pool`);
+  const unplaced=pool?pool.querySelectorAll('.sort-item').length:0;
+  const fb=document.getElementById(`${id}-fb`);
+  if(unplaced>0){fb.className='match-feedback show partial';fb.textContent=`⚠️ ${unplaced} item(s) not sorted yet. Drag them into a zone!`;return;}
+  fb.className='match-feedback show '+(correct===total?'ok':correct>=total*0.6?'partial':'bad');
+  fb.textContent=correct===total?`🎉 Perfect sorting! All ${total} items in the right category.`:`${correct}/${total} correct. Red zones have wrong items — review and retry!`;
+}
+function resetSort(id){
+  const pool=document.getElementById(`${id}-pool`);
+  if(!pool)return;
+  document.querySelectorAll(`#${id}-zones .sort-zone`).forEach(zone=>{
+    zone.classList.remove('correct-zone','wrong-zone');
+    [...zone.querySelectorAll('.sort-item')].forEach(item=>{item.classList.remove('placed');pool.appendChild(item);});
+  });
+  const fb=document.getElementById(`${id}-fb`);fb.className='match-feedback';
+}
+initSort();
+
+// ── HIGHLIGHT ACTIVE MODULE ON SCROLL ──
+window.addEventListener('scroll',()=>{
+  const mods=['mod1','mod2','mod3','mod4'];
+  const pills=document.querySelectorAll('.mod-pill');
+  mods.forEach((id,i)=>{
+    const el=document.getElementById(id);if(!el)return;
+    const r=el.getBoundingClientRect();
+    if(r.top<=200&&r.bottom>200)pills[i]?.classList.add('active');
+    else pills[i]?.classList.remove('active');
+  });
+});
+</script>
+</body>
+</html>
