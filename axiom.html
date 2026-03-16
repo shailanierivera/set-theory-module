@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axiom of Choice & Number Systems · Logic and Set Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=IBM+Plex+Mono:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--card:#1c2128;--card2:#21262d;
+  --ink:#e6edf3;--muted:#8b949e;--border:#30363d;
+  --amber:#f0a500;--rose:#e05c7a;--cyan:#39d0d8;--lime:#56d364;--violet:#a78bfa;
+  --amber-s:rgba(240,165,0,.12);--rose-s:rgba(224,92,122,.12);
+  --cyan-s:rgba(57,208,216,.12);--lime-s:rgba(86,211,100,.12);--violet-s:rgba(167,139,250,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px;}
+
+/* STARS BG */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.stars::before,.stars::after{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1.5px 1.5px at 40% 20%,rgba(255,255,255,.35),transparent),radial-gradient(1px 1px at 80% 50%,rgba(255,255,255,.25),transparent),radial-gradient(1px 1px at 10% 80%,rgba(255,255,255,.3),transparent),radial-gradient(1.5px 1.5px at 70% 10%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 50% 90%,rgba(255,255,255,.2),transparent);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.8rem 2.5rem;background:rgba(13,17,23,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:600;color:var(--amber);letter-spacing:.02em;}
+.nav-links{display:flex;gap:1.8rem;}
+.nav-links a{color:var(--muted);font-size:.84rem;text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-glow{height:1px;background:linear-gradient(90deg,transparent,var(--amber),var(--rose),transparent);width:0%;transition:width .3s;position:absolute;bottom:0;left:0;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;z-index:1;}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+.ho1{width:500px;height:500px;background:radial-gradient(circle,rgba(240,165,0,.12),transparent 70%);top:-100px;left:-100px;}
+.ho2{width:400px;height:400px;background:radial-gradient(circle,rgba(224,92,122,.1),transparent 70%);bottom:-80px;right:-80px;}
+.ho3{width:300px;height:300px;background:radial-gradient(circle,rgba(57,208,216,.08),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:1.2rem;animation:up .8s ease both;background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.25);padding:.35rem 1rem;border-radius:2rem;}
+#hero h1{font-family:'Fraunces',serif;font-size:clamp(2.8rem,7.5vw,5.8rem);font-weight:900;text-align:center;line-height:1.05;animation:up .8s .1s ease both;}
+#hero h1 .t1{color:var(--amber);}
+#hero h1 .t2{color:var(--rose);font-style:italic;}
+#hero h1 .t3{color:var(--cyan);}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:540px;text-align:center;margin-top:1.1rem;line-height:1.8;font-weight:300;animation:up .8s .2s ease both;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1.6rem;animation:up .8s .3s ease both;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:.66rem;padding:.28rem .75rem;border-radius:2rem;border:1px solid var(--border);color:var(--muted);background:var(--surface);}
+.hero-btns{display:flex;gap:.8rem;margin-top:2rem;animation:up .8s .4s ease both;}
+.btn-a{padding:.68rem 1.7rem;border-radius:.4rem;background:var(--amber);color:#0d1117;font-weight:700;border:none;cursor:pointer;font-size:.9rem;text-decoration:none;transition:all .2s;}
+.btn-a:hover{background:#f5b800;transform:translateY(-2px);box-shadow:0 6px 24px rgba(240,165,0,.3);}
+.btn-b{padding:.68rem 1.7rem;border-radius:.4rem;border:1px solid var(--border);background:transparent;color:var(--ink);font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-b:hover{border-color:var(--cyan);color:var(--cyan);}
+@keyframes up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* NUMBER LINE HERO ELEMENT */
+.hero-numline{display:flex;align-items:center;gap:0;margin-top:2.5rem;animation:up .8s .5s ease both;overflow:hidden;max-width:580px;}
+.nl-set{font-family:'IBM Plex Mono',monospace;font-size:.7rem;padding:.3rem .6rem;border-radius:.3rem;border:1px solid;white-space:nowrap;}
+.nl-arr{font-size:.9rem;color:var(--muted);padding:0 .2rem;}
+
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:2rem 1.5rem 6rem;position:relative;z-index:1;}
+section{margin-bottom:5rem;}
+.sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:.4rem;}
+.sec-title{font-family:'Fraunces',serif;font-size:2.1rem;font-weight:700;margin-bottom:.5rem;}
+.sec-desc{color:var(--muted);line-height:1.75;max-width:660px;margin-bottom:2rem;font-size:.95rem;}
+
+/* TOPIC CARDS */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem;}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:1.5rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.topic-card:hover{transform:translateY(-3px);border-color:var(--tc,var(--amber));box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.tc-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:var(--tc,var(--amber));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.topic-card:hover .tc-stripe{transform:scaleX(1);}
+.card-num{font-family:'IBM Plex Mono',monospace;font-size:.67rem;color:var(--tc,var(--amber));margin-bottom:.6rem;}
+.card-title{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;margin-bottom:.4rem;}
+.card-desc{font-size:.84rem;color:var(--muted);line-height:1.6;}
+.card-chip{display:inline-block;margin-top:.8rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.18rem .5rem;border-radius:1rem;background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.card-arr{position:absolute;right:1rem;bottom:1rem;color:var(--muted);font-size:.95rem;transition:all .2s;}
+.topic-card:hover .card-arr{color:var(--tc,var(--amber));transform:translate(2px,-2px);}
+
+/* LESSON PANEL */
+.lesson-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;margin-top:1rem;animation:panelIn .3s ease;}
+.lesson-panel.open{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* TABS */
+.tabs{display:flex;gap:.35rem;margin-bottom:1.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:.8rem;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:.7rem;padding:.38rem .88rem;border-radius:.35rem;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.tab.active,.tab:hover{background:var(--amber);color:#0d1117;border-color:var(--amber);font-weight:600;}
+
+/* CONTENT */
+.ca{line-height:1.8;}
+.ca h3{font-family:'Fraunces',serif;font-size:1.55rem;font-weight:700;margin:1.5rem 0 .7rem;color:var(--ink);}
+.ca h4{font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:600;margin:1.4rem 0 .5rem;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;}
+.ca p{color:#c9d1d9;margin-bottom:.9rem;font-size:.94rem;}
+.ca ul,.ca ol{padding-left:1.4rem;margin-bottom:.9rem;}
+.ca li{color:#c9d1d9;margin-bottom:.42rem;line-height:1.7;font-size:.94rem;}
+.ca strong{color:var(--ink);}
+
+/* BOXES */
+.def-box{background:var(--amber-s);border-left:3px solid var(--amber);border-radius:0 .55rem .55rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.def-box .lbl{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.def-box p{color:var(--ink);margin:0;font-size:.92rem;}
+.prop-box{background:var(--cyan-s);border-left:3px solid var(--cyan);border-radius:0 .55rem .55rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.prop-box .lbl{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.prop-box p,.prop-box ul{color:#c9d1d9;margin:0;font-size:.92rem;}
+.prop-box ul{padding-left:1.2rem;}
+.prop-box li{margin-bottom:.32rem;}
+.ex-box{background:var(--lime-s);border:1px solid rgba(86,211,100,.2);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.ex-box .lbl{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--lime);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.ex-box p,.ex-box ul,.ex-box ol{color:#c9d1d9;margin-bottom:.45rem;font-size:.92rem;}
+.ex-box li{margin-bottom:.32rem;}
+.theorem{background:var(--violet-s);border:1px solid rgba(167,139,250,.2);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.theorem .lbl{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--violet);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.theorem p,.theorem ul{color:#c9d1d9;font-size:.92rem;}
+.warn-box{background:var(--rose-s);border:1px solid rgba(224,92,122,.2);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.warn-box .lbl{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--rose);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.warn-box p{color:#c9d1d9;margin:0;font-size:.92rem;}
+.plain-note{background:var(--surface);border-left:3px solid var(--border);border-radius:0 .5rem .5rem 0;padding:.9rem 1.2rem;margin:.8rem 0;font-size:.92rem;color:var(--muted);line-height:1.75;}
+.plain-note strong{color:var(--ink);}
+
+/* MATH */
+.math{font-family:'IBM Plex Mono',monospace;background:var(--surface);border:1px solid var(--border);border-radius:.3rem;padding:.1rem .42rem;font-size:.85rem;color:var(--rose);}
+.math-block{font-family:'IBM Plex Mono',monospace;background:#010409;border:1px solid var(--border);border-radius:.6rem;padding:1.1rem 1.4rem;margin:.8rem 0;font-size:.84rem;color:#e6b45a;overflow-x:auto;line-height:1.95;white-space:pre;}
+
+/* TABLE */
+.dtable{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.86rem;}
+.dtable th{background:rgba(240,165,0,.15);color:var(--amber);font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;padding:.58rem .88rem;text-align:left;border:1px solid var(--border);}
+.dtable td{padding:.5rem .88rem;border:1px solid var(--border);color:#c9d1d9;vertical-align:top;}
+.dtable tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.ck{color:var(--lime);font-weight:700;}
+.cx{color:var(--rose);font-weight:700;}
+
+/* STEP CARDS */
+.step-flow{display:flex;flex-direction:column;gap:.8rem;margin:1rem 0;}
+.step-card{background:var(--card2);border:1px solid var(--border);border-radius:.65rem;padding:1.1rem 1.3rem;display:flex;gap:1rem;align-items:flex-start;}
+.step-num{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.8rem;font-weight:600;flex-shrink:0;color:#0d1117;}
+.step-body{flex:1;}
+.step-title{font-weight:700;font-size:.93rem;margin-bottom:.25rem;color:var(--ink);}
+.step-desc{font-size:.87rem;color:var(--muted);line-height:1.65;}
+.step-math{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--rose);margin-top:.3rem;}
+
+/* NUMBER LINE VIZ */
+.numline-viz{background:var(--card2);border:1px solid var(--border);border-radius:.65rem;padding:1.3rem;margin:1rem 0;overflow-x:auto;}
+.nl-track{display:flex;align-items:center;gap:0;position:relative;min-width:400px;}
+.nl-tick{display:flex;flex-direction:column;align-items:center;min-width:40px;}
+.nl-mark{width:2px;height:12px;background:var(--muted);}
+.nl-mark.big{height:18px;background:var(--amber);}
+.nl-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;margin-top:.2rem;color:var(--muted);}
+.nl-label.hi{color:var(--amber);}
+.nl-line{flex:1;height:2px;background:var(--border);}
+.nl-dot{width:10px;height:10px;border-radius:50%;border:2px solid;flex-shrink:0;}
+
+/* CONSTRUCTION VIZ */
+.construct-layers{display:flex;flex-direction:column;gap:.6rem;margin:1rem 0;}
+.cl{border-radius:.55rem;padding:.9rem 1.2rem;display:flex;align-items:center;gap:1rem;border:1px solid;}
+.cl-icon{font-size:1.3rem;flex-shrink:0;}
+.cl-title{font-weight:700;font-size:.92rem;font-family:'IBM Plex Mono',monospace;}
+.cl-desc{font-size:.83rem;color:var(--muted);line-height:1.55;margin-top:.18rem;}
+.cl-arrow{color:var(--muted);font-size:.85rem;text-align:center;padding:.2rem;}
+
+/* INTERACTIVE SIM */
+.sim{background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:1.4rem;margin:1.3rem 0;}
+.sim h4{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;margin-bottom:.7rem;}
+.s-in{background:var(--card);border:1px solid var(--border);border-radius:.4rem;padding:.42rem .7rem;color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:.82rem;width:130px;}
+.s-btn{background:var(--amber);border:none;border-radius:.4rem;padding:.42rem .95rem;color:#0d1117;cursor:pointer;font-size:.82rem;font-weight:700;transition:opacity .2s;}
+.s-btn:hover{opacity:.85;}
+.s-out{font-family:'IBM Plex Mono',monospace;font-size:.82rem;background:var(--card);border:1px solid var(--border);border-radius:.45rem;padding:.75rem 1rem;margin-top:.7rem;color:var(--cyan);min-height:2rem;line-height:1.85;display:none;}
+
+/* QUIZ */
+.qwrap{background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;margin:2rem 0;}
+.qwrap h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:.9rem;color:var(--amber);}
+.qi{margin-bottom:1.75rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.qi:last-of-type{border-bottom:none;}
+.qt{font-size:.92rem;color:var(--ink);margin-bottom:.72rem;line-height:1.65;}
+.qopts{display:flex;flex-direction:column;gap:.38rem;}
+.qo{background:var(--surface);border:1px solid var(--border);border-radius:.45rem;padding:.55rem .9rem;cursor:pointer;font-size:.87rem;transition:all .2s;display:flex;align-items:center;gap:.6rem;color:#c9d1d9;}
+.qo:hover{border-color:var(--amber);background:var(--amber-s);}
+.qo.correct{background:var(--lime-s);border-color:var(--lime);color:var(--lime);}
+.qo.wrong{background:var(--rose-s);border-color:var(--rose);color:var(--rose);}
+.ol{width:1.35rem;height:1.35rem;border-radius:50%;background:var(--border);font-family:'IBM Plex Mono',monospace;font-size:.67rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qfb{font-size:.82rem;margin-top:.42rem;padding:.42rem .8rem;border-radius:.4rem;display:none;line-height:1.6;}
+.qfb.show{display:block;}
+.qfb.ok{background:var(--lime-s);color:var(--lime);}
+.qfb.bad{background:var(--rose-s);color:var(--rose);}
+.pbar{height:4px;background:var(--border);border-radius:2px;margin:1rem 0;}
+.pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--amber),var(--lime));transition:width .5s;}
+.qscore{font-family:'IBM Plex Mono',monospace;font-size:.88rem;padding:.9rem;background:var(--amber-s);border-radius:.5rem;text-align:center;display:none;margin-top:1rem;border:1px solid rgba(240,165,0,.25);}
+
+/* FLIP CARDS */
+.fg{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0;}
+.fc{width:172px;height:98px;perspective:900px;cursor:pointer;}
+.fci{width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;position:relative;}
+.fc.fl .fci{transform:rotateY(180deg);}
+.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;border-radius:.5rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:.55rem;font-size:.76rem;border:1px solid var(--border);}
+.ff{background:var(--surface);color:var(--amber);font-family:'IBM Plex Mono',monospace;font-size:.72rem;}
+.fb{background:var(--amber-s);color:#c9d1d9;transform:rotateY(180deg);line-height:1.5;}
+
+/* PROGRESS DOTS */
+.pdots{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.42rem;z-index:50;}
+.pd{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .3s;}
+.pd.active{background:var(--amber);transform:scale(1.4);}
+
+/* OUTCOMES */
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:.9rem;}
+.oc{background:var(--card);border:1px solid var(--border);border-radius:.65rem;padding:1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.oi{width:2rem;height:2rem;border-radius:.4rem;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ot{font-size:.86rem;color:#c9d1d9;line-height:1.65;}
+
+@media(max-width:640px){.pdots,.nav-links{display:none;}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<nav>
+  <div class="nav-logo">⚛ Foundations of Mathematics</div>
+  <div class="nav-links">
+    <a href="#topics">Topics</a>
+    <a href="#engage">Engage</a>
+    <a href="#explore">Explore</a>
+    <a href="#assess">Quiz</a>
+    <a href="#outcomes">Outcomes</a>
+  </div>
+  <div class="nav-glow" id="navGlow"></div>
+</nav>
+
+<div class="pdots" id="pdots">
+  <div class="pd active"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-orb ho1"></div>
+  <div class="hero-orb ho2"></div>
+  <div class="hero-orb ho3"></div>
+  <div class="hero-eyebrow">Logic & Set Theory · Week Module</div>
+  <h1><span class="t1">Axiom</span> of <span class="t2">Choice</span><br>&amp; <span class="t3">Number Systems</span></h1>
+  <p class="hero-sub">From the mysterious Axiom of Choice and the Continuum Hypothesis to the step-by-step construction of ℤ, ℚ, and ℝ — the foundations of all mathematics.</p>
+  <div class="hero-chips">
+    <span class="chip">5Es Framework</span>
+    <span class="chip">Interactive Simulations</span>
+    <span class="chip">PST Module</span>
+    <span class="chip">Self-Assessment</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#engage" class="btn-a">Start Learning →</a>
+    <a href="#topics" class="btn-b">Browse Topics</a>
+  </div>
+  <div class="hero-numline">
+    <span class="nl-set" style="background:var(--rose-s);border-color:rgba(224,92,122,.4);color:var(--rose)">ℕ</span>
+    <span class="nl-arr">⊂</span>
+    <span class="nl-set" style="background:var(--amber-s);border-color:rgba(240,165,0,.4);color:var(--amber)">ℤ</span>
+    <span class="nl-arr">⊂</span>
+    <span class="nl-set" style="background:var(--cyan-s);border-color:rgba(57,208,216,.4);color:var(--cyan)">ℚ</span>
+    <span class="nl-arr">⊂</span>
+    <span class="nl-set" style="background:var(--lime-s);border-color:rgba(86,211,100,.4);color:var(--lime)">ℝ</span>
+    <span class="nl-arr">⊂</span>
+    <span class="nl-set" style="background:var(--violet-s);border-color:rgba(167,139,250,.4);color:var(--violet)">ℂ</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ENGAGE -->
+<section id="engage">
+  <div class="sec-label">5Es · Engage</div>
+  <div class="sec-title">Why Do We Need Axioms?</div>
+  <p class="sec-desc">Mathematics builds everything from a small set of assumed truths — axioms. But some axioms are surprisingly controversial. Let's find out why.</p>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;">
+    <h3 style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--amber);margin-bottom:1.1rem">🤔 Think About This First</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div style="background:var(--amber-s);border:1px solid rgba(240,165,0,.2);border-radius:.7rem;padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">🧦</div>
+        <strong style="font-size:.9rem;">Infinite Pairs of Socks</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">You have infinitely many drawers each with 2 socks. Can you always pick one sock from each drawer? What if the drawers are unlabeled?</p>
+      </div>
+      <div style="background:var(--rose-s);border:1px solid rgba(224,92,122,.2);border-radius:.7rem;padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">📏</div>
+        <strong style="font-size:.9rem;">Is There a "Missing" Infinity?</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">We know ℵ₀ &lt; 𝔠. But is there a set with a size strictly between these two? Can we ever prove or disprove this?</p>
+      </div>
+      <div style="background:var(--cyan-s);border:1px solid rgba(57,208,216,.2);border-radius:.7rem;padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">🔢</div>
+        <strong style="font-size:.9rem;">Where Do Numbers Come From?</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">We use ℤ, ℚ, and ℝ every day — but can they be built purely from sets? Starting from ℕ, how do we construct negative numbers? Fractions? Irrationals?</p>
+      </div>
+    </div>
+    <div style="background:rgba(240,165,0,.05);border:1px dashed rgba(240,165,0,.25);border-radius:.6rem;padding:1rem;">
+      <strong style="color:var(--amber);font-size:.88rem">💬 Think-Pair-Share</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.4rem;line-height:1.7">With a partner: (1) Can you always make an infinite sequence of choices — one from each of infinitely many non-empty sets? (2) If you can't prove something is true or false within a system, does that mean the system is broken? Discuss before moving on.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section id="topics">
+  <div class="sec-label">Course Map</div>
+  <div class="sec-title">Three Foundational Topics</div>
+  <p class="sec-desc">The Axiom of Choice, the Continuum Hypothesis, and the construction of number systems are pillars of mathematical foundations. Click a card to open the lesson.</p>
+  <div class="topic-grid">
+    <div class="topic-card" style="--tc:var(--amber)" onclick="openLesson('L1')">
+      <div class="tc-stripe"></div>
+      <div class="card-num">01 / 03</div>
+      <div class="card-title">Axiom of Choice</div>
+      <div class="card-desc">The controversial axiom that lets us choose one element from each of infinitely many sets — and its far-reaching consequences.</div>
+      <div class="card-chip">ZFC · AC</div><div class="card-arr">↗</div>
+    </div>
+    <div class="topic-card" style="--tc:var(--rose)" onclick="openLesson('L2')">
+      <div class="tc-stripe"></div>
+      <div class="card-num">02 / 03</div>
+      <div class="card-title">Continuum Hypothesis</div>
+      <div class="card-desc">Is there a set whose size is strictly between ℵ₀ and 𝔠? The question that cannot be answered within standard mathematics.</div>
+      <div class="card-chip">CH · independence</div><div class="card-arr">↗</div>
+    </div>
+    <div class="topic-card" style="--tc:var(--cyan)" onclick="openLesson('L3')">
+      <div class="tc-stripe"></div>
+      <div class="card-num">03 / 03</div>
+      <div class="card-title">Constructing ℤ, ℚ, and ℝ</div>
+      <div class="card-desc">Building the integers, rationals, and reals from scratch using sets — showing that all of mathematics rests on pure set theory.</div>
+      <div class="card-chip">Dedekind cuts · equivalence classes</div><div class="card-arr">↗</div>
+    </div>
+  </div>
+
+<!-- ════ L1 — AXIOM OF CHOICE ════ -->
+<div id="L1" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L1','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L1','explore',this)">🔬 Explore</button>
+    <button class="tab" onclick="switchTab('L1','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L1-learn" class="ca">
+    <h3>The Axiom of Choice</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> The Axiom of Choice (AC) says you can always simultaneously pick one element from each set in a collection of non-empty sets — even infinitely many of them. This sounds obvious, but it has surprising and even paradoxical consequences.</div>
+
+    <h4>The Axiom</h4>
+    <div class="def-box">
+      <div class="lbl">Axiom of Choice (AC)</div>
+      <p>For any collection <span class="math">𝒞</span> of non-empty sets, there exists a <strong>choice function</strong> <span class="math">f</span> such that for each set <span class="math">S ∈ 𝒞</span>, we have <span class="math">f(S) ∈ S</span>.<br><br>
+      In plain language: given any collection of non-empty sets (even infinitely many), you can always pick exactly one element from each set.</p>
+    </div>
+
+    <h4>Why Is It Needed?</h4>
+    <div class="plain-note"><strong>For finite collections,</strong> no axiom is needed — we can just make each choice one by one. <strong>For countably infinite collections,</strong> we can describe an explicit rule. <strong>For uncountably infinite collections</strong> with no clear rule, the Axiom of Choice steps in and asserts a choice function exists — even if we can never explicitly describe it.</div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 1 — Shoes vs. Socks (Bertrand Russell)</div>
+      <p><strong>Infinitely many pairs of shoes:</strong> pick the left shoe from each pair. No AC needed — we have an explicit rule.<br>
+      <strong>Infinitely many pairs of identical socks:</strong> socks have no left/right distinction. There is NO explicit rule for picking one from each pair. The Axiom of Choice asserts we can still make the choices — but we can't describe how.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 2 — Simple Use of AC</div>
+      <p>Let <span class="math">𝒞 = { {1,2}, {3,4,5}, {6}, {7,8} }</span>. A choice function might be <span class="math">f({1,2})=1, f({3,4,5})=4, f({6})=6, f({7,8})=7</span>. For finite collections, AC is trivially true. It becomes essential for infinite collections where no explicit rule exists.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 3 — Choosing from Equivalence Classes</div>
+      <p>Define the equivalence relation on ℝ: <span class="math">x ~ y</span> iff <span class="math">x - y ∈ ℚ</span>. This partitions ℝ into uncountably many equivalence classes. AC says we can pick one representative from each class — this is the Vitali set construction (which produces a non-measurable set!).</p>
+    </div>
+
+    <h4>Equivalent Formulations</h4>
+    <div class="prop-box">
+      <div class="lbl">AC is Equivalent To Each of These</div>
+      <ul>
+        <li><strong>Zorn's Lemma:</strong> Every partially ordered set where every chain has an upper bound has a maximal element.</li>
+        <li><strong>Well-Ordering Theorem:</strong> Every set can be well-ordered (every non-empty subset has a least element).</li>
+        <li><strong>Tychonoff's Theorem:</strong> Any product of compact topological spaces is compact.</li>
+        <li><strong>Vector Space Basis:</strong> Every vector space has a basis.</li>
+        <li><strong>Cardinal Comparability:</strong> For any two cardinals κ and λ, either κ ≤ λ or λ ≤ κ.</li>
+      </ul>
+    </div>
+
+    <h4>Consequences of AC</h4>
+    <div class="prop-box">
+      <div class="lbl">Results That Require AC</div>
+      <ul>
+        <li>Every infinite set contains a countably infinite subset.</li>
+        <li>A countable union of countable sets is countable.</li>
+        <li>Every surjective function has a right inverse.</li>
+        <li>Every field has an algebraic closure.</li>
+        <li>The Schröder–Bernstein theorem (in some formulations).</li>
+        <li>ℵ₀ + ℵ₀ = ℵ₀ (for arbitrary infinite cardinals).</li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ The Banach–Tarski Paradox</div>
+      <p>Using AC, it can be proven that a solid sphere in ℝ³ can be decomposed into finitely many pieces and reassembled into TWO spheres of the same size. This is not a physical claim — it relies on non-measurable sets that only exist because of AC. It shows AC can lead to highly counter-intuitive results.</p>
+    </div>
+
+    <h4>Is AC True?</h4>
+    <div class="theorem">
+      <div class="lbl">Independence of AC from ZF</div>
+      <p>Gödel (1938) showed AC is <strong>consistent</strong> with ZF set theory — assuming ZF is consistent, adding AC creates no contradictions.<br>
+      Cohen (1963) showed AC is <strong>independent</strong> of ZF — it cannot be proved from ZF alone.<br>
+      Together: AC can be freely added to ZF. The system ZF + AC = <strong>ZFC</strong> is the standard foundation of modern mathematics.</p>
+    </div>
+
+    <table class="dtable">
+      <tr><th>Axiom System</th><th>Contains AC?</th><th>Status</th></tr>
+      <tr><td>ZF (Zermelo–Fraenkel)</td><td class="cx">No</td><td>Base axioms of set theory</td></tr>
+      <tr><td>ZFC</td><td class="ck">Yes</td><td>Standard foundation; used in most mathematics</td></tr>
+      <tr><td>ZF + ¬AC</td><td class="cx">No (negation added)</td><td>Consistent — a different mathematics is possible</td></tr>
+    </table>
+  </div>
+
+  <div id="L1-explore" class="ca" style="display:none">
+    <h3>🔬 Choice Function Builder</h3>
+    <p style="color:var(--muted);font-size:.9rem">Given a collection of sets, practice constructing a choice function by selecting one element from each set.</p>
+    <div class="sim">
+      <h4 style="color:var(--amber)">Build a Choice Function</h4>
+      <p style="font-size:.86rem;color:var(--muted);margin-bottom:.8rem">Each row is a set. Click one element in each row to choose it. Then verify your choice function.</p>
+      <div id="choiceSets"></div>
+      <div style="display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap;">
+        <button class="s-btn" onclick="checkChoice()">Verify Choice Function</button>
+        <button class="s-btn" onclick="resetChoice()" style="background:var(--muted);color:#fff">Reset</button>
+      </div>
+      <div id="choiceResult" class="s-out"></div>
+    </div>
+  </div>
+
+  <div id="L1-practice" class="ca" style="display:none">
+    <h3>✏️ Flashcards</h3>
+    <div class="fg">
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What does AC say?</div><div class="fb">For any collection of non-empty sets, a choice function exists — picking one element from each.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">AC is equivalent to?</div><div class="fb">Zorn's Lemma, Well-Ordering Theorem, Tychonoff's Theorem, and cardinal comparability.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is ZFC?</div><div class="fb">Zermelo–Fraenkel set theory WITH the Axiom of Choice. Standard foundation of mathematics.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Is AC provable from ZF?</div><div class="fb">NO — Cohen proved AC is independent of ZF. It must be assumed as an axiom.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Banach–Tarski uses?</div><div class="fb">AC — it produces non-measurable sets, leading to the paradoxical sphere decomposition.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Shoes vs. Socks?</div><div class="fb">Shoes: pick left (explicit rule, no AC). Identical socks: no rule possible — AC needed!</div></div></div>
+    </div>
+  </div>
+</div><!-- /L1 -->
+
+<!-- ════ L2 — CONTINUUM HYPOTHESIS ════ -->
+<div id="L2" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L2','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L2','simulate',this)">🧪 Visualize</button>
+    <button class="tab" onclick="switchTab('L2','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L2-learn" class="ca">
+    <h3>The Continuum Hypothesis</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> We know ℵ₀ &lt; 𝔠. The Continuum Hypothesis asks: is there a set with cardinality strictly between these two? This is one of the most famous unsolved — and unsolvable — questions in mathematics.</div>
+
+    <h4>Background — The Cardinal Ladder</h4>
+    <p>From the previous module, we know there are different sizes of infinity. The natural numbers have cardinality <span class="math">ℵ₀</span>, and the real numbers have cardinality <span class="math">𝔠 = 2^{ℵ₀}</span>. Cantor proved <span class="math">ℵ₀ &lt; 𝔠</span> — these are genuinely different infinities.</p>
+
+    <div class="def-box">
+      <div class="lbl">The Continuum Hypothesis (CH)</div>
+      <p>There is <strong>no set</strong> whose cardinality is strictly between that of the natural numbers and the real numbers.<br><br>
+      Formally: <span class="math">2^{ℵ₀} = ℵ₁</span><br><br>
+      Here <span class="math">ℵ₁</span> is the next cardinal after <span class="math">ℵ₀</span>. CH claims the continuum <span class="math">𝔠</span> IS that next cardinal — there is nothing in between.</p>
+    </div>
+
+    <div class="def-box">
+      <div class="lbl">Generalized Continuum Hypothesis (GCH)</div>
+      <p>For every infinite cardinal <span class="math">κ</span>: <span class="math">2^κ = κ⁺</span> (the next cardinal after κ).<br>
+      In other words, there is no cardinal strictly between <span class="math">κ</span> and <span class="math">2^κ</span> for any infinite cardinal.</p>
+    </div>
+
+    <h4>What Would CH Mean?</h4>
+    <div class="ex-box">
+      <div class="lbl">If CH is True</div>
+      <p>The cardinal hierarchy looks like: <span class="math">ℵ₀ &lt; ℵ₁ = 𝔠 &lt; ℵ₂ &lt; …</span><br>
+      Every infinite subset of ℝ is either countable (size ℵ₀) or has the full cardinality of ℝ (size 𝔠). There is no "intermediate" infinity between the naturals and reals.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">If CH is False</div>
+      <p>The cardinal hierarchy looks like: <span class="math">ℵ₀ &lt; ℵ₁ &lt; 𝔠</span> (or even more cardinals in between).<br>
+      There exists a set <span class="math">S ⊆ ℝ</span> that is uncountable but "smaller" than ℝ. We cannot construct such a set explicitly — its existence would be asserted non-constructively.</p>
+    </div>
+
+    <h4>The Independence Result</h4>
+    <div class="theorem">
+      <div class="lbl">Gödel–Cohen Independence Theorem</div>
+      <p><strong>Gödel (1938):</strong> CH is <em>consistent</em> with ZFC. If ZFC has no contradictions, then neither does ZFC + CH. (You can assume CH is true without breaking mathematics.)<br><br>
+      <strong>Cohen (1963):</strong> ¬CH is also <em>consistent</em> with ZFC. If ZFC has no contradictions, then neither does ZFC + ¬CH. (You can also assume CH is false without breaking mathematics.)<br><br>
+      <strong>Conclusion:</strong> CH is <em>independent</em> of ZFC — it can neither be proved nor disproved from the standard axioms of set theory.</p>
+    </div>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ What Does "Independent" Mean?</div>
+      <p>Independence doesn't mean "we don't know yet." It means the question is <em>fundamentally undecidable</em> within ZFC. There are consistent mathematical universes where CH is true, and consistent universes where CH is false. Both are equally valid — the standard axioms do not determine which universe we are in.</p>
+    </div>
+
+    <h4>Historical Context</h4>
+    <div class="prop-box">
+      <div class="lbl">Timeline</div>
+      <ul>
+        <li><strong>1878 — Cantor</strong> first formulated CH as a conjecture in his work on cardinality.</li>
+        <li><strong>1900 — Hilbert</strong> listed CH as the first of his famous 23 problems.</li>
+        <li><strong>1938 — Gödel</strong> proved CH is consistent with ZFC (cannot be disproved).</li>
+        <li><strong>1963 — Cohen</strong> proved ¬CH is consistent with ZFC (cannot be proved). Won the Fields Medal.</li>
+        <li><strong>Today</strong> — Mathematicians explore new axioms (like large cardinal axioms) that may give a definitive answer.</li>
+      </ul>
+    </div>
+
+    <table class="dtable">
+      <tr><th>Statement</th><th>Provable in ZFC?</th><th>Disprovable in ZFC?</th></tr>
+      <tr><td>Axiom of Choice (AC)</td><td class="cx">No</td><td class="cx">No</td></tr>
+      <tr><td>Continuum Hypothesis (CH)</td><td class="cx">No</td><td class="cx">No</td></tr>
+      <tr><td>ℕ is infinite</td><td class="ck">Yes</td><td class="cx">No</td></tr>
+      <tr><td>ℝ is uncountable</td><td class="ck">Yes</td><td class="cx">No</td></tr>
+    </table>
+  </div>
+
+  <div id="L2-simulate" class="ca" style="display:none">
+    <h3>🧪 Cardinal Hierarchy Visualizer</h3>
+    <p style="color:var(--muted);font-size:.9rem">Explore how CH and ¬CH create different pictures of the cardinal hierarchy.</p>
+    <div class="sim">
+      <h4 style="color:var(--rose)">Two Possible Universes of Set Theory</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem;">
+        <div style="background:var(--card2);border:1px solid rgba(86,211,100,.25);border-radius:.6rem;padding:1.1rem;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--lime);text-transform:uppercase;margin-bottom:.7rem">If CH is TRUE</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.82rem;line-height:2.2;color:#c9d1d9;">
+            <div><span style="color:var(--rose)">ℵ₀</span> = |ℕ| = |ℤ| = |ℚ|</div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓ (nothing here)</div>
+            <div><span style="color:var(--amber)">ℵ₁ = 𝔠</span> = |ℝ|</div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓</div>
+            <div><span style="color:var(--cyan)">ℵ₂ = 2^𝔠</span></div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓ …</div>
+          </div>
+          <p style="font-size:.8rem;color:var(--muted);margin-top:.7rem;line-height:1.6">Every subset of ℝ is either countable or has cardinality 𝔠. No intermediate sizes.</p>
+        </div>
+        <div style="background:var(--card2);border:1px solid rgba(224,92,122,.25);border-radius:.6rem;padding:1.1rem;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--rose);text-transform:uppercase;margin-bottom:.7rem">If CH is FALSE</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.82rem;line-height:2.2;color:#c9d1d9;">
+            <div><span style="color:var(--rose)">ℵ₀</span> = |ℕ|</div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓</div>
+            <div><span style="color:var(--violet)">ℵ₁</span> (exists, but ≠ 𝔠)</div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓ (possibly more…)</div>
+            <div><span style="color:var(--amber)">𝔠 = 2^{ℵ₀}</span> = |ℝ|</div>
+            <div style="color:var(--muted);font-size:.75rem;padding-left:.5rem">↓ …</div>
+          </div>
+          <p style="font-size:.8rem;color:var(--muted);margin-top:.7rem;line-height:1.6">There exists a set with cardinality strictly between ℕ and ℝ — but we cannot construct one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="L2-practice" class="ca" style="display:none">
+    <div class="fg">
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is CH?</div><div class="fb">No set has cardinality strictly between ℵ₀ and 𝔠. Formally: 2^{ℵ₀} = ℵ₁.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Who proved CH independent?</div><div class="fb">Gödel (1938) showed CH consistent; Cohen (1963) showed ¬CH consistent.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What does "independent" mean here?</div><div class="fb">CH can neither be proved NOR disproved from ZFC axioms. Both CH and ¬CH are consistent.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">GCH says?</div><div class="fb">For every infinite cardinal κ: 2^κ = κ⁺ (next cardinal). Generalizes CH to all infinities.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">CH is problem #? in Hilbert's list?</div><div class="fb">Problem #1 — Hilbert listed it first in his famous 1900 list of 23 open problems.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L2 -->
+
+<!-- ════ L3 — CONSTRUCTION OF NUMBER SYSTEMS ════ -->
+<div id="L3" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L3','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L3','simulate',this)">🧪 Simulate</button>
+    <button class="tab" onclick="switchTab('L3','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L3-learn" class="ca">
+    <h3>Constructing ℤ, ℚ, and ℝ from Sets</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> All of mathematics can be built from sets. Starting with the natural numbers ℕ (assumed as a foundation), we construct ℤ, ℚ, and ℝ using purely set-theoretic tools — equivalence classes, ordered pairs, and Dedekind cuts. This shows that numbers themselves are just sets in disguise.</div>
+
+    <div class="construct-layers">
+      <div class="cl" style="background:var(--rose-s);border-color:rgba(224,92,122,.3)">
+        <div class="cl-icon">🌱</div>
+        <div><div class="cl-title" style="color:var(--rose)">ℕ — Natural Numbers</div><div class="cl-desc">Starting point. Assumed via Peano axioms or constructed from the empty set: 0=∅, 1={∅}, 2={∅,{∅}}, …</div></div>
+      </div>
+      <div class="cl-arrow">⬇ extend with negatives</div>
+      <div class="cl" style="background:var(--amber-s);border-color:rgba(240,165,0,.3)">
+        <div class="cl-icon">⊖</div>
+        <div><div class="cl-title" style="color:var(--amber)">ℤ — Integers</div><div class="cl-desc">Constructed from ℕ × ℕ using equivalence classes. Adds negative numbers.</div></div>
+      </div>
+      <div class="cl-arrow">⬇ extend with fractions</div>
+      <div class="cl" style="background:var(--cyan-s);border-color:rgba(57,208,216,.3)">
+        <div class="cl-icon">÷</div>
+        <div><div class="cl-title" style="color:var(--cyan)">ℚ — Rational Numbers</div><div class="cl-desc">Constructed from ℤ × ℤ* using equivalence classes. Adds fractions.</div></div>
+      </div>
+      <div class="cl-arrow">⬇ complete with limits</div>
+      <div class="cl" style="background:var(--lime-s);border-color:rgba(86,211,100,.3)">
+        <div class="cl-icon">∞</div>
+        <div><div class="cl-title" style="color:var(--lime)">ℝ — Real Numbers</div><div class="cl-desc">Constructed from ℚ using Dedekind cuts or Cauchy sequences. Adds irrational numbers.</div></div>
+      </div>
+    </div>
+
+    <h4>Step 1 — Constructing ℤ (The Integers)</h4>
+    <div class="plain-note"><strong>Problem:</strong> ℕ has no negative numbers. We can't solve <span class="math">n + x = m</span> when <span class="math">m &lt; n</span>. <strong>Solution:</strong> Think of an integer as a "difference" of two natural numbers — encode it as a pair (a, b) meaning "a − b."</div>
+
+    <div class="def-box">
+      <div class="lbl">Construction of ℤ</div>
+      <p><strong>Step 1:</strong> Form the set <span class="math">ℕ × ℕ = {(a,b) | a,b ∈ ℕ}</span>. Think of <span class="math">(a,b)</span> as "a − b."<br><br>
+      <strong>Step 2:</strong> Define an equivalence relation: <span class="math">(a,b) ~ (c,d)</span> iff <span class="math">a + d = b + c</span> (same "difference").<br><br>
+      <strong>Step 3:</strong> The integers are the equivalence classes: <span class="math">ℤ = (ℕ × ℕ) / ~</span></p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Examples — Integer Construction</div>
+      <ul>
+        <li><span class="math">[(3,0)] = {(3,0),(4,1),(5,2),…}</span> represents the integer <strong>+3</strong></li>
+        <li><span class="math">[(0,2)] = {(0,2),(1,3),(2,4),…}</span> represents the integer <strong>−2</strong></li>
+        <li><span class="math">[(5,5)] = {(0,0),(1,1),(2,2),…}</span> represents the integer <strong>0</strong></li>
+        <li>Why (3,1) ~ (5,3)? Check: 3+3 = 1+5 = 6 ✅ Both represent integer <strong>+2</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="prop-box">
+      <div class="lbl">Arithmetic on ℤ (via representatives)</div>
+      <ul>
+        <li><strong>Addition:</strong> <span class="math">[(a,b)] + [(c,d)] = [(a+c, b+d)]</span></li>
+        <li><strong>Negation:</strong> <span class="math">-[(a,b)] = [(b,a)]</span> — swap the pair!</li>
+        <li><strong>Multiplication:</strong> <span class="math">[(a,b)] × [(c,d)] = [(ac+bd, ad+bc)]</span></li>
+        <li>These are well-defined (same result regardless of representative chosen).</li>
+      </ul>
+    </div>
+
+    <h4>Step 2 — Constructing ℚ (The Rationals)</h4>
+    <div class="plain-note"><strong>Problem:</strong> ℤ has no fractions. We can't solve <span class="math">n · x = m</span> when <span class="math">n ∤ m</span>. <strong>Solution:</strong> Encode a fraction as a pair (p, q) meaning "p/q" with <span class="math">q ≠ 0</span>.</div>
+
+    <div class="def-box">
+      <div class="lbl">Construction of ℚ</div>
+      <p><strong>Step 1:</strong> Form the set <span class="math">ℤ × ℤ* = {(p,q) | p ∈ ℤ, q ∈ ℤ, q ≠ 0}</span>. Think of <span class="math">(p,q)</span> as "p/q."<br><br>
+      <strong>Step 2:</strong> Define equivalence: <span class="math">(p,q) ~ (r,s)</span> iff <span class="math">p · s = q · r</span> (cross-multiply).<br><br>
+      <strong>Step 3:</strong> The rationals are the equivalence classes: <span class="math">ℚ = (ℤ × ℤ*) / ~</span></p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Examples — Rational Construction</div>
+      <ul>
+        <li><span class="math">[(1,2)] = {(1,2),(2,4),(3,6),(−1,−2),…}</span> represents <strong>1/2</strong></li>
+        <li><span class="math">[(3,4)] = {(3,4),(6,8),(−3,−4),…}</span> represents <strong>3/4</strong></li>
+        <li><span class="math">[(2,1)] = {(2,1),(4,2),(6,3),…}</span> represents integer <strong>2</strong> — ℤ embeds into ℚ!</li>
+        <li>Why (1,2) ~ (2,4)? Check: 1×4 = 2×2 = 4 ✅ Both represent <strong>1/2</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="prop-box">
+      <div class="lbl">Arithmetic on ℚ</div>
+      <ul>
+        <li><strong>Addition:</strong> <span class="math">[(p,q)] + [(r,s)] = [(ps+qr, qs)]</span> (common denominator)</li>
+        <li><strong>Multiplication:</strong> <span class="math">[(p,q)] × [(r,s)] = [(pr, qs)]</span></li>
+        <li><strong>Inverse:</strong> <span class="math">[(p,q)]⁻¹ = [(q,p)]</span> for p ≠ 0</li>
+        <li>ℚ is a <strong>field</strong> — closed under +, −, ×, ÷ (except by 0).</li>
+      </ul>
+    </div>
+
+    <h4>Step 3 — Constructing ℝ (The Real Numbers)</h4>
+    <div class="plain-note"><strong>Problem:</strong> ℚ has "gaps" — numbers like √2, π, e cannot be expressed as fractions. The rationals are not <em>complete</em> (Cauchy sequences can fail to converge in ℚ). <strong>Solution:</strong> Two main methods — Dedekind cuts or Cauchy sequences.</div>
+
+    <div class="def-box">
+      <div class="lbl">Method 1 — Dedekind Cuts</div>
+      <p>A <strong>Dedekind cut</strong> is a pair <span class="math">(A, B)</span> that partitions ℚ into two non-empty sets where:<br>
+      1. <span class="math">A ∪ B = ℚ</span>, <span class="math">A ∩ B = ∅</span><br>
+      2. Every element of A is less than every element of B<br>
+      3. A has no maximum element<br><br>
+      Each cut <span class="math">(A, B)</span> represents a real number — the "boundary" between A and B.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example — Dedekind Cut for √2</div>
+      <p>Define the cut for √2 as:<br>
+      <span class="math">A = {q ∈ ℚ | q &lt; 0 or q² &lt; 2}</span><br>
+      <span class="math">B = {q ∈ ℚ | q ≥ 0 and q² ≥ 2}</span><br>
+      A contains all rationals "below √2" and B contains all rationals "at or above √2." The number √2 itself is irrational — it's represented by the <em>gap</em> between A and B. Every rational corresponds to a cut, but cuts can also capture irrationals!</p>
+    </div>
+
+    <div class="def-box">
+      <div class="lbl">Method 2 — Cauchy Sequences</div>
+      <p>A <strong>Cauchy sequence</strong> is a sequence <span class="math">(qₙ)</span> in ℚ where elements get arbitrarily close together.<br>
+      Define equivalence: <span class="math">(qₙ) ~ (rₙ)</span> iff <span class="math">|qₙ − rₙ| → 0</span>.<br>
+      The real numbers are the equivalence classes of Cauchy sequences: <span class="math">ℝ = {Cauchy sequences in ℚ} / ~</span></p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example — √2 via Cauchy Sequences</div>
+      <p>The sequence 1, 1.4, 1.41, 1.414, 1.4142, … is a Cauchy sequence in ℚ whose limit is √2 ∉ ℚ.<br>
+      Its equivalence class IS the real number √2.<br>
+      Similarly: π = [3, 3.1, 3.14, 3.141, 3.1415, …] and e = [2, 2.7, 2.71, 2.718, …]</p>
+    </div>
+
+    <div class="prop-box">
+      <div class="lbl">Key Properties of ℝ</div>
+      <ul>
+        <li><strong>Completeness:</strong> Every Cauchy sequence of real numbers converges to a real number.</li>
+        <li><strong>Ordered field:</strong> ℝ is a field with a total order compatible with arithmetic.</li>
+        <li><strong>Archimedean property:</strong> For any x ∈ ℝ, there exists n ∈ ℕ with n &gt; x.</li>
+        <li><strong>Density of ℚ in ℝ:</strong> Between any two real numbers there is a rational number.</li>
+        <li>ℝ is the <em>unique</em> complete ordered field (up to isomorphism).</li>
+      </ul>
+    </div>
+
+    <table class="dtable">
+      <tr><th>System</th><th>Built From</th><th>Method</th><th>Solves</th><th>Still Missing</th></tr>
+      <tr><td>ℕ</td><td>∅ (empty set)</td><td>Peano axioms / von Neumann</td><td>Counting</td><td>Negatives, fractions, irrationals</td></tr>
+      <tr><td>ℤ</td><td>ℕ × ℕ</td><td>Equivalence classes of differences</td><td>Subtraction (a−b)</td><td>Fractions, irrationals</td></tr>
+      <tr><td>ℚ</td><td>ℤ × ℤ*</td><td>Equivalence classes of ratios</td><td>Division (p/q)</td><td>Irrationals (√2, π, e)</td></tr>
+      <tr><td>ℝ</td><td>ℚ sequences</td><td>Dedekind cuts or Cauchy sequences</td><td>Completeness</td><td>Square roots of negatives</td></tr>
+      <tr><td>ℂ</td><td>ℝ × ℝ</td><td>Pairs (a,b) = a + bi</td><td>All polynomials</td><td>Nothing algebraic!</td></tr>
+    </table>
+  </div>
+
+  <div id="L3-simulate" class="ca" style="display:none">
+    <h3>🧪 Number Construction Simulator</h3>
+    <div class="sim">
+      <h4 style="color:var(--amber)">Integer Construction: (a,b) represents a − b</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Enter two natural numbers a and b. See what integer the pair (a,b) represents, and which equivalence class it belongs to.</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">a =</label><input class="s-in" id="intA" type="number" value="5" min="0" style="width:80px"></div>
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">b =</label><input class="s-in" id="intB" type="number" value="3" min="0" style="width:80px"></div>
+        <button class="s-btn" onclick="constructInt()">Show Integer</button>
+      </div>
+      <div id="intResult" class="s-out"></div>
+    </div>
+
+    <div class="sim">
+      <h4 style="color:var(--cyan)">Rational Construction: (p,q) represents p/q</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Enter p (numerator) and q ≠ 0 (denominator). See the rational, its reduced form, and some equivalent pairs.</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">p =</label><input class="s-in" id="ratP" type="number" value="4" style="width:80px"></div>
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">q (≠ 0) =</label><input class="s-in" id="ratQ" type="number" value="6" style="width:80px"></div>
+        <button class="s-btn" onclick="constructRat()">Show Rational</button>
+      </div>
+      <div id="ratResult" class="s-out"></div>
+    </div>
+
+    <div class="sim">
+      <h4 style="color:var(--lime)">Dedekind Cut Visualizer</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Select a real number to see its Dedekind cut — the partition of ℚ into sets A and B.</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+        <button class="s-btn" onclick="showCut('sqrt2')">√2</button>
+        <button class="s-btn" onclick="showCut('2')" style="background:var(--cyan)">2 (rational)</button>
+        <button class="s-btn" onclick="showCut('3over2')" style="background:var(--violet)">3/2</button>
+        <button class="s-btn" onclick="showCut('pi')" style="background:var(--rose)">π (approx)</button>
+      </div>
+      <div id="cutResult" class="s-out"></div>
+    </div>
+  </div>
+
+  <div id="L3-practice" class="ca" style="display:none">
+    <div class="fg">
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">How is ℤ constructed?</div><div class="fb">ℤ = (ℕ×ℕ)/~ where (a,b)~(c,d) iff a+d=b+c. Pair (a,b) represents integer a−b.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">How is ℚ constructed?</div><div class="fb">ℚ = (ℤ×ℤ*)/~ where (p,q)~(r,s) iff ps=qr. Pair (p,q) represents fraction p/q.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is a Dedekind cut?</div><div class="fb">A partition (A,B) of ℚ where A has no max, every a∈A &lt; every b∈B. Represents a real number.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What does (3,5) represent in ℤ?</div><div class="fb">The integer 3−5 = −2. Equivalence class [(3,5)] = {(0,2),(1,3),(2,4),(3,5),…}</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What does (2,6) represent in ℚ?</div><div class="fb">The rational 2/6 = 1/3. Same class as (1,3),(3,9),(4,12),…</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What makes ℝ complete?</div><div class="fb">Every Cauchy sequence converges in ℝ. ℚ has gaps (√2∉ℚ); ℝ fills them all.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Cauchy sequence for √2?</div><div class="fb">1, 1.4, 1.41, 1.414, 1.4142, … — converges to √2, which is not in ℚ.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L3 -->
+</section><!-- /topics -->
+
+<!-- EXPLORE -->
+<section id="explore">
+  <div class="sec-label">5Es · Explore</div>
+  <div class="sec-title">Hands-On Discovery</div>
+  <p class="sec-desc">Experiment with number system properties and the structure of the real line.</p>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--amber);margin-bottom:.7rem">📐 Number Line Explorer</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">See which number system contains different values.</p>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem;">
+      <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">Enter a number (e.g. 3, -2, 1.5, sqrt2)</label>
+      <input class="s-in" id="numCheck" value="1.5" style="width:180px"></div>
+      <button class="s-btn" onclick="checkNum()">Classify</button>
+    </div>
+    <div id="numResult" class="s-out"></div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;">
+    <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--cyan);margin-bottom:.7rem">🔢 Integer Arithmetic via Pairs</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Compute integer addition using the formal construction. Enter two integers as pairs (a,b) = a−b.</p>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end;">
+      <div>
+        <label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">First integer: a₁ − b₁</label>
+        <div style="display:flex;gap:.4rem;align-items:center;"><input class="s-in" id="ia1" type="number" value="5" style="width:70px"><span style="color:var(--muted)">−</span><input class="s-in" id="ib1" type="number" value="2" style="width:70px"></div>
+      </div>
+      <span style="font-size:1.2rem;color:var(--muted);padding-bottom:.2rem">+</span>
+      <div>
+        <label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">Second integer: a₂ − b₂</label>
+        <div style="display:flex;gap:.4rem;align-items:center;"><input class="s-in" id="ia2" type="number" value="1" style="width:70px"><span style="color:var(--muted)">−</span><input class="s-in" id="ib2" type="number" value="4" style="width:70px"></div>
+      </div>
+      <button class="s-btn" onclick="addIntegers()">Add</button>
+    </div>
+    <div id="intAddResult" class="s-out"></div>
+  </div>
+</section>
+
+<!-- ELABORATE -->
+<section id="elaborate">
+  <div class="sec-label">5Es · Elaborate</div>
+  <div class="sec-title">Proof Workshop</div>
+  <p class="sec-desc">These proof structures show how formal constructions really work. Study each, then try the challenge.</p>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:2rem;">
+    <h3 style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:700;color:var(--amber);margin-bottom:1.1rem">📝 Proof Templates</h3>
+
+    <div style="margin-bottom:1.5rem;background:var(--amber-s);border-radius:.6rem;padding:1.2rem;border:1px solid rgba(240,165,0,.15);">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--amber);text-transform:uppercase;margin-bottom:.5rem">Proof 1 — Integer Addition is Well-Defined</div>
+      <strong style="font-size:.91rem">Claim: If (a,b)~(a',b') and (c,d)~(c',d'), then (a+c,b+d)~(a'+c',b'+d').</strong>
+      <div class="math-block">Given:  (a,b) ~ (a',b')  means  a + b' = a' + b   ... (i)
+        (c,d) ~ (c',d')  means  c + d' = c' + d   ... (ii)
+
+Add (i) and (ii):
+  (a + c) + (b' + d') = (a' + c') + (b + d)
+
+This is exactly the condition for:
+  (a+c, b+d) ~ (a'+c', b'+d')  ✓
+
+Therefore addition is well-defined on ℤ.  □</div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;background:var(--cyan-s);border-radius:.6rem;padding:1.2rem;border:1px solid rgba(57,208,216,.15);">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--cyan);text-transform:uppercase;margin-bottom:.5rem">Proof 2 — ℚ is an Equivalence Relation</div>
+      <strong style="font-size:.91rem">Claim: The relation (p,q)~(r,s) iff ps=qr is an equivalence relation on ℤ×ℤ*.</strong>
+      <div class="math-block">Reflexive:  (p,q) ~ (p,q)?  Need: p·q = q·p. ✓ (commutativity)
+
+Symmetric:  If (p,q)~(r,s) then ps=qr.
+            Need (r,s)~(p,q): rq = sp.
+            From ps=qr: rq = ps = sp. ✓
+
+Transitive: If (p,q)~(r,s) and (r,s)~(t,u):
+            ps = qr  and  ru = st
+            Multiply: ps·ru = qr·st
+            psu·r  = qst·r
+            Since r ≠ 0: pu = qt
+            So (p,q) ~ (t,u). ✓   □</div>
+    </div>
+
+    <div style="background:var(--lime-s);border-radius:.6rem;padding:1.2rem;border:1px solid rgba(86,211,100,.15);">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--lime);text-transform:uppercase;margin-bottom:.5rem">Your Turn</div>
+      <strong style="font-size:.91rem">Show that negation in ℤ is well-defined: if (a,b)~(c,d), then (b,a)~(d,c).</strong>
+      <p style="font-size:.84rem;color:var(--muted);margin-top:.5rem;line-height:1.7">Hint: The condition (a,b)~(c,d) says a+d = b+c. The condition (b,a)~(d,c) says b+c = d+a. What do you notice?</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="assess">
+  <div class="sec-label">5Es · Evaluate</div>
+  <div class="sec-title">Knowledge Check</div>
+  <p class="sec-desc">12 questions across all three topics. Read every explanation — even when you're correct!</p>
+  <div class="qwrap">
+    <h3>📊 Self-Assessment — 12 Questions</h3>
+    <div class="pbar"><div class="pfill" id="qp" style="width:0%"></div></div>
+
+    <div class="qi"><div class="qt">1. The Axiom of Choice states that:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(1,'A','C')"><span class="ol">A</span>Every set can be well-ordered</div>
+      <div class="qo" onclick="qa(1,'B','C')"><span class="ol">B</span>Every infinite set is countable</div>
+      <div class="qo" onclick="qa(1,'C','C')"><span class="ol">C</span>For any collection of non-empty sets, a choice function exists</div>
+      <div class="qo" onclick="qa(1,'D','C')"><span class="ol">D</span>Every subset of ℝ is measurable</div>
+    </div>
+    <div class="qfb" id="q1-fb">✅ C is correct. AC directly states a choice function exists for any collection of non-empty sets. A is the Well-Ordering Theorem (equivalent to AC, but not the statement of AC itself).</div></div>
+
+    <div class="qi"><div class="qt">2. Which of the following is equivalent to the Axiom of Choice?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(2,'A','B')"><span class="ol">A</span>Cantor's diagonal argument</div>
+      <div class="qo" onclick="qa(2,'B','B')"><span class="ol">B</span>Zorn's Lemma</div>
+      <div class="qo" onclick="qa(2,'C','B')"><span class="ol">C</span>The Continuum Hypothesis</div>
+      <div class="qo" onclick="qa(2,'D','B')"><span class="ol">D</span>Schröder–Bernstein Theorem</div>
+    </div>
+    <div class="qfb" id="q2-fb">✅ B is correct. Zorn's Lemma, the Well-Ordering Theorem, and Tychonoff's Theorem are all equivalent to AC. CH is independent of ZFC; Cantor's diagonal argument is a proof technique.</div></div>
+
+    <div class="qi"><div class="qt">3. The Continuum Hypothesis states that:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(3,'A','B')"><span class="ol">A</span>ℝ is countable</div>
+      <div class="qo" onclick="qa(3,'B','B')"><span class="ol">B</span>There is no set with cardinality strictly between ℵ₀ and 𝔠</div>
+      <div class="qo" onclick="qa(3,'C','B')"><span class="ol">C</span>2^{ℵ₀} = ℵ₂</div>
+      <div class="qo" onclick="qa(3,'D','B')"><span class="ol">D</span>Every infinite set has cardinality ℵ₀</div>
+    </div>
+    <div class="qfb" id="q3-fb">✅ B is correct. CH says 2^{ℵ₀} = ℵ₁ — the next cardinal after ℵ₀. There's nothing between |ℕ| and |ℝ|. C is wrong (ℵ₂ would leave a gap). D is wrong — ℝ has a larger cardinality.</div></div>
+
+    <div class="qi"><div class="qt">4. Who proved the independence of the Continuum Hypothesis from ZFC?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(4,'A','C')"><span class="ol">A</span>Cantor and Hilbert</div>
+      <div class="qo" onclick="qa(4,'B','C')"><span class="ol">B</span>Zermelo and Fraenkel</div>
+      <div class="qo" onclick="qa(4,'C','C')"><span class="ol">C</span>Gödel (1938) and Cohen (1963)</div>
+      <div class="qo" onclick="qa(4,'D','C')"><span class="ol">D</span>Dedekind and Cauchy</div>
+    </div>
+    <div class="qfb" id="q4-fb">✅ C is correct. Gödel showed CH is consistent with ZFC (can't be disproved). Cohen showed ¬CH is also consistent (can't be proved). Together, CH is independent. Cohen won the Fields Medal for this.</div></div>
+
+    <div class="qi"><div class="qt">5. In the construction of ℤ, the pair (5, 3) represents which integer?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(5,'A','A')"><span class="ol">A</span>+2</div>
+      <div class="qo" onclick="qa(5,'B','A')"><span class="ol">B</span>+8</div>
+      <div class="qo" onclick="qa(5,'C','A')"><span class="ol">C</span>−2</div>
+      <div class="qo" onclick="qa(5,'D','A')"><span class="ol">D</span>+5/3</div>
+    </div>
+    <div class="qfb" id="q5-fb">✅ A is correct. The pair (a,b) in the construction of ℤ represents a − b = 5 − 3 = +2.</div></div>
+
+    <div class="qi"><div class="qt">6. In the construction of ℚ, which pair is in the same equivalence class as (2, 6)?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(6,'A','D')"><span class="ol">A</span>(2, 3)</div>
+      <div class="qo" onclick="qa(6,'B','D')"><span class="ol">B</span>(4, 6)</div>
+      <div class="qo" onclick="qa(6,'C','D')"><span class="ol">C</span>(2, 4)</div>
+      <div class="qo" onclick="qa(6,'D','D')"><span class="ol">D</span>(1, 3)</div>
+    </div>
+    <div class="qfb" id="q6-fb">✅ D is correct. (2,6) represents 2/6 = 1/3. Check (1,3): 1×6 = 2×3 = 6 ✓ — cross-multiplication confirms they're equivalent. (2,3) = 2/3, (4,6) = 4/6 = 2/3, (2,4) = 1/2.</div></div>
+
+    <div class="qi"><div class="qt">7. A Dedekind cut (A, B) of ℚ represents a real number. Which condition must hold?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(7,'A','C')"><span class="ol">A</span>A and B are both finite</div>
+      <div class="qo" onclick="qa(7,'B','C')"><span class="ol">B</span>A has a maximum element</div>
+      <div class="qo" onclick="qa(7,'C','C')"><span class="ol">C</span>A ∪ B = ℚ, A ∩ B = ∅, every a∈A &lt; every b∈B, and A has no maximum</div>
+      <div class="qo" onclick="qa(7,'D','C')"><span class="ol">D</span>Both A and B are countable</div>
+    </div>
+    <div class="qfb" id="q7-fb">✅ C is correct. These four conditions define a Dedekind cut. Crucially, A must have no maximum — otherwise the "boundary" would belong to A and wouldn't properly represent an irrational number.</div></div>
+
+    <div class="qi"><div class="qt">8. In the formal construction, what does the equivalence relation for ℤ require?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(8,'A','B')"><span class="ol">A</span>(a,b) ~ (c,d) iff a = c and b = d</div>
+      <div class="qo" onclick="qa(8,'B','B')"><span class="ol">B</span>(a,b) ~ (c,d) iff a + d = b + c</div>
+      <div class="qo" onclick="qa(8,'C','B')"><span class="ol">C</span>(a,b) ~ (c,d) iff a · d = b · c</div>
+      <div class="qo" onclick="qa(8,'D','B')"><span class="ol">D</span>(a,b) ~ (c,d) iff a − b = c − d (using integer subtraction)</div>
+    </div>
+    <div class="qfb" id="q8-fb">✅ B is correct. Since we're working in ℕ (no subtraction yet), we encode "a−b = c−d" as a+d = b+c — using only addition. D uses subtraction, which we haven't defined yet at this stage!</div></div>
+
+    <div class="qi"><div class="qt">9. What property of ℝ does the Dedekind cut construction guarantee?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(9,'A','C')"><span class="ol">A</span>ℝ is countable</div>
+      <div class="qo" onclick="qa(9,'B','C')"><span class="ol">B</span>ℝ contains only rational numbers</div>
+      <div class="qo" onclick="qa(9,'C','C')"><span class="ol">C</span>ℝ is complete — every Cauchy sequence converges in ℝ</div>
+      <div class="qo" onclick="qa(9,'D','C')"><span class="ol">D</span>ℝ is finite</div>
+    </div>
+    <div class="qfb" id="q9-fb">✅ C is correct. The whole point of constructing ℝ from ℚ is to fill the "gaps" — creating a complete ordered field where every Cauchy sequence converges.</div></div>
+
+    <div class="qi"><div class="qt">10. Which correctly describes the relationship between number systems?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(10,'A','B')"><span class="ol">A</span>ℝ ⊂ ℚ ⊂ ℤ ⊂ ℕ</div>
+      <div class="qo" onclick="qa(10,'B','B')"><span class="ol">B</span>ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ</div>
+      <div class="qo" onclick="qa(10,'C','B')"><span class="ol">C</span>ℤ ⊂ ℕ ⊂ ℚ ⊂ ℝ</div>
+      <div class="qo" onclick="qa(10,'D','B')"><span class="ol">D</span>ℕ = ℤ = ℚ = ℝ</div>
+    </div>
+    <div class="qfb" id="q10-fb">✅ B is correct. Each system extends the previous: ℕ (counting) ⊂ ℤ (adds negatives) ⊂ ℚ (adds fractions) ⊂ ℝ (adds irrationals) ⊂ ℂ (adds imaginary numbers).</div></div>
+
+    <div class="qi"><div class="qt">11. The Axiom of Choice is independent of ZF. This means:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(11,'A','D')"><span class="ol">A</span>AC is false</div>
+      <div class="qo" onclick="qa(11,'B','D')"><span class="ol">B</span>AC is true but unproven</div>
+      <div class="qo" onclick="qa(11,'C','D')"><span class="ol">C</span>AC contradicts ZF</div>
+      <div class="qo" onclick="qa(11,'D','D')"><span class="ol">D</span>AC can neither be proved nor disproved from ZF alone</div>
+    </div>
+    <div class="qfb" id="q11-fb">✅ D is correct. Independence means both ZF+AC and ZF+¬AC are consistent. You can choose to include or exclude AC without contradiction. Most mathematicians include it (ZFC).</div></div>
+
+    <div class="qi"><div class="qt">12. The sequence 1, 1.7, 1.73, 1.732, … (converging to √3) represents which real number in the Cauchy sequence construction of ℝ?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(12,'A','C')"><span class="ol">A</span>A rational number</div>
+      <div class="qo" onclick="qa(12,'B','C')"><span class="ol">B</span>An undefined value</div>
+      <div class="qo" onclick="qa(12,'C','C')"><span class="ol">C</span>The irrational number √3</div>
+      <div class="qo" onclick="qa(12,'D','C')"><span class="ol">D</span>The integer 2</div>
+    </div>
+    <div class="qfb" id="q12-fb">✅ C is correct. In the Cauchy sequence construction of ℝ, a real number IS an equivalence class of Cauchy sequences. The sequence 1, 1.7, 1.73, … is a Cauchy sequence whose equivalence class defines √3 ∈ ℝ \ ℚ.</div></div>
+
+    <div class="qscore" id="qscore"></div>
+    <button class="btn-a" onclick="submitQuiz()" id="submitBtn" style="margin-top:1rem">Submit &amp; See Score</button>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section id="outcomes">
+  <div class="sec-label">Learning Outcomes</div>
+  <div class="sec-title">By Week's End, You Can…</div>
+  <p class="sec-desc">These are the concrete skills you should demonstrate as a pre-service teacher after completing this module.</p>
+  <div class="og">
+    <div class="oc"><div class="oi" style="background:var(--amber-s);color:var(--amber)">①</div><div class="ot"><strong>Discuss the Axiom of Choice</strong> — state it precisely, give examples of when it's needed, list equivalent formulations, and explain its role in ZFC.</div></div>
+    <div class="oc"><div class="oi" style="background:var(--rose-s);color:var(--rose)">②</div><div class="ot"><strong>Discuss the Continuum Hypothesis</strong> — state CH and GCH, explain what independence means, and describe the Gödel–Cohen result and its implications.</div></div>
+    <div class="oc"><div class="oi" style="background:var(--amber-s);color:var(--amber)">③</div><div class="ot"><strong>Construct ℤ from ℕ</strong> — define the equivalence relation on ℕ×ℕ, identify what each pair represents, and verify arithmetic operations are well-defined.</div></div>
+    <div class="oc"><div class="oi" style="background:var(--cyan-s);color:var(--cyan)">④</div><div class="ot"><strong>Construct ℚ from ℤ</strong> — define the equivalence relation on ℤ×ℤ*, identify equivalent fractions using cross-multiplication, and verify field operations.</div></div>
+    <div class="oc"><div class="oi" style="background:var(--lime-s);color:var(--lime)">⑤</div><div class="ot"><strong>Construct ℝ from ℚ</strong> — describe Dedekind cuts and Cauchy sequences, give examples (√2, π), and explain why completeness requires extending beyond ℚ.</div></div>
+  </div>
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border);position:relative;z-index:1;">
+  <p>Logic & Set Theory · Axiom of Choice & Number Systems · 5Es Interactive Module</p>
+  <p style="margin-top:.3rem;opacity:.4">Designed for Pre-Service Mathematics Teachers</p>
+</footer>
+
+<script>
+// NAV PROGRESS
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('navGlow').style.width=p+'%';
+  const secs=[document.getElementById('hero'),...document.querySelectorAll('section')];
+  document.querySelectorAll('.pd').forEach((d,i)=>{if(!secs[i])return;const r=secs[i].getBoundingClientRect();d.classList.toggle('active',r.top<=window.innerHeight/2&&r.bottom>0);});
+});
+
+// LESSONS
+let openPanel=null;
+function openLesson(id){
+  if(openPanel&&openPanel!==id)document.getElementById(openPanel)?.classList.remove('open');
+  const el=document.getElementById(id);el.classList.toggle('open');
+  openPanel=el.classList.contains('open')?id:null;
+  if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(id==='L1'&&!window.choiceInited){initChoice();window.choiceInited=true;}
+}
+function switchTab(lesson,tab,btn){
+  document.querySelectorAll('#'+lesson+'>div[id^="'+lesson+'-"]').forEach(d=>d.style.display='none');
+  const el=document.getElementById(lesson+'-'+tab);if(el)el.style.display='block';
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(lesson==='L1'&&tab==='explore'&&!window.choiceInited){initChoice();window.choiceInited=true;}
+}
+
+// CHOICE FUNCTION BUILDER
+const choiceSetsData=[['🍎','🍊','🍋'],['🐶','🐱'],['1','2','3','4'],['red','blue','green']];
+function initChoice(){
+  const c=document.getElementById('choiceSets');c.innerHTML='';
+  window.choicePicks={};
+  choiceSetsData.forEach((set,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;';
+    const lbl=document.createElement('span');
+    lbl.style.cssText='font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--muted);min-width:60px;';
+    lbl.textContent=`Set ${i+1}:`;
+    row.appendChild(lbl);
+    set.forEach(elem=>{
+      const b=document.createElement('button');
+      b.textContent=elem;b.dataset.set=i;b.dataset.elem=elem;
+      b.style.cssText='padding:.3rem .65rem;border-radius:.35rem;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .2s;font-family:"Nunito",sans-serif;';
+      b.onclick=function(){
+        row.querySelectorAll('button').forEach(x=>{x.style.background='var(--surface)';x.style.borderColor='var(--border)';x.style.color='var(--muted)';});
+        this.style.background='var(--amber-s)';this.style.borderColor='var(--amber)';this.style.color='var(--amber)';
+        window.choicePicks[i]=elem;
+      };
+      row.appendChild(b);
+    });
+    c.appendChild(row);
+  });
+}
+function checkChoice(){
+  const n=choiceSetsData.length;const r=document.getElementById('choiceResult');
+  r.style.display='block';
+  if(Object.keys(window.choicePicks||{}).length<n){r.style.color='var(--rose)';r.textContent='⚠️ You must pick one element from each set first!';return;}
+  let out='✅ Valid choice function!\n\n';
+  Object.entries(window.choicePicks).forEach(([i,e])=>{out+=`f(Set ${+i+1}) = ${e}\n`;});
+  out+='\nThis is exactly what AC guarantees — a function that picks one element from each set in the collection.';
+  r.style.color='var(--lime)';r.textContent=out;
+}
+function resetChoice(){window.choicePicks={};initChoice();document.getElementById('choiceResult').style.display='none';}
+
+// INTEGER CONSTRUCTION
+function constructInt(){
+  const a=parseInt(document.getElementById('intA').value)||0;
+  const b=parseInt(document.getElementById('intB').value)||0;
+  const z=a-b;
+  const cls=[];for(let k=0;k<5;k++)cls.push(`(${a+k},${b+k})`);
+  const r=document.getElementById('intResult');r.style.display='block';
+  r.innerHTML=`The pair (${a},${b}) represents the integer: ${z>=0?'+':''}${z}\n\nEquivalence class (first 5 members):\n[${a},${b}] = {${cls.join(', ')}, …}\n\nAll pairs where first − second = ${z}.`;
+}
+
+// RATIONAL CONSTRUCTION
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+function constructRat(){
+  const p=parseInt(document.getElementById('ratP').value)||0;
+  const q=parseInt(document.getElementById('ratQ').value)||1;
+  if(q===0){const r=document.getElementById('ratResult');r.style.display='block';r.style.color='var(--rose)';r.textContent='⚠️ q cannot be 0 — division by zero is undefined!';return;}
+  const g=gcd(Math.abs(p),Math.abs(q));
+  const sign=q<0?-1:1;
+  const rp=sign*p/g,rq=sign*q/g;
+  const cls=[];for(let k=1;k<=4;k++)cls.push(`(${p*k},${q*k})`);
+  const r=document.getElementById('ratResult');r.style.display='block';r.style.color='var(--cyan)';
+  r.innerHTML=`The pair (${p},${q}) represents: ${p}/${q} = ${rp}/${rq} (reduced form)\n\nSome equivalent pairs: ${cls.join(', ')}\n\nVerify: for any (${p}k, ${q}k): cross-multiply → ${p}k · ${q}k' = ${q}k · ${p}k' ✓`;
+}
+
+// DEDEKIND CUT
+function showCut(type){
+  const r=document.getElementById('cutResult');r.style.display='block';r.style.color='var(--lime)';
+  const cuts={
+    sqrt2:{name:'√2 ≈ 1.41421…',a:'A = { q ∈ ℚ | q < 0  OR  q² < 2 }',b:'B = { q ∈ ℚ | q ≥ 0  AND  q² ≥ 2 }',aex:'…, 0, 0.5, 1, 1.4, 1.41, 1.414, …',bex:'1.42, 1.415, 1.4143, 2, 3, …',note:'√2 is irrational — it lies in the GAP between A and B, which is the cut itself.'},
+    '2':{name:'2 (rational)',a:'A = { q ∈ ℚ | q < 2 }',b:'B = { q ∈ ℚ | q ≥ 2 }',aex:'…, 0, 1, 1.5, 1.9, 1.99, 1.999, …',bex:'2, 2.001, 2.1, 3, 4, …',note:'For rational numbers, the cut boundary IS in B (the rational itself). A has no maximum.'},
+    '3over2':{name:'3/2 = 1.5 (rational)',a:'A = { q ∈ ℚ | q < 3/2 }',b:'B = { q ∈ ℚ | q ≥ 3/2 }',aex:'…, 1, 1.2, 1.4, 1.49, 1.499, …',bex:'1.5, 1.501, 1.6, 2, …',note:'3/2 is rational, so it sits exactly at the boundary in B. Cut represents 1.5 exactly.'},
+    pi:{name:'π ≈ 3.14159…',a:'A = { q ∈ ℚ | q < π }  (approx: q² < 9.87)',b:'B = { q ∈ ℚ | q ≥ π }',aex:'…, 3, 3.1, 3.14, 3.141, 3.1415, …',bex:'3.1416, 3.142, 3.15, 4, …',note:'π is transcendental (not even algebraic) — the cut represents it exactly, even though no finite decimal expansion does.'}
+  };
+  const c=cuts[type];
+  r.textContent=`Dedekind Cut for ${c.name}\n\nA = ${c.a}\nSample elements of A: ${c.aex}\n\nB = ${c.b}\nSample elements of B: ${c.bex}\n\nNote: ${c.note}`;
+}
+
+// NUMBER CLASSIFIER
+function checkNum(){
+  const raw=document.getElementById('numCheck').value.trim().toLowerCase();
+  const r=document.getElementById('numResult');r.style.display='block';
+  let val=null,name=raw,isNat=false,isInt=false,isRat=false,isReal=true,note='';
+  if(raw==='sqrt2'||raw==='√2'){val=Math.sqrt(2);name='√2';note='Algebraic irrational — root of x²−2=0.';}
+  else if(raw==='pi'||raw==='π'){val=Math.PI;name='π';note='Transcendental irrational — not a root of any polynomial with rational coefficients.';}
+  else if(raw==='e'){val=Math.E;name='e';note='Transcendental irrational — base of natural logarithm.';}
+  else if(raw==='sqrt3'||raw==='√3'){val=Math.sqrt(3);name='√3';note='Algebraic irrational.';}
+  else{val=parseFloat(raw);name=raw;}
+  if(val===null||isNaN(val)){r.style.color='var(--rose)';r.textContent='⚠️ Unknown input. Try: 3, -2, 1.5, sqrt2, pi, e, sqrt3';return;}
+  isNat=Number.isInteger(val)&&val>=0;
+  isInt=Number.isInteger(val);
+  isRat=!['sqrt2','√2','pi','π','e','sqrt3','√3'].includes(raw);
+  r.style.color='var(--cyan)';
+  r.textContent=`Number: ${name} ≈ ${val}\n\nIn ℕ (natural numbers)? ${isNat?'✅ Yes':'❌ No'}\nIn ℤ (integers)?      ${isInt?'✅ Yes':'❌ No'}\nIn ℚ (rationals)?     ${isRat?'✅ Yes':'❌ No'}\nIn ℝ (reals)?         ✅ Yes (always)\n${note?'\n'+note:''}`;
+}
+
+// INTEGER ARITHMETIC VIA PAIRS
+function addIntegers(){
+  const a1=parseInt(document.getElementById('ia1').value)||0,b1=parseInt(document.getElementById('ib1').value)||0;
+  const a2=parseInt(document.getElementById('ia2').value)||0,b2=parseInt(document.getElementById('ib2').value)||0;
+  const z1=a1-b1,z2=a2-b2,sum=z1+z2;
+  const ra=a1+a2,rb=b1+b2;
+  const r=document.getElementById('intAddResult');r.style.display='block';r.style.color='var(--amber)';
+  r.textContent=`(${a1},${b1}) + (${a2},${b2}) = (${ra},${rb})\n\n= [(${ra},${rb})] which represents ${ra}−${rb} = ${sum}\n\nVerification: (${a1}−${b1}) + (${a2}−${b2}) = ${z1} + ${z2} = ${sum} ✓`;
+}
+
+// QUIZ
+const correct={1:'C',2:'B',3:'B',4:'C',5:'A',6:'D',7:'C',8:'B',9:'C',10:'B',11:'D',12:'C'};
+const ua={};
+function qa(q,choice){
+  if(ua[q])return;ua[q]=choice;
+  document.querySelectorAll('.qi')[q-1].querySelectorAll('.qo').forEach((o,i)=>{
+    const l=String.fromCharCode(65+i);
+    if(l===correct[q])o.classList.add('correct');
+    else if(l===choice&&choice!==correct[q])o.classList.add('wrong');
+  });
+  const fb=document.getElementById(`q${q}-fb`);
+  if(choice===correct[q])fb.className='qfb show ok';
+  else{fb.className='qfb show bad';fb.textContent='✗ Incorrect. Correct: '+correct[q]+'. '+fb.textContent.replace('✅','');}
+  document.getElementById('qp').style.width=(Object.keys(ua).length/12*100)+'%';
+}
+function submitQuiz(){
+  for(let q=1;q<=12;q++)if(!ua[q])qa(q,'_');
+  const score=Object.entries(ua).filter(([q,a])=>a===correct[+q]).length;
+  const pct=Math.round(score/12*100);
+  const el=document.getElementById('qscore');el.style.display='block';
+  el.innerHTML=(pct>=90?'🌟 Excellent!':pct>=75?'✅ Well done!':pct>=50?'📚 Keep reviewing!':'💪 Revisit the lessons!')+` Score: <strong>${score}/12</strong> (${pct}%)`;
+  document.getElementById('submitBtn').disabled=true;
+}
+</script>
+</body>
+</html>
