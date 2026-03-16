@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordering & Ordinals · Logic and Set Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f2;--surface:#f0ebe0;--card:#ffffff;--card2:#f7f3ec;
+  --ink:#1c1a18;--muted:#7a7060;--border:#d8cfc0;
+  --terra:#c45c2a;--sage:#3a6b4e;--navy:#1e3a5f;--gold:#b8860b;--plum:#6b3a6b;
+  --terra-s:rgba(196,92,42,.1);--sage-s:rgba(58,107,78,.1);
+  --navy-s:rgba(30,58,95,.1);--gold-s:rgba(184,134,11,.1);--plum-s:rgba(107,58,107,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--terra);border-radius:2px;}
+
+/* GRID TEXTURE */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.3;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.5rem;background:rgba(250,247,242,.94);backdrop-filter:blur(12px);border-bottom:2px solid var(--ink);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--terra);letter-spacing:.08em;}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:var(--muted);font-size:.83rem;text-decoration:none;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-prog{height:3px;background:var(--terra);width:0%;transition:width .3s;position:absolute;bottom:-2px;left:0;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:8rem 4rem 4rem;position:relative;z-index:1;overflow:hidden;}
+.hero-bg-num{position:absolute;right:-2rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(18rem,30vw,28rem);color:var(--terra);opacity:.06;pointer-events:none;line-height:1;user-select:none;}
+.h-eyebrow{font-family:'Source Code Pro',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;animation:slideR .7s ease both;}
+.h-eyebrow::before{content:'';width:32px;height:2px;background:var(--terra);}
+#hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,9rem);line-height:.95;letter-spacing:.04em;animation:slideR .7s .1s ease both;}
+#hero h1 .t1{color:var(--ink);}
+#hero h1 .t2{color:var(--terra);display:block;}
+#hero h1 .t3{color:var(--navy);display:block;}
+.h-sub{font-size:1.05rem;color:var(--muted);max-width:500px;margin-top:1.4rem;line-height:1.8;font-weight:300;animation:slideR .7s .2s ease both;}
+.h-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem;animation:slideR .7s .3s ease both;}
+.htag{font-family:'Source Code Pro',monospace;font-size:.65rem;padding:.28rem .7rem;border:1.5px solid var(--border);color:var(--muted);border-radius:2px;background:var(--card);}
+.h-btns{display:flex;gap:.8rem;margin-top:2rem;animation:slideR .7s .4s ease both;}
+.btn-fill{padding:.7rem 1.8rem;background:var(--ink);color:var(--bg);font-weight:700;border:2px solid var(--ink);font-size:.88rem;cursor:pointer;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;}
+.btn-fill:hover{background:var(--terra);border-color:var(--terra);}
+.btn-out{padding:.7rem 1.8rem;background:transparent;color:var(--ink);font-weight:700;border:2px solid var(--ink);font-size:.88rem;cursor:pointer;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;}
+.btn-out:hover{border-color:var(--terra);color:var(--terra);}
+/* ordinal sequence hero decoration */
+.ord-seq{display:flex;align-items:center;gap:.4rem;margin-top:2.5rem;animation:slideR .7s .5s ease both;flex-wrap:wrap;}
+.ord-n{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .3s;cursor:default;}
+.ord-n:hover{background:var(--terra);border-color:var(--terra);color:#fff;}
+.ord-arr{color:var(--border);font-size:.9rem;}
+@keyframes slideR{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:2rem 2rem 6rem;position:relative;z-index:1;}
+section{margin-bottom:5rem;}
+.sec-label{font-family:'Source Code Pro',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:.35rem;display:flex;align-items:center;gap:.5rem;}
+.sec-label::before{content:'';width:20px;height:2px;background:var(--terra);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.04em;margin-bottom:.4rem;line-height:1;}
+.sec-desc{color:var(--muted);line-height:1.75;max-width:640px;margin-bottom:2rem;font-size:.95rem;}
+
+/* TOPIC CARDS */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.topic-card{background:var(--card);border:2px solid var(--ink);padding:1.6rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.topic-card:hover{background:var(--ink);color:var(--bg);transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--terra);}
+.topic-card:hover .card-desc,.topic-card:hover .card-num{color:rgba(250,247,242,.6);}
+.topic-card:hover .card-title{color:var(--bg);}
+.card-num{font-family:'Source Code Pro',monospace;font-size:.66rem;color:var(--terra);margin-bottom:.6rem;letter-spacing:.1em;transition:color .2s;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;margin-bottom:.4rem;transition:color .2s;}
+.card-desc{font-size:.84rem;color:var(--muted);line-height:1.6;transition:color .2s;}
+.card-chip{display:inline-block;margin-top:.8rem;font-family:'Source Code Pro',monospace;font-size:.6rem;padding:.18rem .5rem;border:1px solid var(--border);background:var(--surface);color:var(--muted);}
+.card-arr{position:absolute;right:1rem;bottom:1rem;font-size:.95rem;color:var(--border);transition:all .2s;}
+.topic-card:hover .card-arr{color:var(--terra);}
+
+/* LESSON PANEL */
+.lesson-panel{display:none;background:var(--card);border:2px solid var(--ink);padding:2rem;margin-top:.8rem;animation:panelIn .3s ease;}
+.lesson-panel.open{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+
+/* TABS */
+.tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:.7rem;}
+.tab{font-family:'Source Code Pro',monospace;font-size:.68rem;padding:.36rem .85rem;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.04em;}
+.tab.active,.tab:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+
+/* CONTENT */
+.ca{line-height:1.8;}
+.ca h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;margin:1.5rem 0 .7rem;color:var(--ink);}
+.ca h4{font-family:'Source Code Pro',monospace;font-size:.75rem;font-weight:600;margin:1.4rem 0 .45rem;color:var(--terra);text-transform:uppercase;letter-spacing:.1em;}
+.ca p{color:#3a3530;margin-bottom:.9rem;font-size:.94rem;}
+.ca ul,.ca ol{padding-left:1.4rem;margin-bottom:.9rem;}
+.ca li{color:#3a3530;margin-bottom:.42rem;line-height:1.7;font-size:.94rem;}
+.ca strong{color:var(--ink);}
+
+/* BOXES */
+.def-box{background:var(--terra-s);border-left:4px solid var(--terra);padding:1rem 1.3rem;margin:1rem 0;}
+.def-box .lbl{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--terra);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;font-weight:600;}
+.def-box p{color:var(--ink);margin:0;font-size:.92rem;}
+.prop-box{background:var(--navy-s);border-left:4px solid var(--navy);padding:1rem 1.3rem;margin:1rem 0;}
+.prop-box .lbl{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--navy);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;font-weight:600;}
+.prop-box p,.prop-box ul{color:var(--ink);margin:0;font-size:.92rem;}
+.prop-box ul{padding-left:1.2rem;}
+.prop-box li{margin-bottom:.32rem;}
+.ex-box{background:var(--gold-s);border:2px solid rgba(184,134,11,.25);padding:1rem 1.3rem;margin:1rem 0;}
+.ex-box .lbl{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;font-weight:600;}
+.ex-box p,.ex-box ul,.ex-box ol{color:#3a3530;margin-bottom:.45rem;font-size:.92rem;}
+.ex-box li{margin-bottom:.32rem;}
+.theorem{background:var(--sage-s);border:2px solid rgba(58,107,78,.2);padding:1rem 1.3rem;margin:1rem 0;}
+.theorem .lbl{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--sage);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;font-weight:600;}
+.theorem p,.theorem ul{color:#3a3530;font-size:.92rem;}
+.warn-box{background:var(--plum-s);border:2px solid rgba(107,58,107,.2);padding:1rem 1.3rem;margin:1rem 0;}
+.warn-box .lbl{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--plum);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;font-weight:600;}
+.warn-box p{color:#3a3530;margin:0;font-size:.92rem;}
+.plain-note{background:var(--surface);border-left:4px solid var(--border);padding:.9rem 1.2rem;margin:.8rem 0;font-size:.92rem;color:var(--muted);line-height:1.75;}
+.plain-note strong{color:var(--ink);}
+
+/* MATH */
+.math{font-family:'Source Code Pro',monospace;background:var(--surface);border:1px solid var(--border);padding:.1rem .4rem;font-size:.85rem;color:var(--terra);}
+.math-block{font-family:'Source Code Pro',monospace;background:var(--ink);color:#f0c060;padding:1.2rem 1.5rem;margin:.8rem 0;font-size:.84rem;overflow-x:auto;line-height:1.95;white-space:pre;}
+
+/* TABLE */
+.dtable{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.86rem;}
+.dtable th{background:var(--ink);color:var(--bg);font-family:'Source Code Pro',monospace;font-size:.64rem;text-transform:uppercase;letter-spacing:.06em;padding:.58rem .88rem;text-align:left;}
+.dtable td{padding:.5rem .88rem;border:1px solid var(--border);color:#3a3530;}
+.dtable tr:nth-child(even) td{background:var(--surface);}
+.ck{color:var(--sage);font-weight:700;}
+.cx{color:var(--terra);font-weight:700;}
+
+/* ORDINAL VISUALIZER */
+.ord-vis{background:var(--card2);border:2px solid var(--border);padding:1.4rem;margin:1rem 0;}
+.ord-row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:.5rem 0;}
+.ord-box{width:36px;height:36px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Source Code Pro',monospace;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .25s;background:var(--card);}
+.ord-box:hover{border-color:var(--terra);color:var(--terra);}
+.ord-box.lit{background:var(--terra);border-color:var(--terra);color:#fff;}
+.ord-box.limit{background:var(--navy);border-color:var(--navy);color:#fff;}
+.ord-box.succ{background:var(--sage);border-color:var(--sage);color:#fff;}
+.ord-label{font-family:'Source Code Pro',monospace;font-size:.7rem;color:var(--muted);padding:.2rem .4rem;background:var(--surface);border:1px solid var(--border);}
+.ord-omega{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--navy);background:var(--navy-s);border:2px solid var(--navy);width:48px;height:36px;}
+
+/* INDUCTION STEPS */
+.ind-step{background:var(--card2);border:2px solid var(--border);padding:1.2rem;margin:.7rem 0;position:relative;overflow:hidden;}
+.ind-step::before{content:attr(data-n);position:absolute;right:1rem;top:.5rem;font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--border);line-height:1;}
+.ind-step .st-label{font-family:'Source Code Pro',monospace;font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.ind-step .st-title{font-weight:700;font-size:.93rem;margin-bottom:.3rem;color:var(--ink);}
+.ind-step .st-body{font-size:.88rem;color:var(--muted);line-height:1.65;}
+.ind-step.done{border-color:var(--sage);background:var(--sage-s);}
+.ind-step.done .st-label{color:var(--sage);}
+
+/* INTERACTIVE */
+.sim{background:var(--surface);border:2px solid var(--border);padding:1.4rem;margin:1.3rem 0;}
+.sim h4{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.04em;margin-bottom:.7rem;}
+.s-in{background:var(--card);border:2px solid var(--border);padding:.42rem .7rem;color:var(--ink);font-family:'Source Code Pro',monospace;font-size:.82rem;width:120px;}
+.s-in:focus{outline:none;border-color:var(--terra);}
+.s-btn{background:var(--ink);border:2px solid var(--ink);padding:.42rem 1rem;color:var(--bg);cursor:pointer;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;}
+.s-btn:hover{background:var(--terra);border-color:var(--terra);}
+.s-out{font-family:'Source Code Pro',monospace;font-size:.82rem;background:var(--card);border:2px solid var(--border);padding:.75rem 1rem;margin-top:.7rem;color:var(--terra);min-height:2rem;line-height:1.85;display:none;white-space:pre-wrap;}
+.op-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem;}
+.op-btn{padding:.35rem .75rem;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:.78rem;font-family:'Source Code Pro',monospace;transition:all .2s;}
+.op-btn.sel,.op-btn:hover{background:var(--terra);border-color:var(--terra);color:#fff;}
+
+/* QUIZ */
+.qwrap{background:var(--card);border:2px solid var(--ink);padding:2rem;margin:2rem 0;}
+.qwrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.04em;margin-bottom:.9rem;color:var(--terra);}
+.qi{margin-bottom:1.75rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.qi:last-of-type{border-bottom:none;}
+.qt{font-size:.92rem;color:var(--ink);margin-bottom:.72rem;line-height:1.65;}
+.qopts{display:flex;flex-direction:column;gap:.38rem;}
+.qo{background:var(--surface);border:1.5px solid var(--border);padding:.55rem .9rem;cursor:pointer;font-size:.87rem;transition:all .2s;display:flex;align-items:center;gap:.6rem;color:#3a3530;}
+.qo:hover{border-color:var(--terra);background:var(--terra-s);}
+.qo.correct{background:var(--sage-s);border-color:var(--sage);color:var(--sage);}
+.qo.wrong{background:var(--terra-s);border-color:var(--terra);color:var(--terra);}
+.ol{width:1.4rem;height:1.4rem;background:var(--border);font-family:'Source Code Pro',monospace;font-size:.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qfb{font-size:.82rem;margin-top:.42rem;padding:.42rem .8rem;display:none;line-height:1.6;}
+.qfb.show{display:block;}
+.qfb.ok{background:var(--sage-s);color:var(--sage);border-left:3px solid var(--sage);}
+.qfb.bad{background:var(--terra-s);color:var(--terra);border-left:3px solid var(--terra);}
+.pbar{height:4px;background:var(--border);margin:1rem 0;}
+.pfill{height:100%;background:var(--terra);transition:width .5s;}
+.qscore{font-family:'Source Code Pro',monospace;font-size:.88rem;padding:.9rem;background:var(--terra-s);text-align:center;display:none;margin-top:1rem;border:2px solid var(--terra);}
+
+/* FLIP CARDS */
+.fg{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0;}
+.fc{width:174px;height:98px;perspective:900px;cursor:pointer;}
+.fci{width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;position:relative;}
+.fc.fl .fci{transform:rotateY(180deg);}
+.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:.55rem;font-size:.76rem;border:2px solid var(--border);}
+.ff{background:var(--surface);color:var(--terra);font-family:'Source Code Pro',monospace;font-size:.7rem;}
+.fb{background:var(--terra-s);color:#3a3530;transform:rotateY(180deg);line-height:1.5;}
+
+/* PROGRESS DOTS */
+.pdots{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.4rem;z-index:50;}
+.pd{width:8px;height:8px;background:var(--border);cursor:pointer;transition:all .3s;}
+.pd.active{background:var(--terra);transform:scale(1.5);}
+
+/* OUTCOMES */
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:.9rem;}
+.oc{background:var(--card);border:2px solid var(--border);padding:1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.oi{width:2rem;height:2rem;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;}
+.ot{font-size:.86rem;color:#3a3530;line-height:1.65;}
+
+.divl{height:2px;background:var(--border);margin:1.4rem 0;}
+@media(max-width:640px){.pdots,.nav-links{display:none;}#hero{padding:6rem 1.5rem 3rem;}.hero-bg-num{display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Ω Ordinals</div>
+  <div class="nav-links">
+    <a href="#topics">Topics</a>
+    <a href="#engage">Engage</a>
+    <a href="#explore">Explore</a>
+    <a href="#assess">Quiz</a>
+    <a href="#outcomes">Outcomes</a>
+  </div>
+  <div class="nav-prog" id="navProg"></div>
+</nav>
+
+<div class="pdots" id="pdots">
+  <div class="pd active"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+  <div class="pd"></div>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg-num">Ω</div>
+  <div class="h-eyebrow">Logic & Set Theory · Week Module</div>
+  <h1>
+    <span class="t1">Ordering</span>
+    <span class="t2">&amp; Ordinals</span>
+    <span class="t3">Transfinite</span>
+  </h1>
+  <p class="h-sub">Ordinal numbers count beyond infinity — measuring not just size, but order. Transfinite induction extends mathematical proof into the infinite realm.</p>
+  <div class="h-tags">
+    <span class="htag">5Es Framework</span>
+    <span class="htag">Interactive Simulations</span>
+    <span class="htag">PST Module</span>
+    <span class="htag">Self-Assessment</span>
+  </div>
+  <div class="h-btns">
+    <a href="#engage" class="btn-fill">Start Learning</a>
+    <a href="#topics" class="btn-out">Browse Topics</a>
+  </div>
+  <div class="ord-seq">
+    <div class="ord-n">0</div><div class="ord-arr">→</div>
+    <div class="ord-n">1</div><div class="ord-arr">→</div>
+    <div class="ord-n">2</div><div class="ord-arr">→</div>
+    <div class="ord-n">3</div><div class="ord-arr">→</div>
+    <div class="ord-n">…</div><div class="ord-arr">→</div>
+    <div class="ord-n" style="background:var(--terra);border-color:var(--terra);color:#fff;font-family:'Bebas Neue';font-size:1.3rem">ω</div>
+    <div class="ord-arr">→</div>
+    <div class="ord-n" style="font-size:.7rem;font-family:'Source Code Pro'">ω+1</div>
+    <div class="ord-arr">→</div>
+    <div class="ord-n" style="font-size:.62rem;font-family:'Source Code Pro'">ω·2</div>
+    <div class="ord-arr">→</div>
+    <div class="ord-n" style="font-size:.68rem;font-family:'Source Code Pro'">ω²</div>
+    <div class="ord-arr">→</div>
+    <div class="ord-n" style="font-size:.9rem;font-family:'Bebas Neue';color:var(--navy)">Ω</div>
+  </div>
+</div>
+
+<main>
+
+<!-- ENGAGE -->
+<section id="engage">
+  <div class="sec-label">5Es · Engage</div>
+  <div class="sec-title">Beyond Counting</div>
+  <p class="sec-desc">Cardinal numbers tell us HOW MANY. But ordinals tell us something different — they capture ORDER and position. Let's discover why that distinction matters profoundly.</p>
+  <div style="background:var(--card);border:2px solid var(--ink);padding:2rem;">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em;color:var(--terra);margin-bottom:1.1rem">🤔 Cardinal vs. Ordinal Thinking</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div style="background:var(--terra-s);border:2px solid rgba(196,92,42,.25);padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">🏁</div>
+        <strong style="font-size:.9rem">Race Positions</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">5 runners finish a race. The cardinal number 5 tells us how many ran. But "1st, 2nd, 3rd…" are ordinals — they encode the ORDER of finishing, not just the count.</p>
+      </div>
+      <div style="background:var(--navy-s);border:2px solid rgba(30,58,95,.2);padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">🔢</div>
+        <strong style="font-size:.9rem">What comes after all natural numbers?</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">After 0, 1, 2, 3, … there's a "first infinite ordinal" called ω. After ω comes ω+1, then ω+2, … then ω·2, then ω², then ω^ω, then ε₀…</p>
+      </div>
+      <div style="background:var(--sage-s);border:2px solid rgba(58,107,78,.2);padding:1.1rem;">
+        <div style="font-size:1.3rem;margin-bottom:.4rem">🔁</div>
+        <strong style="font-size:.9rem">Why can't ordinary induction reach ω?</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">Standard induction proves P(0) and P(n)→P(n+1). It reaches every finite n — but never ω. Transfinite induction fills that gap.</p>
+      </div>
+    </div>
+    <div style="background:rgba(196,92,42,.05);border:2px dashed rgba(196,92,42,.3);padding:1rem;">
+      <strong style="color:var(--terra);font-size:.88rem">💬 Discussion Prompt</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.4rem;line-height:1.7">With a partner: (1) List five everyday uses of ordinal numbers (not cardinal). (2) If you could keep counting forever — 0, 1, 2, 3, … — what would the "first position after all of them" mean? Would it be a number? What would it look like?</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section id="topics">
+  <div class="sec-label">Course Map</div>
+  <div class="sec-title">Two Deep Ideas</div>
+  <p class="sec-desc">Ordinals and transfinite induction are inseparable — ordinals give us the structure, induction gives us the proof technique. Click a card to open the full lesson.</p>
+  <div class="topic-grid">
+    <div class="topic-card" onclick="openLesson('L1')">
+      <div class="card-num">01 / 02</div>
+      <div class="card-title">Ordinal Numbers</div>
+      <div class="card-desc">Order types, well-orderings, successor and limit ordinals, and the transfinite hierarchy beyond ω.</div>
+      <div class="card-chip">ω, ε₀, Ω</div><div class="card-arr">↗</div>
+    </div>
+    <div class="topic-card" onclick="openLesson('L2')">
+      <div class="card-num">02 / 02</div>
+      <div class="card-title">Transfinite Induction</div>
+      <div class="card-desc">Extending mathematical induction through all ordinals — base, successor step, and the crucial limit step.</div>
+      <div class="card-chip">proof technique</div><div class="card-arr">↗</div>
+    </div>
+  </div>
+
+<!-- ════ L1 — ORDINAL NUMBERS ════ -->
+<div id="L1" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L1','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L1','explore',this)">🔬 Explore</button>
+    <button class="tab" onclick="switchTab('L1','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L1-learn" class="ca">
+    <h3>Ordinal Numbers</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Cardinals measure SIZE. Ordinals measure ORDER. Two sets with the same cardinality can have different ordinal structure — depending on how their elements are arranged. Ordinals formalize the idea of "position in a sequence," even for infinite sequences.</div>
+
+    <h4>Step 1 — Well-Ordered Sets</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Well-Ordering</div>
+      <p>A set <span class="math">A</span> with a linear order <span class="math">&lt;</span> is <strong>well-ordered</strong> if every non-empty subset of <span class="math">A</span> has a <strong>least element</strong>.<br><br>
+      Formally: <span class="math">∀ S ⊆ A, S ≠ ∅ ⟹ ∃ m ∈ S: m ≤ s  for all  s ∈ S</span></p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Examples of Well-Ordered Sets</div>
+      <ul>
+        <li><span class="math">ℕ = {0,1,2,3,…}</span> with the usual ≤ — well-ordered ✅ (every non-empty subset has a smallest element)</li>
+        <li><span class="math">{0,1,2,…,n}</span> for any finite n — well-ordered ✅</li>
+        <li><span class="math">{0,1,2,…} ∪ {ω}</span> where ω is bigger than every natural — well-ordered ✅</li>
+        <li><span class="math">ℤ</span> (integers) with usual ≤ — NOT well-ordered ❌ (the subset {...,-3,-2,-1} has no smallest element)</li>
+        <li><span class="math">ℝ</span> (reals) with usual ≤ — NOT well-ordered ❌ (e.g. the interval (0,1) has no least element)</li>
+        <li>Any finite set with any linear order — always well-ordered ✅</li>
+      </ul>
+    </div>
+
+    <h4>Step 2 — Order Isomorphism</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Order Isomorphism</div>
+      <p>Two well-ordered sets <span class="math">(A, &lt;_A)</span> and <span class="math">(B, &lt;_B)</span> are <strong>order isomorphic</strong> if there is a bijection <span class="math">f: A → B</span> that <em>preserves order</em>:<br>
+      <span class="math">a₁ &lt;_A a₂  ⟺  f(a₁) &lt;_B f(a₂)</span><br><br>
+      Order isomorphism captures the idea of "same ordering structure" regardless of what the elements are.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example — Order Isomorphism</div>
+      <p><span class="math">{1,2,3}</span> with usual order is isomorphic to <span class="math">{a,b,c}</span> ordered a&lt;b&lt;c via f(1)=a, f(2)=b, f(3)=c.<br>
+      <span class="math">ℕ</span> and <span class="math">{2,4,6,8,…}</span> (even numbers) are order isomorphic via f(n)=2n — same order type!<br>
+      <span class="math">ℕ</span> and <span class="math">ℕ ∪ {ω}</span> are NOT order isomorphic — one has a last element (ω), the other doesn't.</p>
+    </div>
+
+    <h4>Step 3 — Ordinal Numbers</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Ordinal Number</div>
+      <p>An <strong>ordinal number</strong> (or ordinal) is the <em>order type</em> of a well-ordered set — a canonical representative of its isomorphism class.<br><br>
+      <strong>Von Neumann's construction:</strong> Each ordinal IS the set of all smaller ordinals:<br>
+      <span class="math">0 = ∅</span><br>
+      <span class="math">1 = {0} = {∅}</span><br>
+      <span class="math">2 = {0,1} = {∅,{∅}}</span><br>
+      <span class="math">3 = {0,1,2}</span><br>
+      <span class="math">n = {0,1,2,…,n−1}</span><br>
+      <span class="math">ω = {0,1,2,3,…} = ℕ</span></p>
+    </div>
+
+    <div class="plain-note"><strong>Key insight:</strong> Every ordinal α = {β | β &lt; α}. An ordinal literally contains all the ordinals smaller than itself. This makes the ordinals naturally well-ordered by the membership relation ∈.</div>
+
+    <h4>Step 4 — Two Types of Ordinals</h4>
+    <div class="def-box">
+      <div class="lbl">Successor Ordinals</div>
+      <p>An ordinal <span class="math">α</span> is a <strong>successor ordinal</strong> if <span class="math">α = β + 1 = β ∪ {β}</span> for some ordinal <span class="math">β</span>.<br>
+      Examples: 1 = 0+1, 2 = 1+1, 3 = 2+1, …, ω+1 = ω∪{ω}, ω+2, ω+3, …<br>
+      Every successor ordinal has an <em>immediate predecessor</em>.</p>
+    </div>
+    <div class="def-box">
+      <div class="lbl">Limit Ordinals</div>
+      <p>An ordinal <span class="math">α &gt; 0</span> is a <strong>limit ordinal</strong> if it is NOT a successor ordinal — it has no immediate predecessor.<br>
+      <span class="math">α</span> is a limit ordinal iff <span class="math">α = sup{β | β &lt; α}</span> (it equals the supremum of all smaller ordinals).<br>
+      Examples: <span class="math">ω, ω·2, ω², ω^ω, ε₀</span><br>
+      <span class="math">ω</span> is the FIRST limit ordinal — it has no predecessor ordinal.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">The Ordinal Hierarchy</div>
+      <div style="font-family:'Source Code Pro',monospace;font-size:.82rem;line-height:2;color:#3a3530;">
+        <strong>Finite ordinals:</strong> 0, 1, 2, 3, 4, … (each is a successor)<br>
+        <strong>First limit:</strong> ω = {0,1,2,3,…}<br>
+        <strong>Successors of ω:</strong> ω+1, ω+2, ω+3, …<br>
+        <strong>Second limit:</strong> ω+ω = ω·2 = {0,1,2,…,ω,ω+1,ω+2,…}<br>
+        <strong>More:</strong> ω·2+1, …, ω·3, …, ω·ω = ω²<br>
+        <strong>Higher:</strong> ω³, ω⁴, …, ω^ω, ω^{ω^ω}, …<br>
+        <strong>Epsilon-naught:</strong> ε₀ = ω^{ω^{ω^{…}}} (first fixed point of α↦ω^α)<br>
+        <strong>Much higher still:</strong> ε₁, ε₂, …, Church–Kleene ordinal ω₁^{CK}, …
+      </div>
+    </div>
+
+    <h4>Ordinal Arithmetic</h4>
+    <div class="prop-box">
+      <div class="lbl">Adding Ordinals</div>
+      <ul>
+        <li><span class="math">α + 0 = α</span></li>
+        <li><span class="math">α + (β+1) = (α + β) + 1</span> (successor step)</li>
+        <li><span class="math">α + λ = sup{α + β | β &lt; λ}</span> for limit ordinal λ</li>
+        <li><strong>Warning: ordinal addition is NOT commutative!</strong><br>
+        <span class="math">1 + ω = ω</span> (adding 1 before ω doesn't extend past ω)<br>
+        <span class="math">ω + 1 &gt; ω</span> (adding 1 after ω gives a new ordinal)</li>
+      </ul>
+    </div>
+    <div class="prop-box">
+      <div class="lbl">Multiplying Ordinals</div>
+      <ul>
+        <li><span class="math">α · 0 = 0</span></li>
+        <li><span class="math">α · (β+1) = α · β + α</span></li>
+        <li><span class="math">α · λ = sup{α · β | β &lt; λ}</span> for limit λ</li>
+        <li><span class="math">2 · ω = ω</span> (repeating 2 infinitely gets to ω)</li>
+        <li><span class="math">ω · 2 = ω + ω &gt; ω</span> (two copies of ω)</li>
+        <li>Not commutative: <span class="math">2 · ω ≠ ω · 2</span></li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ Ordinals vs. Cardinals</div>
+      <p>Ordinals and cardinals agree on finite numbers (3 means "three" in both senses). For infinite sets, they diverge. The ordinals ω, ω+1, ω+2, …, ω·2, …, ω² all have the SAME cardinality ℵ₀ — they are all countably infinite, just with different orderings. Cardinals measure size; ordinals measure order type.</p>
+    </div>
+
+    <table class="dtable">
+      <tr><th>Ordinal</th><th>As a Set</th><th>Type</th><th>Cardinality</th></tr>
+      <tr><td>0</td><td>∅</td><td>—</td><td>0</td></tr>
+      <tr><td>1</td><td>{0}</td><td>Successor</td><td>1</td></tr>
+      <tr><td>n</td><td>{0,1,…,n−1}</td><td>Successor</td><td>n</td></tr>
+      <tr><td>ω</td><td>{0,1,2,3,…}</td><td>Limit</td><td>ℵ₀</td></tr>
+      <tr><td>ω+1</td><td>{0,1,2,…,ω}</td><td>Successor</td><td>ℵ₀</td></tr>
+      <tr><td>ω·2</td><td>{0,…,ω,ω+1,…}</td><td>Limit</td><td>ℵ₀</td></tr>
+      <tr><td>ω²</td><td>{0,…,ω,…,ω·2,…}</td><td>Limit</td><td>ℵ₀</td></tr>
+      <tr><td>ω₁</td><td>All countable ordinals</td><td>Limit</td><td>ℵ₁</td></tr>
+    </table>
+  </div><!-- /L1-learn -->
+
+  <div id="L1-explore" class="ca" style="display:none">
+    <h3>🔬 Ordinal Visualizer</h3>
+    <p style="color:var(--muted);font-size:.9rem">Explore the ordinal hierarchy. Click ordinals to see their type (successor or limit). Use the arithmetic explorer to compute ordinal operations.</p>
+    <div class="sim">
+      <h4 style="color:var(--terra)">Ordinal Hierarchy — Click to Identify</h4>
+      <div id="ordVis"></div>
+      <div id="ordInfo" style="margin-top:.8rem;font-size:.85rem;color:var(--muted);font-family:'Source Code Pro',monospace;min-height:1.5rem;"></div>
+    </div>
+    <div class="sim" style="margin-top:1rem;">
+      <h4 style="color:var(--navy)">Ordinal Arithmetic Explorer</h4>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:.8rem">Select an operation and two small ordinals to see the result. Notice the non-commutativity!</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">α</label>
+        <select class="s-in" id="ordA" style="width:100px">
+          <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="w" selected>ω</option>
+          <option value="w1">ω+1</option><option value="w2">ω·2</option>
+        </select></div>
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">op</label>
+        <select class="s-in" id="ordOp" style="width:70px">
+          <option value="+">+</option><option value="*">·</option>
+        </select></div>
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">β</label>
+        <select class="s-in" id="ordB" style="width:100px">
+          <option value="0">0</option><option value="1" selected>1</option><option value="2">2</option>
+          <option value="3">3</option><option value="w">ω</option>
+          <option value="w1">ω+1</option><option value="w2">ω·2</option>
+        </select></div>
+        <button class="s-btn" onclick="calcOrd()">Calculate</button>
+      </div>
+      <div id="ordResult" class="s-out"></div>
+    </div>
+  </div>
+
+  <div id="L1-practice" class="ca" style="display:none">
+    <h3>✏️ Flashcards</h3>
+    <div class="fg">
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is a well-ordered set?</div><div class="fb">A linearly ordered set where every non-empty subset has a least (minimum) element.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is an ordinal number?</div><div class="fb">The order type of a well-ordered set. In von Neumann's construction, α = {β | β &lt; α}.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Successor vs limit ordinal?</div><div class="fb">Successor: α = β+1, has immediate predecessor. Limit: no predecessor, equals sup of all smaller.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is ω?</div><div class="fb">The first infinite ordinal — the order type of ℕ. First limit ordinal. ω = {0,1,2,3,…}.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Is 1+ω = ω+1?</div><div class="fb">NO! 1+ω = ω (same size), but ω+1 &gt; ω. Ordinal addition is NOT commutative.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Cardinal of ω, ω+1, ω²?</div><div class="fb">All have cardinality ℵ₀ — they're countably infinite sets with different order structures.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Is ℤ well-ordered?</div><div class="fb">NO — the subset {…,-3,-2,-1} of negative integers has no least element.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is ε₀?</div><div class="fb">The first ordinal fixed point: ε₀ = ω^{ω^{ω^⋰}}. The smallest ordinal α with ω^α = α.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L1 -->
+
+<!-- ════ L2 — TRANSFINITE INDUCTION ════ -->
+<div id="L2" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L2','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L2','simulate',this)">🧪 Simulate</button>
+    <button class="tab" onclick="switchTab('L2','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L2-learn" class="ca">
+    <h3>Transfinite Induction</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Ordinary mathematical induction proves P(n) for all n ∈ ℕ using two steps: prove P(0) and prove P(n)→P(n+1). But what about proving P(α) for ALL ordinals α — including limit ordinals like ω where there's no immediate predecessor? Transfinite induction adds a third step to handle exactly this case.</div>
+
+    <h4>Recall — Ordinary Induction</h4>
+    <div class="def-box">
+      <div class="lbl">Standard Mathematical Induction</div>
+      <p>To prove <span class="math">P(n)</span> for all <span class="math">n ∈ ℕ</span>:<br>
+      <strong>Base case:</strong> Prove <span class="math">P(0)</span>.<br>
+      <strong>Inductive step:</strong> Assume <span class="math">P(n)</span>; prove <span class="math">P(n+1)</span>.<br>
+      <strong>Limitation:</strong> This only reaches every finite n. It never reaches ω or beyond.</p>
+    </div>
+
+    <h4>Why We Need a Third Step</h4>
+    <div class="plain-note">
+      Suppose we've proved P(0), P(1), P(2), … P(n) for every finite n. Does P(ω) follow?<br><br>
+      <strong>NOT automatically!</strong> ω is a limit ordinal — it has no immediate predecessor. Standard induction only gives us P(n) → P(n+1), which never crosses the gap to ω.<br><br>
+      We need a separate argument: "if P(β) holds for ALL β &lt; ω, then P(ω) holds."
+    </div>
+
+    <h4>The Three Cases</h4>
+    <div class="def-box">
+      <div class="lbl">Transfinite Induction</div>
+      <p>To prove <span class="math">P(α)</span> for all ordinals <span class="math">α</span>, it suffices to prove:<br><br>
+      <strong>Case 1 — Base:</strong> <span class="math">P(0)</span> holds.<br><br>
+      <strong>Case 2 — Successor step:</strong> For every ordinal <span class="math">β</span>, if <span class="math">P(β)</span> then <span class="math">P(β+1)</span>.<br><br>
+      <strong>Case 3 — Limit step:</strong> For every limit ordinal <span class="math">λ</span>, if <span class="math">P(β)</span> for all <span class="math">β &lt; λ</span>, then <span class="math">P(λ)</span>.</p>
+    </div>
+
+    <div class="theorem">
+      <div class="lbl">Strong Form (Transfinite Induction Schema)</div>
+      <p>Equivalently: if <span class="math">P(β)</span> holds for all <span class="math">β &lt; α</span> implies <span class="math">P(α)</span>, for every ordinal <span class="math">α</span>, then <span class="math">P(α)</span> holds for all ordinals.<br><br>
+      This is the "strong induction" version — the inductive hypothesis is "P holds for ALL smaller ordinals."</p>
+    </div>
+
+    <h4>Why It Works</h4>
+    <div class="plain-note">
+      Suppose the three cases hold but <strong>P(α) fails for some ordinal α</strong>. Let <span class="math">α₀</span> be the smallest ordinal where P fails (exists by well-ordering of ordinals).<br>
+      — <span class="math">α₀ ≠ 0</span> (Case 1 covers this)<br>
+      — <span class="math">α₀</span> is not a successor ordinal β+1 (because P(β) holds — α₀ was minimal — so Case 2 gives P(β+1))<br>
+      — <span class="math">α₀</span> is not a limit ordinal (because P(β) holds for all β &lt; α₀ — minimal — so Case 3 gives P(α₀))<br>
+      Contradiction! So no failure is possible — P holds everywhere.
+    </div>
+
+    <h4>Worked Examples</h4>
+    <div class="ex-box">
+      <div class="lbl">Example 1 — Every ordinal is either 0, a successor, or a limit</div>
+      <p>Let P(α) = "α is 0, a successor, or a limit ordinal."<br><br>
+      <strong>Base (α=0):</strong> P(0) holds — 0 is explicitly the base case. ✅<br>
+      <strong>Successor (α=β+1):</strong> β+1 is a successor ordinal by definition. ✅<br>
+      <strong>Limit (α=λ):</strong> λ is a limit ordinal by definition (any ordinal that's not 0 and not a successor). ✅<br><br>
+      By transfinite induction, every ordinal α belongs to exactly one of these three categories. □</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 2 — Defining a function on all ordinals by transfinite recursion</div>
+      <p>Define <span class="math">f(α)</span> = "the set of all ordinals ≤ α" for all ordinals α.<br><br>
+      <strong>Base:</strong> <span class="math">f(0) = {0}</span><br>
+      <strong>Successor:</strong> <span class="math">f(α+1) = f(α) ∪ {α+1}</span><br>
+      <strong>Limit:</strong> <span class="math">f(λ) = ⋃{f(β) | β &lt; λ}</span><br><br>
+      Transfinite induction guarantees this is well-defined for all ordinals.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 3 — Ordinal arithmetic is well-defined</div>
+      <p>We can define α + β for all ordinals by transfinite induction on β:<br>
+      <span class="math">α + 0 = α</span> (base)<br>
+      <span class="math">α + (β+1) = (α + β) + 1</span> (successor step)<br>
+      <span class="math">α + λ = sup{α + β | β &lt; λ}</span> (limit step)<br><br>
+      Each step is well-defined because we only reference previously defined values.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Example 4 — Every well-ordered set is isomorphic to a unique ordinal</div>
+      <p>Let P(α) = "every well-ordered set of order type α is isomorphic to the ordinal α."<br><br>
+      <strong>Base:</strong> The empty set has order type 0. ✅<br>
+      <strong>Successor:</strong> If every set of type β is iso to β, then any set of type β+1 is {elements of type β} ∪ {one more element} ≅ β+1. ✅<br>
+      <strong>Limit:</strong> A set of limit type λ is the union of initial segments of types β &lt; λ, each isomorphic to β by inductive hypothesis. ✅<br><br>
+      Therefore every well-ordered set has a unique ordinal representative. □</p>
+    </div>
+
+    <h4>Transfinite Recursion</h4>
+    <div class="def-box">
+      <div class="lbl">Transfinite Recursion Theorem</div>
+      <p>Given a function <span class="math">G</span> that maps partial functions to values, there is a unique function <span class="math">F</span> defined on all ordinals such that:<br>
+      <span class="math">F(α) = G(F ↾ α)</span> for all ordinals α<br><br>
+      (where <span class="math">F ↾ α</span> is the restriction of F to ordinals below α.)<br><br>
+      This is the engine behind ordinal arithmetic, the cumulative hierarchy of sets (V₀, V₁, …), and many other constructions.</p>
+    </div>
+
+    <div class="prop-box">
+      <div class="lbl">Comparison: Ordinary vs. Transfinite Induction</div>
+      <ul>
+        <li><strong>Ordinary induction:</strong> 2 steps (base + successor). Reaches all finite n.</li>
+        <li><strong>Transfinite induction:</strong> 3 steps (base + successor + limit). Reaches ALL ordinals.</li>
+        <li><strong>The limit step is the key addition</strong> — it handles "jumps" at limit ordinals like ω, ω², ε₀.</li>
+        <li>Strong transfinite induction: assume P holds for all β &lt; α; prove P(α). One step covers all three cases.</li>
+        <li>Both rely on the well-ordering of their respective domains (ℕ for ordinary, Ord for transfinite).</li>
+      </ul>
+    </div>
+
+    <table class="dtable">
+      <tr><th>Feature</th><th>Ordinary Induction</th><th>Transfinite Induction</th></tr>
+      <tr><td>Domain</td><td>ℕ = {0,1,2,…}</td><td>All ordinals Ord</td></tr>
+      <tr><td>Base case</td><td>P(0)</td><td>P(0)</td></tr>
+      <tr><td>Inductive step</td><td>P(n) → P(n+1)</td><td>P(β) → P(β+1) for all β</td></tr>
+      <tr><td>Limit step</td><td class="cx">None needed</td><td class="ck">P(β) ∀β&lt;λ → P(λ) for limit λ</td></tr>
+      <tr><td>Reaches ω?</td><td class="cx">No</td><td class="ck">Yes</td></tr>
+      <tr><td>Basis</td><td>Well-ordering of ℕ</td><td>Well-ordering of all ordinals</td></tr>
+    </table>
+  </div><!-- /L2-learn -->
+
+  <div id="L2-simulate" class="ca" style="display:none">
+    <h3>🧪 Transfinite Induction Step-Builder</h3>
+    <p style="color:var(--muted);font-size:.9rem">Walk through a transfinite induction proof step-by-step. Select a property and verify each case.</p>
+    <div class="sim">
+      <h4 style="color:var(--navy)">Prove: Every ordinal α satisfies P(α)</h4>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:.9rem">Choose a property, then click through each case to build the proof.</p>
+      <div style="margin-bottom:.8rem;">
+        <select class="s-in" id="propSel" onchange="loadProp()" style="width:300px">
+          <option value="trichotomy">P(α): α is 0, successor, or limit</option>
+          <option value="transitive">P(α): α is a transitive set</option>
+          <option value="arith">P(α): α + 0 = α (ordinal arithmetic base)</option>
+        </select>
+      </div>
+      <div id="indSteps"></div>
+      <div id="indResult" class="s-out" style="margin-top:.8rem;"></div>
+    </div>
+  </div>
+
+  <div id="L2-practice" class="ca" style="display:none">
+    <div class="fg">
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">3 steps of transfinite induction?</div><div class="fb">1. Base: P(0). 2. Successor: P(β)→P(β+1). 3. Limit: P(β) for all β&lt;λ → P(λ).</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Why do we need the limit step?</div><div class="fb">Limit ordinals like ω have no predecessor — you can't reach them by successor steps alone.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Strong transfinite induction?</div><div class="fb">Assume P(β) for ALL β &lt; α; prove P(α). Covers base, successor, and limit in one step.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Why does transfinite induction work?</div><div class="fb">Ordinals are well-ordered — if P fails anywhere, there's a LEAST failure, which leads to a contradiction with one of the three cases.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">What is transfinite recursion?</div><div class="fb">Defining a function F(α) for all ordinals using: base, F(β+1)=G(F(β)), F(λ)=G({F(β)|β&lt;λ}).</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('fl')"><div class="fci"><div class="ff">Can ordinary induction prove P(ω)?</div><div class="fb">NO — ordinary induction proves P(n) for all finite n, but cannot cross to ω without the limit step.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L2 -->
+</section><!-- /topics -->
+
+<!-- EXPLORE -->
+<section id="explore">
+  <div class="sec-label">5Es · Explore</div>
+  <div class="sec-title">Interactive Experiments</div>
+  <p class="sec-desc">Experiment with ordinals and induction structures to build intuition through hands-on exploration.</p>
+
+  <div style="background:var(--card);border:2px solid var(--ink);padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;color:var(--terra);margin-bottom:.7rem">🔢 Well-Ordering Checker</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Enter a set of integers and an order. The tool checks whether it's well-ordered.</p>
+    <div class="sim" style="background:var(--bg);">
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">Set (comma-separated integers)</label><input class="s-in" id="woSet" value="3,1,4,1,5,9,2,6" style="width:220px"></div>
+        <button class="s-btn" onclick="checkWO()">Check</button>
+      </div>
+      <div id="woResult" class="s-out"></div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:2px solid var(--ink);padding:2rem;">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;color:var(--navy);margin-bottom:.7rem">📐 Ordinal Comparison</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Compare two ordinals from the list below to understand the ordinal ordering.</p>
+    <div class="sim" style="background:var(--bg);">
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">First ordinal</label>
+        <select class="s-in" id="cmpA" style="width:110px">
+          <option value="0">0</option><option value="1">1</option><option value="3">3</option>
+          <option value="w">ω</option><option value="w1">ω+1</option><option value="w2">ω+2</option>
+          <option value="w*2">ω·2</option><option value="w2sq">ω²</option>
+        </select></div>
+        <div><label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:.2rem">Second ordinal</label>
+        <select class="s-in" id="cmpB" style="width:110px">
+          <option value="0">0</option><option value="1">1</option><option value="3">3</option>
+          <option value="w" selected>ω</option><option value="w1">ω+1</option><option value="w2">ω+2</option>
+          <option value="w*2">ω·2</option><option value="w2sq">ω²</option>
+        </select></div>
+        <button class="s-btn" onclick="compareOrds()">Compare</button>
+      </div>
+      <div id="cmpResult" class="s-out"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ELABORATE -->
+<section id="elaborate">
+  <div class="sec-label">5Es · Elaborate</div>
+  <div class="sec-title">Proof Workshop</div>
+  <p class="sec-desc">Study complete proof structures, then tackle the challenge on your own.</p>
+  <div style="background:var(--card);border:2px solid var(--ink);padding:2rem;">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;color:var(--gold);margin-bottom:1.1rem">📝 Proof Templates</h3>
+
+    <div style="margin-bottom:1.5rem;background:var(--terra-s);border:2px solid rgba(196,92,42,.2);padding:1.2rem;">
+      <div style="font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--terra);text-transform:uppercase;margin-bottom:.5rem">Proof 1 — Every Non-Empty Set of Ordinals Has a Minimum</div>
+      <strong style="font-size:.91rem">Claim: Every non-empty class S of ordinals has a least element.</strong>
+      <div class="math-block">Proof by transfinite induction:
+Let S be a non-empty class of ordinals.
+Pick any α ∈ S.
+
+Case 1: No ordinal β &lt; α belongs to S.
+  Then α is the least element of S. ✓
+
+Case 2: Some β₀ &lt; α belongs to S.
+  Consider T = S ∩ α = {β ∈ S | β &lt; α}.
+  T is a non-empty set of ordinals, all less than α.
+  α is itself a set, and T ⊆ α.
+  By induction on α (every ordinal is well-ordered
+  as a set by ∈), T has a minimum element m.
+  Since all elements of S less than α are in T,
+  m is the least element of all of S. ✓
+  
+Therefore S is well-ordered. □</div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;background:var(--sage-s);border:2px solid rgba(58,107,78,.2);padding:1.2rem;">
+      <div style="font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--sage);text-transform:uppercase;margin-bottom:.5rem">Proof 2 — Transfinite Induction for Ordinal Addition</div>
+      <strong style="font-size:.91rem">Prove: α + 0 = α for all ordinals α.</strong>
+      <div class="math-block">This follows immediately from the BASE CASE
+of the recursive definition of ordinal addition:
+
+  α + 0 := α   (definition)
+
+Now prove: α + β is defined for all β, by 
+transfinite induction on β.
+
+Base (β=0):   α + 0 = α. ✓
+
+Successor (β = γ+1):
+  Assume α + γ is defined.
+  Set α + (γ+1) := (α + γ) + 1. ✓
+
+Limit (β = λ):
+  Assume α + γ defined for all γ &lt; λ.
+  Set α + λ := sup{α + γ | γ &lt; λ}. ✓
+
+By transfinite induction, α + β is defined
+for all ordinals α, β. □</div>
+    </div>
+
+    <div style="background:var(--navy-s);border:2px solid rgba(30,58,95,.2);padding:1.2rem;">
+      <div style="font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--navy);text-transform:uppercase;margin-bottom:.5rem">Your Turn — Proof Challenge</div>
+      <strong style="font-size:.91rem">Prove by transfinite induction: α · 1 = α for all ordinals α.</strong>
+      <p style="font-size:.84rem;color:var(--muted);margin-top:.5rem;line-height:1.7">Hint: Use the recursive definition α·0=0, α·(β+1)=α·β+α, α·λ=sup{α·β|β&lt;λ}.<br>
+      For each of the three cases (base α·0, then try to prove α·1), which step of the definition applies? Recall 1 = 0+1 is a successor ordinal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="assess">
+  <div class="sec-label">5Es · Evaluate</div>
+  <div class="sec-title">Knowledge Check</div>
+  <p class="sec-desc">10 questions covering ordinals and transfinite induction. Read each explanation carefully!</p>
+  <div class="qwrap">
+    <h3>Self-Assessment — 10 Questions</h3>
+    <div class="pbar"><div class="pfill" id="qp" style="width:0%"></div></div>
+
+    <div class="qi"><div class="qt">1. A well-ordered set is one where:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(1,'A','C')"><span class="ol">A</span>Every element has a successor</div>
+      <div class="qo" onclick="qa(1,'B','C')"><span class="ol">B</span>The set is finite</div>
+      <div class="qo" onclick="qa(1,'C','C')"><span class="ol">C</span>Every non-empty subset has a least element</div>
+      <div class="qo" onclick="qa(1,'D','C')"><span class="ol">D</span>The set has no maximum element</div>
+    </div>
+    <div class="qfb" id="q1-fb">✅ C is correct. A well-ordering is a linear order where every non-empty subset has a minimum. This is what allows transfinite induction to work — we can always find a "first failure."</div></div>
+
+    <div class="qi"><div class="qt">2. In Von Neumann's construction, the ordinal 3 equals:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(2,'A','C')"><span class="ol">A</span>{1, 2, 3}</div>
+      <div class="qo" onclick="qa(2,'B','C')"><span class="ol">B</span>{∅, {∅}, {{∅}}}</div>
+      <div class="qo" onclick="qa(2,'C','C')"><span class="ol">C</span>{0, 1, 2}</div>
+      <div class="qo" onclick="qa(2,'D','C')"><span class="ol">D</span>{3}</div>
+    </div>
+    <div class="qfb" id="q2-fb">✅ C is correct. In Von Neumann's construction: 3 = {0,1,2}. Each ordinal contains all smaller ordinals. So 0=∅, 1={0}, 2={0,1}, 3={0,1,2}.</div></div>
+
+    <div class="qi"><div class="qt">3. Which of the following is a limit ordinal?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(3,'A','D')"><span class="ol">A</span>5</div>
+      <div class="qo" onclick="qa(3,'B','D')"><span class="ol">B</span>ω + 1</div>
+      <div class="qo" onclick="qa(3,'C','D')"><span class="ol">C</span>ω + 3</div>
+      <div class="qo" onclick="qa(3,'D','D')"><span class="ol">D</span>ω · 2</div>
+    </div>
+    <div class="qfb" id="q3-fb">✅ D is correct. ω·2 = ω+ω is a limit ordinal — it has no immediate predecessor and equals the sup of all ordinals below it. Options A, B, C are all successor ordinals (4+1, ω+0+1, ω+2+1).</div></div>
+
+    <div class="qi"><div class="qt">4. What is 1 + ω?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(4,'A','C')"><span class="ol">A</span>ω + 1</div>
+      <div class="qo" onclick="qa(4,'B','C')"><span class="ol">B</span>2</div>
+      <div class="qo" onclick="qa(4,'C','C')"><span class="ol">C</span>ω</div>
+      <div class="qo" onclick="qa(4,'D','C')"><span class="ol">D</span>ω · 2</div>
+    </div>
+    <div class="qfb" id="q4-fb">✅ C is correct. 1 + ω = ω. Adding a finite ordinal BEFORE ω doesn't extend past ω — the order type of {1} ∪ {0,1,2,...} with 1 before everything is still isomorphic to ω. But ω + 1 &gt; ω (adding after).</div></div>
+
+    <div class="qi"><div class="qt">5. Transfinite induction requires how many cases?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(5,'A','C')"><span class="ol">A</span>1 (just the inductive step)</div>
+      <div class="qo" onclick="qa(5,'B','C')"><span class="ol">B</span>2 (base + inductive step)</div>
+      <div class="qo" onclick="qa(5,'C','C')"><span class="ol">C</span>3 (base + successor step + limit step)</div>
+      <div class="qo" onclick="qa(5,'D','C')"><span class="ol">D</span>Infinitely many cases</div>
+    </div>
+    <div class="qfb" id="q5-fb">✅ C is correct. Transfinite induction has THREE cases: (1) Base P(0), (2) Successor P(β)→P(β+1), (3) Limit: P(β) for all β&lt;λ implies P(λ). The limit case is what distinguishes it from ordinary induction.</div></div>
+
+    <div class="qi"><div class="qt">6. Why does ordinary mathematical induction fail to prove P(ω)?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(6,'A','C')"><span class="ol">A</span>Because P(0) is hard to prove</div>
+      <div class="qo" onclick="qa(6,'B','C')"><span class="ol">B</span>Because ω is not a natural number</div>
+      <div class="qo" onclick="qa(6,'C','C')"><span class="ol">C</span>Because ω has no immediate predecessor — the step P(n)→P(n+1) never reaches ω</div>
+      <div class="qo" onclick="qa(6,'D','C')"><span class="ol">D</span>Because ω is uncountable</div>
+    </div>
+    <div class="qfb" id="q6-fb">✅ C is correct. ω is a limit ordinal with no immediate predecessor. Ordinary induction only gives P(n)→P(n+1), which builds P(1), P(2), P(3), … but never crosses the gap to ω. The limit step in transfinite induction handles this.</div></div>
+
+    <div class="qi"><div class="qt">7. The cardinality of ordinal ω + 100 is:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(7,'A','B')"><span class="ol">A</span>100 + ℵ₀ (a new cardinal)</div>
+      <div class="qo" onclick="qa(7,'B','B')"><span class="ol">B</span>ℵ₀</div>
+      <div class="qo" onclick="qa(7,'C','B')"><span class="ol">C</span>ℵ₁</div>
+      <div class="qo" onclick="qa(7,'D','B')"><span class="ol">D</span>100</div>
+    </div>
+    <div class="qfb" id="q7-fb">✅ B is correct. ω+100 = {0,1,2,...,ω,ω+1,...,ω+99} — still a countably infinite set. Its cardinality is ℵ₀. Many different ordinals share the same cardinal — ordinals track order, not just size.</div></div>
+
+    <div class="qi"><div class="qt">8. Which set is NOT well-ordered under the usual ≤?</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(8,'A','D')"><span class="ol">A</span>ℕ = {0, 1, 2, 3, …}</div>
+      <div class="qo" onclick="qa(8,'B','D')"><span class="ol">B</span>{5, 3, 1, 7} (finite set)</div>
+      <div class="qo" onclick="qa(8,'C','D')"><span class="ol">C</span>{2, 4, 6, 8, …} (even natural numbers)</div>
+      <div class="qo" onclick="qa(8,'D','D')"><span class="ol">D</span>ℚ (rational numbers)</div>
+    </div>
+    <div class="qfb" id="q8-fb">✅ D is correct. ℚ with usual ≤ is NOT well-ordered — for example, the subset {q ∈ ℚ | q &gt; 0} has no least element (for any positive rational p/q, p/(2q) is smaller). Options A, B, C are all well-ordered.</div></div>
+
+    <div class="qi"><div class="qt">9. In the strong form of transfinite induction, the inductive hypothesis is:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(9,'A','C')"><span class="ol">A</span>P(α) holds</div>
+      <div class="qo" onclick="qa(9,'B','C')"><span class="ol">B</span>P(α−1) holds</div>
+      <div class="qo" onclick="qa(9,'C','C')"><span class="ol">C</span>P(β) holds for all ordinals β &lt; α</div>
+      <div class="qo" onclick="qa(9,'D','C')"><span class="ol">D</span>P(β) holds for all finite ordinals β</div>
+    </div>
+    <div class="qfb" id="q9-fb">✅ C is correct. In strong transfinite induction, we assume P(β) for ALL β strictly less than α, then prove P(α). This single assumption simultaneously covers the base case (vacuously for α=0) and both successor and limit cases.</div></div>
+
+    <div class="qi"><div class="qt">10. The first ordinal with cardinality ℵ₁ (uncountably infinite) is:</div>
+    <div class="qopts">
+      <div class="qo" onclick="qa(10,'A','D')"><span class="ol">A</span>ω²</div>
+      <div class="qo" onclick="qa(10,'B','D')"><span class="ol">B</span>ε₀</div>
+      <div class="qo" onclick="qa(10,'C','D')"><span class="ol">C</span>ω^ω</div>
+      <div class="qo" onclick="qa(10,'D','D')"><span class="ol">D</span>ω₁ (the first uncountable ordinal)</div>
+    </div>
+    <div class="qfb" id="q10-fb">✅ D is correct. ω₁ is the set of all countable ordinals — it is the first ordinal that is itself uncountable, so |ω₁| = ℵ₁. All of ω², ε₀, ω^ω are countable ordinals (|·| = ℵ₀).</div></div>
+
+    <div class="qscore" id="qscore"></div>
+    <button class="btn-fill" onclick="submitQuiz()" id="submitBtn" style="margin-top:1rem">Submit &amp; See Score</button>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section id="outcomes">
+  <div class="sec-label">Learning Outcomes</div>
+  <div class="sec-title">By Week's End</div>
+  <p class="sec-desc">These are the skills you demonstrate as a pre-service teacher after completing this module.</p>
+  <div class="og">
+    <div class="oc"><div class="oi" style="color:var(--terra)">①</div><div class="ot"><strong>Define ordinal numbers</strong> — state the definition via well-orderings and von Neumann's construction, classify ordinals as successor or limit, and give examples at each level of the hierarchy.</div></div>
+    <div class="oc"><div class="oi" style="color:var(--navy)">②</div><div class="ot"><strong>Explain the ordinal hierarchy</strong> — describe ordinals beyond ω including ω+1, ω·2, ω², ε₀, and explain why ordinal and cardinal arithmetic diverge for infinite ordinals.</div></div>
+    <div class="oc"><div class="oi" style="color:var(--sage)">③</div><div class="ot"><strong>State and apply transfinite induction</strong> — identify and carry out all three cases (base, successor, limit) and explain why each is necessary.</div></div>
+    <div class="oc"><div class="oi" style="color:var(--gold)">④</div><div class="ot"><strong>Discuss transfinite recursion</strong> — define functions on all ordinals (like ordinal arithmetic) using the recursive definition framework and justify well-definedness.</div></div>
+    <div class="oc"><div class="oi" style="color:var(--plum)">⑤</div><div class="ot"><strong>Write proofs using transfinite induction</strong> — structure arguments with explicit base, successor, and limit cases, and use the strong form when appropriate.</div></div>
+  </div>
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;font-family:'Source Code Pro',monospace;font-size:.68rem;color:var(--muted);border-top:2px solid var(--ink);position:relative;z-index:1;">
+  <p>Logic & Set Theory · Ordering & Ordinals · 5Es Interactive Module</p>
+  <p style="margin-top:.3rem;opacity:.4">Designed for Pre-Service Mathematics Teachers</p>
+</footer>
+
+<script>
+// NAV PROGRESS
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('navProg').style.width=p+'%';
+  const secs=[document.getElementById('hero'),...document.querySelectorAll('section')];
+  document.querySelectorAll('.pd').forEach((d,i)=>{if(!secs[i])return;const r=secs[i].getBoundingClientRect();d.classList.toggle('active',r.top<=window.innerHeight/2&&r.bottom>0);});
+});
+
+// LESSONS
+let openPanel=null;
+function openLesson(id){
+  if(openPanel&&openPanel!==id)document.getElementById(openPanel)?.classList.remove('open');
+  const el=document.getElementById(id);el.classList.toggle('open');
+  openPanel=el.classList.contains('open')?id:null;
+  if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(id==='L1'&&!window.ordVisInited){buildOrdVis();window.ordVisInited=true;}
+  if(id==='L2'&&!window.indInited){loadProp();window.indInited=true;}
+}
+function switchTab(lesson,tab,btn){
+  document.querySelectorAll('#'+lesson+'>div[id^="'+lesson+'-"]').forEach(d=>d.style.display='none');
+  const el=document.getElementById(lesson+'-'+tab);if(el)el.style.display='block';
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(lesson==='L1'&&tab==='explore'&&!window.ordVisInited){buildOrdVis();window.ordVisInited=true;}
+  if(lesson==='L2'&&tab==='simulate'&&!window.indInited){loadProp();window.indInited=true;}
+}
+
+// ORDINAL VISUALIZER
+const ordData=[
+  {lbl:'0',type:'base',desc:'0 = ∅ — the empty set. The starting point.'},
+  {lbl:'1',type:'succ',desc:'1 = {0} — successor of 0. Successor ordinal.'},
+  {lbl:'2',type:'succ',desc:'2 = {0,1} — successor of 1. Successor ordinal.'},
+  {lbl:'3',type:'succ',desc:'3 = {0,1,2} — successor of 2. Successor ordinal.'},
+  {lbl:'4',type:'succ',desc:'4 = {0,1,2,3} — successor of 3.'},
+  {lbl:'…',type:'dots',desc:'All finite natural numbers follow as successor ordinals.'},
+  {lbl:'ω',type:'limit',desc:'ω = {0,1,2,3,…} — FIRST LIMIT ordinal. No predecessor. Order type of ℕ.'},
+  {lbl:'ω+1',type:'succ',desc:'ω+1 = ω∪{ω} — successor of ω. First ordinal after ω.'},
+  {lbl:'ω+2',type:'succ',desc:'ω+2 — successor of ω+1.'},
+  {lbl:'ω+…',type:'dots',desc:'ω+3, ω+4, … continue as successors.'},
+  {lbl:'ω·2',type:'limit',desc:'ω·2 = ω+ω — LIMIT ordinal. Equals sup{ω+n | n∈ℕ}. Two copies of ω.'},
+  {lbl:'ω·2+1',type:'succ',desc:'ω·2+1 — successor of ω·2.'},
+  {lbl:'ω·3',type:'limit',desc:'ω·3 = ω·2+ω — limit ordinal.'},
+  {lbl:'ω²',type:'limit',desc:'ω² = ω·ω — limit ordinal. Sup of all ω·n. |ω²| = ℵ₀.'},
+  {lbl:'ω^ω',type:'limit',desc:'ω^ω — limit ordinal, still countable (|ω^ω|=ℵ₀).'},
+  {lbl:'ε₀',type:'limit',desc:'ε₀ = ω^{ω^{ω^⋰}} — first ordinal with ω^{ε₀}=ε₀. Still countable!'},
+  {lbl:'ω₁',type:'limit',desc:'ω₁ — FIRST UNCOUNTABLE ordinal. |ω₁| = ℵ₁. Leap to uncountability.'}
+];
+function buildOrdVis(){
+  const el=document.getElementById('ordVis');if(!el)return;
+  el.innerHTML='<div class="ord-row" style="margin-bottom:.5rem;gap:.3rem;flex-wrap:wrap;">';
+  const row=el.querySelector('.ord-row');
+  ordData.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='ord-box'+(o.type==='limit'?' limit':o.type==='succ'?' succ':'');
+    if(o.type==='dots')d.style.cssText='background:transparent;border-color:transparent;color:var(--muted);font-size:.9rem;';
+    d.textContent=o.lbl;
+    d.style.fontFamily=o.lbl.includes('ω')||o.lbl==='ε₀'||o.lbl==='ω₁'?"'Bebas Neue',sans-serif":'';
+    d.style.fontSize=o.lbl.length>3?'.65rem':o.lbl.includes('ω')?'1rem':'';
+    d.onclick=()=>{document.getElementById('ordInfo').innerHTML=`<strong>${o.lbl}</strong>: ${o.desc} <span style="color:${o.type==='limit'?'var(--navy)':o.type==='succ'?'var(--sage)':'var(--muted)'}">[${o.type==='limit'?'LIMIT':o.type==='succ'?'SUCCESSOR':o.type==='base'?'BASE':'—'}]</span>`;};
+    row.appendChild(d);
+  });
+  el.innerHTML+=`<div style="display:flex;gap:.6rem;margin-top:.6rem;font-size:.75rem;font-family:'Source Code Pro',monospace;flex-wrap:wrap;">
+    <span style="display:flex;align-items:center;gap:.3rem"><span style="width:14px;height:14px;background:var(--terra);display:inline-block;border:1px solid var(--terra)"></span>Finite/Base</span>
+    <span style="display:flex;align-items:center;gap:.3rem"><span style="width:14px;height:14px;background:var(--sage);display:inline-block"></span>Successor</span>
+    <span style="display:flex;align-items:center;gap:.3rem"><span style="width:14px;height:14px;background:var(--navy);display:inline-block"></span>Limit</span>
+  </div>`;
+  // fix: first 5 are terra-colored
+  const boxes=el.querySelectorAll('.ord-box');
+  boxes[0].style.background='var(--terra)';boxes[0].style.borderColor='var(--terra)';boxes[0].style.color='#fff';
+}
+
+// ORDINAL ARITHMETIC
+const ordNames={'0':'0','1':'1','2':'2','3':'3','w':'ω','w1':'ω+1','w2':'ω+2','w*2':'ω·2','w2sq':'ω²'};
+function ordRank(s){const m={'0':0,'1':1,'2':2,'3':3,'w':1000,'w1':1001,'w2':1002,'w*2':2000,'w2sq':10000};return m[s]||0;}
+function calcOrd(){
+  const a=document.getElementById('ordA').value;
+  const b=document.getElementById('ordB').value;
+  const op=document.getElementById('ordOp').value;
+  const ra=ordRank(a),rb=ordRank(b);
+  let result='',explain='';
+  const na=ordNames[a]||a,nb=ordNames[b]||b;
+  if(op==='+'){
+    // special cases for commutativity demonstration
+    if(a==='1'&&b==='w'){result='ω';explain='1+ω = ω\nAdding 1 BEFORE ω: the order type of {x}∪{0,1,2,…} (where x comes first) is still ω.\nThis shows ordinal addition is NOT commutative!';}
+    else if(a==='w'&&b==='1'){result='ω+1';explain='ω+1 > ω\nAdding 1 AFTER ω: {0,1,2,…,ω} — a new ordinal with a last element!\nCompare: 1+ω=ω ≠ ω+1 — not commutative!';}
+    else if(a==='0')result=nb;
+    else if(b==='0')result=na;
+    else if(ra>=1000&&rb>=1000){const names={'w':'ω','w1':'ω+1','w*2':'ω·2'};result=ra+rb>=2000?'ω·'+Math.floor((ra+rb)/1000):ordNames['w'+(ra+rb-1000)]||'ω+'+(ra+rb-1000);result=result||'large ordinal';}
+    else if(ra>=1000){result=na+'+'+nb.replace('ω','');}
+    else if(rb>=1000){result=nb;explain=na+'+ω = ω (finite + ω = ω)';}
+    else{result=''+(ra+rb);}
+  } else {
+    if(a==='0'||b==='0'){result='0';explain='Any ordinal × 0 = 0';}
+    else if(b==='1'){result=na;explain=na+'·1 = '+na;}
+    else if(a==='1'){result=nb;explain='1·'+nb+' = '+nb;}
+    else if(a==='2'&&b==='w'){result='ω';explain='2·ω = ω\nω copies of {0,1} concatenated = order type ω.\nNOT the same as ω·2 = ω+ω!';}
+    else if(a==='w'&&b==='2'){result='ω·2';explain='ω·2 = ω+ω\nTwo copies of ω concatenated. Strictly > ω.\nCompare: 2·ω = ω ≠ ω·2 — not commutative!';}
+    else if(a==='w'&&b==='w'){result='ω²';explain='ω·ω = ω² — the ω-th limit ordinal.';}
+    else{result=na+'·'+nb+' (complex ordinal)';}
+  }
+  const el=document.getElementById('ordResult');el.style.display='block';
+  el.textContent=`${na} ${op==='+'?'+':'·'} ${nb} = ${result}${explain?'\n\n'+explain:''}`;
+}
+
+// INDUCTION SIMULATOR
+const props={
+  trichotomy:{
+    title:'P(α): Every ordinal α is 0, a successor, or a limit ordinal',
+    steps:[
+      {label:'Base Case',title:'Prove P(0)',body:'α = 0 satisfies the property — 0 is explicitly listed as the base case in the definition of ordinals.',done:false},
+      {label:'Successor Step',title:'Prove P(β) → P(β+1)',body:'If β is any ordinal, then β+1 is defined as β∪{β}. By definition, β+1 is a successor ordinal. So P(β+1) holds regardless of what β is.',done:false},
+      {label:'Limit Step',title:'Prove P(λ) for limit ordinal λ',body:'If λ is a limit ordinal, then λ has no immediate predecessor and λ = sup{β | β < λ}. By the definition of limit ordinal, P(λ) holds directly.',done:false}
+    ]
+  },
+  transitive:{
+    title:'P(α): Every ordinal α is a transitive set (β∈γ∈α ⟹ β∈α)',
+    steps:[
+      {label:'Base Case',title:'Prove P(0)',body:'0 = ∅ is vacuously transitive — there are no elements to check. P(0) holds trivially.',done:false},
+      {label:'Successor Step',title:'Prove P(β) → P(β+1)',body:'Assume β is transitive (P(β)). Then β+1 = β∪{β}. If γ∈δ∈β+1, either δ=β (so γ∈β⊆β+1 ✓) or δ∈β (so γ∈δ∈β, and by transitivity of β, γ∈β⊆β+1 ✓).',done:false},
+      {label:'Limit Step',title:'Prove P(λ) for limit λ (given P(β) for all β<λ)',body:'Assume every β<λ is transitive. Let γ∈δ∈λ. Then δ∈λ=∪{β|β<λ}, so δ∈β₀ for some β₀<λ. Since β₀<λ, β₀ is transitive (IH). γ∈δ∈β₀ ⟹ γ∈β₀⊆λ ✓.',done:false}
+    ]
+  },
+  arith:{
+    title:'P(β): α + β is well-defined for all ordinals β (fixing α)',
+    steps:[
+      {label:'Base Case',title:'Define α + 0',body:'Set α + 0 := α by definition. This is the base case — well-defined and equals α. P(0) holds.',done:false},
+      {label:'Successor Step',title:'Define α + (β+1) given α + β',body:'Assuming α + β is defined (P(β)), set α + (β+1) := (α + β) + 1. This is the successor of α+β, which exists since every ordinal has a successor. P(β+1) holds.',done:false},
+      {label:'Limit Step',title:'Define α + λ for limit λ (given α+β for all β<λ)',body:'Assuming α+β is defined for all β<λ (IH), set α + λ := sup{α + β | β < λ}. This supremum exists (ordinals are well-ordered). P(λ) holds.',done:false}
+    ]
+  }
+};
+let currentProp='trichotomy',stepsDone=0;
+function loadProp(){
+  const sel=document.getElementById('propSel');if(!sel)return;
+  currentProp=sel.value;stepsDone=0;
+  const p=props[currentProp];
+  const el=document.getElementById('indSteps');if(!el)return;
+  el.innerHTML='';
+  p.steps.forEach((s,i)=>{
+    const d=document.createElement('div');
+    d.className='ind-step';d.setAttribute('data-n',i+1);d.id='step'+i;
+    d.innerHTML=`<div class="st-label" style="color:var(--terra)">${s.label}</div><div class="st-title">${s.title}</div><div class="st-body">${s.body}</div>
+    <button onclick="markDone(${i})" style="margin-top:.7rem;padding:.3rem .8rem;background:transparent;border:1.5px solid var(--border);cursor:pointer;font-size:.78rem;font-family:'Source Code Pro',monospace;color:var(--muted);transition:all .2s;" onmouseover="this.style.background='var(--sage)';this.style.borderColor='var(--sage)';this.style.color='#fff'" onmouseout="if(!this.dataset.done){this.style.background='transparent';this.style.borderColor='var(--border)';this.style.color='var(--muted)'}">✓ Mark Complete</button>`;
+    el.appendChild(d);
+  });
+  document.getElementById('indResult').style.display='none';
+}
+function markDone(i){
+  const d=document.getElementById('step'+i);d.classList.add('done');
+  const btn=d.querySelector('button');btn.style.background='var(--sage)';btn.style.borderColor='var(--sage)';btn.style.color='#fff';btn.dataset.done='1';btn.textContent='✓ Completed';
+  stepsDone++;
+  if(stepsDone>=3){
+    const r=document.getElementById('indResult');r.style.display='block';r.style.color='var(--sage)';
+    r.textContent='🎉 All three cases verified!\n\nBy transfinite induction, the property holds for ALL ordinals.\n\nYou have successfully applied transfinite induction — covering the base case, the successor step, and the crucial limit step that ordinary induction misses.';
+  }
+}
+
+// WELL-ORDERING CHECKER
+function checkWO(){
+  const raw=document.getElementById('woSet').value;
+  const nums=[...new Set(raw.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n)))].sort((a,b)=>a-b);
+  const el=document.getElementById('woResult');el.style.display='block';
+  if(nums.length===0){el.style.color='var(--terra)';el.textContent='⚠️ Please enter valid integers.';return;}
+  // Any finite set of integers IS well-ordered under ≤
+  el.style.color='var(--sage)';
+  el.textContent=`Sorted set: {${nums.join(', ')}}\n\nIs this well-ordered? ✅ YES\n\nReason: Any finite set of integers is well-ordered under ≤.\nLeast element: ${nums[0]}\n\nEvery non-empty subset will also have a minimum (since the set is finite and totally ordered).\n\nNote: If this were an INFINITE set like all negative integers {...,-3,-2,-1}, it would NOT be well-ordered — there would be no least element.`;
+}
+
+// ORDINAL COMPARE
+function compareOrds(){
+  const a=document.getElementById('cmpA').value;
+  const b=document.getElementById('cmpB').value;
+  const ra=ordRank(a),rb=ordRank(b);
+  const na=ordNames[a]||a,nb=ordNames[b]||b;
+  const el=document.getElementById('cmpResult');el.style.display='block';
+  let rel,expl;
+  if(ra<rb){rel='<';expl=`${na} < ${nb}\n${na} comes earlier in the ordinal ordering.`;}
+  else if(ra>rb){rel='>';expl=`${na} > ${nb}\n${na} comes later in the ordinal ordering.`;}
+  else{rel='=';expl=`${na} = ${nb}\nThese are the same ordinal.`;}
+  el.style.color=ra===rb?'var(--sage)':ra<rb?'var(--navy)':'var(--terra)';
+  el.textContent=`${na}  ${rel}  ${nb}\n\n${expl}`;
+}
+
+// QUIZ
+const correct={1:'C',2:'C',3:'D',4:'C',5:'C',6:'C',7:'B',8:'D',9:'C',10:'D'};
+const ua={};
+function qa(q,choice){
+  if(ua[q])return;ua[q]=choice;
+  document.querySelectorAll('.qi')[q-1].querySelectorAll('.qo').forEach((o,i)=>{
+    const l=String.fromCharCode(65+i);
+    if(l===correct[q])o.classList.add('correct');
+    else if(l===choice&&choice!==correct[q])o.classList.add('wrong');
+  });
+  const fb=document.getElementById(`q${q}-fb`);
+  if(choice===correct[q])fb.className='qfb show ok';
+  else{fb.className='qfb show bad';fb.textContent='✗ Incorrect. Correct: '+correct[q]+'. '+fb.textContent.replace('✅','');}
+  document.getElementById('qp').style.width=(Object.keys(ua).length/10*100)+'%';
+}
+function submitQuiz(){
+  for(let q=1;q<=10;q++)if(!ua[q])qa(q,'_');
+  const score=Object.entries(ua).filter(([q,a])=>a===correct[+q]).length;
+  const pct=Math.round(score/10*100);
+  const el=document.getElementById('qscore');el.style.display='block';
+  el.innerHTML=(pct>=90?'🌟 Excellent!':pct>=70?'✅ Well done!':pct>=50?'📚 Keep reviewing!':'💪 Revisit the lessons!')+` Score: <strong>${score}/10</strong> (${pct}%)`;
+  document.getElementById('submitBtn').disabled=true;
+}
+
+// Init
+window.addEventListener('DOMContentLoaded',()=>{
+  // animate ordinal sequence in hero
+  document.querySelectorAll('.ord-n').forEach((n,i)=>{
+    setTimeout(()=>n.style.opacity='1',200+i*100);
+    n.style.opacity='0';n.style.transition='opacity .4s';
+  });
+});
+</script>
+</body>
+</html>
