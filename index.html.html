@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardinal Numbers · Logic and Set Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ef;--surface:#eeeae2;--card:#ffffff;
+  --ink:#1a1612;--muted:#7a7065;--border:#d8d0c4;
+  --red:#c0392b;--teal:#0d7377;--gold:#c9820a;--blue:#2563a8;--green:#1a7a4a;
+  --red-soft:rgba(192,57,43,.1);--teal-soft:rgba(13,115,119,.1);
+  --gold-soft:rgba(201,130,10,.1);--blue-soft:rgba(37,99,168,.1);--green-soft:rgba(26,122,74,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.8rem 2.5rem;background:rgba(247,244,239,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--teal);letter-spacing:.02em;}
+.nav-links{display:flex;gap:1.8rem;}
+.nav-links a{color:var(--muted);font-size:.85rem;text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-bar{height:2px;background:linear-gradient(90deg,var(--teal),var(--gold));width:0%;transition:width .3s;position:absolute;bottom:0;left:0;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--bg);}
+.hero-pattern{position:absolute;inset:0;opacity:.04;background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:28px 28px;}
+.hero-accent{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(13,115,119,.08),transparent 70%);top:-100px;right:-150px;pointer-events:none;}
+.hero-accent2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,130,10,.07),transparent 70%);bottom:-80px;left:-100px;pointer-events:none;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:1.2rem;animation:riseIn .7s ease both;}
+#hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:700;line-height:1.02;text-align:center;color:var(--ink);animation:riseIn .7s .12s ease both;}
+#hero h1 em{color:var(--teal);font-style:italic;}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:520px;text-align:center;margin-top:1.2rem;line-height:1.75;font-weight:300;animation:riseIn .7s .24s ease both;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1.6rem;animation:riseIn .7s .36s ease both;}
+.htag{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.3rem .8rem;border-radius:2rem;border:1px solid var(--border);color:var(--muted);background:var(--card);}
+.hero-btns{display:flex;gap:.8rem;margin-top:2rem;animation:riseIn .7s .48s ease both;}
+.btn-main{padding:.7rem 1.8rem;border-radius:.4rem;background:var(--teal);color:#fff;font-weight:600;border:none;cursor:pointer;font-size:.92rem;text-decoration:none;transition:all .2s;}
+.btn-main:hover{background:#0a5c5f;transform:translateY(-1px);}
+.btn-out{padding:.7rem 1.8rem;border-radius:.4rem;border:1.5px solid var(--border);background:transparent;color:var(--ink);font-size:.92rem;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-out:hover{border-color:var(--teal);color:var(--teal);}
+@keyframes riseIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+section{margin-bottom:5rem;}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;margin-bottom:.5rem;color:var(--ink);}
+.sec-desc{color:var(--muted);line-height:1.75;max-width:660px;margin-bottom:2rem;font-size:.95rem;}
+
+/* TOPIC CARDS */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem;}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.topic-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--card-line,var(--teal));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.topic-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.08);border-color:var(--card-line,var(--teal));}
+.topic-card:hover::after{transform:scaleX(1);}
+.card-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--card-line,var(--teal));margin-bottom:.6rem;letter-spacing:.1em;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;margin-bottom:.4rem;color:var(--ink);}
+.card-desc{font-size:.84rem;color:var(--muted);line-height:1.6;}
+.card-chip{display:inline-block;margin-top:.8rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.18rem .55rem;border-radius:1rem;background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.card-arr{position:absolute;right:1rem;bottom:1rem;color:var(--muted);font-size:1rem;transition:all .2s;}
+.topic-card:hover .card-arr{color:var(--card-line,var(--teal));transform:translate(2px,-2px);}
+
+/* LESSON PANEL */
+.lesson-panel{display:none;background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;margin-top:1rem;animation:panelIn .3s ease;}
+.lesson-panel.open{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* TABS */
+.tabs{display:flex;gap:.35rem;margin-bottom:1.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:.8rem;}
+.tab{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.38rem .9rem;border-radius:.35rem;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.tab.active,.tab:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* CONTENT */
+.content-area{line-height:1.8;}
+.content-area h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;margin:1.5rem 0 .7rem;color:var(--ink);}
+.content-area h4{font-size:.95rem;font-weight:600;margin:1.3rem 0 .45rem;color:var(--teal);text-transform:uppercase;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;}
+.content-area p{color:#3d3530;margin-bottom:.9rem;font-size:.95rem;}
+.content-area ul,.content-area ol{padding-left:1.4rem;margin-bottom:.9rem;}
+.content-area li{color:#3d3530;margin-bottom:.4rem;line-height:1.7;font-size:.95rem;}
+.content-area strong{color:var(--ink);}
+
+/* BOXES */
+.def-box{background:rgba(13,115,119,.06);border-left:3px solid var(--teal);border-radius:0 .5rem .5rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.def-box .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.def-box p{color:var(--ink);margin:0;font-size:.93rem;}
+.prop-box{background:rgba(37,99,168,.06);border-left:3px solid var(--blue);border-radius:0 .5rem .5rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.prop-box .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.prop-box p,.prop-box ul{color:var(--ink);margin:0;font-size:.93rem;}
+.prop-box ul{padding-left:1.2rem;}
+.prop-box li{margin-bottom:.3rem;}
+.ex-box{background:var(--gold-soft);border:1px solid rgba(201,130,10,.25);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.ex-box .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.ex-box p,.ex-box ul,.ex-box ol{color:#3d3530;margin-bottom:.45rem;font-size:.93rem;}
+.ex-box li{margin-bottom:.35rem;}
+.theorem{background:var(--green-soft);border:1px solid rgba(26,122,74,.2);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.theorem .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.theorem p,.theorem ul{color:#3d3530;font-size:.93rem;}
+.warn-box{background:var(--red-soft);border:1px solid rgba(192,57,43,.2);border-radius:.6rem;padding:1rem 1.3rem;margin:1rem 0;}
+.warn-box .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.warn-box p{color:#3d3530;margin:0;font-size:.93rem;}
+.note-box{background:var(--surface);border:1px solid var(--border);border-radius:.6rem;padding:1rem 1.3rem;margin:.8rem 0;}
+.note-box .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:600;}
+.plain-note{background:var(--surface);border-left:3px solid var(--border);border-radius:0 .5rem .5rem 0;padding:.9rem 1.2rem;margin:.8rem 0;font-size:.92rem;color:var(--muted);line-height:1.75;}
+.plain-note strong{color:var(--ink);}
+
+/* MATH */
+.math{font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--border);border-radius:.3rem;padding:.1rem .4rem;font-size:.86rem;color:var(--red);}
+.math-block{font-family:'JetBrains Mono',monospace;background:#1a1612;border-radius:.6rem;padding:1.1rem 1.4rem;margin:.8rem 0;font-size:.85rem;color:#e8d5b0;overflow-x:auto;line-height:1.9;white-space:pre;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.87rem;}
+.data-table th{background:var(--teal);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.68rem;text-transform:uppercase;padding:.6rem .9rem;text-align:left;border:1px solid var(--teal);}
+.data-table td{padding:.52rem .9rem;border:1px solid var(--border);color:#3d3530;vertical-align:top;}
+.data-table tr:nth-child(even) td{background:var(--surface);}
+.check{color:var(--green);font-weight:700;}
+.cross{color:var(--red);font-weight:700;}
+
+/* INTERACTIVE */
+.sim-box{background:var(--surface);border:1.5px solid var(--border);border-radius:.75rem;padding:1.5rem;margin:1.4rem 0;}
+.sim-box h4{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--teal);margin-bottom:.7rem;}
+.s-input{background:var(--card);border:1px solid var(--border);border-radius:.4rem;padding:.45rem .75rem;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.82rem;width:160px;}
+.s-btn{background:var(--teal);border:none;border-radius:.4rem;padding:.45rem 1rem;color:#fff;cursor:pointer;font-size:.82rem;font-family:'Outfit',sans-serif;font-weight:600;transition:opacity .2s;}
+.s-btn:hover{opacity:.85;}
+.s-btn-outline{background:transparent;border:1.5px solid var(--border);border-radius:.4rem;padding:.42rem .9rem;color:var(--muted);cursor:pointer;font-size:.8rem;transition:all .2s;}
+.s-btn-outline.sel,.s-btn-outline:hover{background:var(--teal);border-color:var(--teal);color:#fff;}
+.result-box{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--card);border:1px solid var(--border);border-radius:.5rem;padding:.8rem 1rem;margin-top:.8rem;color:var(--teal);min-height:2rem;line-height:1.8;}
+
+/* BIJECTION DEMO */
+.bij-wrap{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:1rem 0;}
+.bij-set{background:var(--card);border:1px solid var(--border);border-radius:.5rem;padding:.9rem;min-width:120px;}
+.bij-set h5{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem;}
+.bij-elem{background:var(--surface);border:1px solid var(--border);border-radius:.35rem;padding:.28rem .6rem;margin-bottom:.3rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .18s;user-select:none;}
+.bij-elem:hover,.bij-elem.sel{background:var(--teal);border-color:var(--teal);color:#fff;}
+.bij-elem.mapped{background:rgba(26,122,74,.15);border-color:var(--green);color:var(--green);}
+.bij-canvas{flex:1;min-width:130px;}
+
+/* COUNTING VISUAL */
+.count-grid{display:flex;flex-wrap:wrap;gap:6px;margin:.8rem 0;}
+.count-dot{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-family:'JetBrains Mono',monospace;color:var(--muted);transition:all .3s;cursor:default;}
+.count-dot.lit{background:var(--teal);border-color:var(--teal);color:#fff;}
+.count-dot.gold{background:var(--gold);border-color:var(--gold);color:#fff;}
+.count-dot.red{background:var(--red);border-color:var(--red);color:#fff;}
+
+/* INFINITY VISUAL */
+.inf-strip{display:flex;align-items:center;gap:4px;overflow:hidden;margin:.8rem 0;padding:.5rem;background:var(--card);border:1px solid var(--border);border-radius:.5rem;}
+.inf-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.2rem .4rem;border-radius:.25rem;background:var(--surface);color:var(--muted);flex-shrink:0;transition:all .3s;}
+.inf-num.hi{background:var(--teal);color:#fff;}
+.inf-dots{font-family:'JetBrains Mono',monospace;color:var(--muted);padding:0 .3rem;font-size:1rem;}
+
+/* ARITHMETIC CALCULATOR */
+.arith-row{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;margin:.8rem 0;}
+.arith-select{background:var(--card);border:1px solid var(--border);border-radius:.4rem;padding:.42rem .7rem;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.82rem;}
+.arith-result{font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:var(--teal);font-weight:600;padding:.3rem .8rem;background:var(--card);border:1px solid var(--border);border-radius:.4rem;min-width:60px;text-align:center;}
+
+/* QUIZ */
+.quiz-wrap{background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;margin:2rem 0;}
+.quiz-wrap h3{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;margin-bottom:1rem;color:var(--gold);}
+.q-item{margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.q-item:last-of-type{border-bottom:none;}
+.q-text{font-size:.92rem;color:var(--ink);margin-bottom:.75rem;line-height:1.65;}
+.q-opts{display:flex;flex-direction:column;gap:.4rem;}
+.q-opt{background:var(--surface);border:1px solid var(--border);border-radius:.45rem;padding:.58rem .95rem;cursor:pointer;font-size:.87rem;transition:all .2s;display:flex;align-items:center;gap:.6rem;color:#3d3530;}
+.q-opt:hover{border-color:var(--teal);background:rgba(13,115,119,.05);}
+.q-opt.correct{background:rgba(26,122,74,.1);border-color:var(--green);color:var(--green);}
+.q-opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.opt-l{width:1.4rem;height:1.4rem;border-radius:50%;background:var(--border);font-family:'JetBrains Mono',monospace;font-size:.67rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.q-fb{font-size:.82rem;margin-top:.45rem;padding:.45rem .8rem;border-radius:.4rem;display:none;line-height:1.6;}
+.q-fb.show{display:block;}
+.q-fb.ok{background:rgba(26,122,74,.08);color:var(--green);}
+.q-fb.bad{background:var(--red-soft);color:var(--red);}
+.prog-bar{height:4px;background:var(--border);border-radius:2px;margin:1rem 0;}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .5s;}
+.quiz-score{font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.9rem;background:rgba(13,115,119,.08);border-radius:.5rem;text-align:center;display:none;margin-top:1rem;border:1px solid rgba(13,115,119,.2);}
+
+/* FLIP CARDS */
+.flip-grid{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0;}
+.flip-card{width:170px;height:98px;perspective:900px;cursor:pointer;}
+.flip-inner{width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;position:relative;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:.5rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:.55rem;font-size:.76rem;border:1px solid var(--border);}
+.flip-front{background:var(--surface);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:.73rem;}
+.flip-back{background:rgba(13,115,119,.08);color:#3d3530;transform:rotateY(180deg);line-height:1.5;}
+
+/* PROGRESS DOTS */
+.prog-dots{position:fixed;right:1.3rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.45rem;z-index:50;}
+.pdot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .3s;border:2px solid transparent;}
+.pdot.active{background:var(--teal);transform:scale(1.4);}
+
+/* OUTCOMES */
+.outcomes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem;}
+.oc-card{background:var(--card);border:1px solid var(--border);border-radius:.65rem;padding:1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.oc-icon{width:2rem;height:2rem;border-radius:.4rem;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.oc-text{font-size:.86rem;color:#3d3530;line-height:1.65;}
+
+/* DIVIDER */
+.div-line{height:1px;background:var(--border);margin:1.4rem 0;}
+
+@media(max-width:640px){.prog-dots,.nav-links{display:none;}.bij-wrap{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ℵ Cardinal Numbers</div>
+  <div class="nav-links">
+    <a href="#topics">Topics</a>
+    <a href="#engage">Engage</a>
+    <a href="#explore">Explore</a>
+    <a href="#assess">Quiz</a>
+    <a href="#outcomes">Outcomes</a>
+  </div>
+  <div class="nav-bar" id="navBar"></div>
+</nav>
+
+<div class="prog-dots" id="progDots">
+  <div class="pdot active"></div>
+  <div class="pdot"></div>
+  <div class="pdot"></div>
+  <div class="pdot"></div>
+  <div class="pdot"></div>
+  <div class="pdot"></div>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-accent2"></div>
+  <div class="hero-eyebrow">Logic & Set Theory · Week Module</div>
+  <h1>Cardinal<br><em>Numbers</em></h1>
+  <p class="hero-sub">How do we measure the "size" of a set — even when it's infinite? Explore equinumerosity, countability, and the arithmetic of infinities.</p>
+  <div class="hero-tags">
+    <span class="htag">5Es Framework</span>
+    <span class="htag">Interactive Simulations</span>
+    <span class="htag">PST Module</span>
+    <span class="htag">Self-Assessment</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#engage" class="btn-main">Start Learning →</a>
+    <a href="#topics" class="btn-out">Browse Topics</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══ ENGAGE ═══ -->
+<section id="engage">
+  <div class="sec-label">5Es · Engage</div>
+  <div class="sec-title">How Big Is Infinity?</div>
+  <p class="sec-desc">Before any definitions, let's provoke curiosity with a fundamental question that stumped mathematicians for centuries.</p>
+  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--gold);margin-bottom:1.1rem">🤔 Puzzles to Think About</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div style="background:rgba(13,115,119,.06);border:1px solid rgba(13,115,119,.2);border-radius:.7rem;padding:1.2rem;">
+        <div style="font-size:1.3rem;margin-bottom:.5rem">∞ vs ∞</div>
+        <strong style="font-size:.9rem;color:var(--ink)">Are there more real numbers than natural numbers?</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">Both sets are infinite — but are they the <em>same size</em>? What does "size" even mean for infinite sets?</p>
+      </div>
+      <div style="background:var(--gold-soft);border:1px solid rgba(201,130,10,.2);border-radius:.7rem;padding:1.2rem;">
+        <div style="font-size:1.3rem;margin-bottom:.5rem">🏨</div>
+        <strong style="font-size:.9rem;color:var(--ink)">Hilbert's Hotel</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">A hotel with infinitely many rooms, all full — yet it can always accommodate a new guest. How is this possible?</p>
+      </div>
+      <div style="background:var(--red-soft);border:1px solid rgba(192,57,43,.2);border-radius:.7rem;padding:1.2rem;">
+        <div style="font-size:1.3rem;margin-bottom:.5rem">📐</div>
+        <strong style="font-size:.9rem;color:var(--ink)">Even numbers vs Natural numbers</strong>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:.4rem;line-height:1.65">There seem to be "fewer" even numbers than natural numbers — yet we can match them perfectly. Are they the same size?</p>
+      </div>
+    </div>
+    <div style="background:rgba(13,115,119,.05);border:1px dashed rgba(13,115,119,.3);border-radius:.6rem;padding:1rem;">
+      <strong style="color:var(--teal);font-size:.88rem">💬 Discussion Prompt</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.4rem;line-height:1.7">With a partner: How would you decide if two sets have the "same number" of elements — <em>without counting</em>? Think about how you'd compare a bag of apples to a bag of oranges without numbers. This intuition will lead us directly to the concept of <strong>equinumerosity</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOPICS ═══ -->
+<section id="topics">
+  <div class="sec-label">Course Map</div>
+  <div class="sec-title">Three Big Ideas</div>
+  <p class="sec-desc">Cardinal numbers formalize the concept of "size" for sets — including infinite ones. Click each card to open the full lesson.</p>
+  <div class="topic-grid">
+    <div class="topic-card" style="--card-line:#0d7377" onclick="openLesson('T1')">
+      <div class="card-num">01 / 03</div>
+      <div class="card-title">Equinumerosity</div>
+      <div class="card-desc">Two sets are equinumerous when their elements can be matched perfectly — one-to-one and onto.</div>
+      <div class="card-chip">bijections</div><div class="card-arr">↗</div>
+    </div>
+    <div class="topic-card" style="--card-line:#c9820a" onclick="openLesson('T2')">
+      <div class="card-num">02 / 03</div>
+      <div class="card-title">Cardinality & Countability</div>
+      <div class="card-desc">Finite, countably infinite, and uncountably infinite — classifying sets by their size.</div>
+      <div class="card-chip">ℵ₀, 𝔠</div><div class="card-arr">↗</div>
+    </div>
+    <div class="topic-card" style="--card-line:#2563a8" onclick="openLesson('T3')">
+      <div class="card-num">03 / 03</div>
+      <div class="card-title">Arithmetic of Cardinals</div>
+      <div class="card-desc">Adding, multiplying, and comparing infinite cardinal numbers — where intuition breaks down.</div>
+      <div class="card-chip">ordering</div><div class="card-arr">↗</div>
+    </div>
+  </div>
+
+<!-- ════ T1 ════ -->
+<div id="T1" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('T1','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('T1','explore',this)">🔬 Explore</button>
+    <button class="tab" onclick="switchTab('T1','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="T1-learn" class="content-area">
+    <h3>Equinumerosity</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> We need a way to compare set sizes that works even without numbers. The answer: two sets have the same size if we can pair every element of one with exactly one element of the other — leaving nothing unpaired on either side. This pairing is called a <em>bijection</em>.</div>
+
+    <h4>The Core Idea</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Equinumerous Sets</div>
+      <p>Two sets <span class="math">A</span> and <span class="math">B</span> are <strong>equinumerous</strong> (written <span class="math">A ~ B</span> or <span class="math">|A| = |B|</span>) if there exists a <strong>bijection</strong> <span class="math">f: A → B</span> — a function that is both injective and surjective.<br><br>
+      Also called: <em>having the same cardinality</em>, <em>being in one-to-one correspondence</em>, or <em>equipotent</em>.</p>
+    </div>
+
+    <div class="note-box">
+      <div class="lbl">💡 Why Bijections?</div>
+      <p style="font-size:.9rem;color:#3d3530;line-height:1.7">Imagine matching socks: if every left sock has exactly one right sock partner, and every right sock is matched — the two piles are the same size. You never needed to count. A bijection does exactly this: it's a perfect matching with nothing left over.</p>
+    </div>
+
+    <h4>Examples — Finite Sets</h4>
+    <div class="ex-box">
+      <div class="lbl">Example 1 — Simple Finite Sets</div>
+      <p>Let <span class="math">A = {cat, dog, fish}</span> and <span class="math">B = {1, 2, 3}</span>.<br>
+      Define f: cat↦1, dog↦2, fish↦3. This is a bijection, so <span class="math">A ~ B</span> and <span class="math">|A| = |B| = 3</span>.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example 2 — Checking Equinumerosity</div>
+      <p>Is <span class="math">{a,b,c,d} ~ {1,2,3}</span>? No bijection exists — any function from a 4-element set to a 3-element set must send two elements to the same output (pigeonhole principle). So these are NOT equinumerous.</p>
+    </div>
+
+    <h4>Examples — Infinite Sets (Surprising!)</h4>
+    <div class="ex-box">
+      <div class="lbl">Example 3 — Even Numbers ~ Natural Numbers</div>
+      <p>Let <span class="math">E = {0,2,4,6,…}</span> (even naturals) and <span class="math">ℕ = {0,1,2,3,…}</span>.<br>
+      Define <span class="math">f: ℕ → E</span> by <span class="math">f(n) = 2n</span>.<br>
+      Injective: f(m) = f(n) ⟹ 2m = 2n ⟹ m = n ✅<br>
+      Surjective: every even number 2k = f(k) ✅<br>
+      So <span class="math">E ~ ℕ</span>! Even though E "seems smaller," they have the same cardinality.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example 4 — Integers ~ Natural Numbers</div>
+      <p>Define a bijection <span class="math">f: ℕ → ℤ</span>:<br>
+      f(0)=0, f(1)=1, f(2)=-1, f(3)=2, f(4)=-2, f(5)=3, …<br>
+      In general: f(n) = n/2 if n is even, f(n) = -(n+1)/2 if n is odd.<br>
+      This pairs every natural number with exactly one integer — so <span class="math">|ℕ| = |ℤ|</span>!</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example 5 — Open Interval ~ All Real Numbers</div>
+      <p>The interval <span class="math">(0,1)</span> and <span class="math">ℝ</span> are equinumerous!<br>
+      The bijection <span class="math">f(x) = tan(π(x - ½))</span> maps <span class="math">(0,1) → ℝ</span> bijectively.<br>
+      So a tiny interval "contains as many points" as the entire real line.</p>
+    </div>
+
+    <h4>Properties of Equinumerosity</h4>
+    <div class="prop-box">
+      <div class="lbl">Equinumerosity is an Equivalence Relation</div>
+      <ul>
+        <li><strong>Reflexive:</strong> <span class="math">A ~ A</span> — the identity map id_A is a bijection. ✅</li>
+        <li><strong>Symmetric:</strong> <span class="math">A ~ B ⟹ B ~ A</span> — if f: A→B is a bijection, then f⁻¹: B→A is also a bijection. ✅</li>
+        <li><strong>Transitive:</strong> <span class="math">A ~ B</span> and <span class="math">B ~ C ⟹ A ~ C</span> — compose the two bijections. ✅</li>
+      </ul>
+    </div>
+
+    <div class="theorem">
+      <div class="lbl">Schröder–Bernstein Theorem</div>
+      <p>If there exist injections <span class="math">f: A → B</span> and <span class="math">g: B → A</span>, then <span class="math">A ~ B</span>.<br>
+      This is a powerful tool — you don't need to find an explicit bijection, just two injections!</p>
+    </div>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ Common Misconception</div>
+      <p>A proper subset of an infinite set CAN be equinumerous to the whole set. In fact, this is Dedekind's definition of an <em>infinite set</em>: A set is infinite if and only if it is equinumerous to one of its proper subsets.</p>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Sets</th><th>Equinumerous?</th><th>Bijection</th></tr>
+      <tr><td>{1,2,3} and {a,b,c}</td><td class="check">Yes</td><td>Any matching of 3 elements to 3 elements</td></tr>
+      <tr><td>ℕ and E (evens)</td><td class="check">Yes</td><td>n ↦ 2n</td></tr>
+      <tr><td>ℕ and ℤ</td><td class="check">Yes</td><td>Interleaving bijection above</td></tr>
+      <tr><td>ℕ and ℚ</td><td class="check">Yes</td><td>Cantor's diagonal enumeration</td></tr>
+      <tr><td>ℕ and ℝ</td><td class="cross">No</td><td>Cantor's diagonal argument proves no bijection exists</td></tr>
+      <tr><td>(0,1) and ℝ</td><td class="check">Yes</td><td>f(x) = tan(π(x−½))</td></tr>
+    </table>
+  </div><!-- /T1-learn -->
+
+  <div id="T1-explore" class="content-area" style="display:none">
+    <h3>🔬 Bijection Builder</h3>
+    <p style="color:var(--muted);font-size:.9rem">Click a domain element, then a codomain element to create a mapping. See if your function is a bijection (equinumerosity proof!).</p>
+    <div class="sim-box">
+      <h4>Match the sets to prove equinumerosity</h4>
+      <div class="bij-wrap">
+        <div class="bij-set"><h5>Set A</h5><div id="bijA"></div></div>
+        <div class="bij-canvas"><canvas id="bijCanvas" width="160" height="140"></canvas></div>
+        <div class="bij-set"><h5>Set B</h5><div id="bijB"></div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem">
+        <button class="s-btn" onclick="resetBij()" style="background:var(--muted)">Reset</button>
+        <button class="s-btn" onclick="checkBij()">Check Bijection</button>
+      </div>
+      <div id="bijResult" class="result-box" style="margin-top:.8rem;display:none;"></div>
+    </div>
+  </div>
+
+  <div id="T1-practice" class="content-area" style="display:none">
+    <h3>✏️ Flashcards</h3>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.9rem">Click to flip.</p>
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What does A ~ B mean?</div><div class="flip-back">A and B are equinumerous — a bijection f: A→B exists.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is equinumerosity an equivalence relation?</div><div class="flip-back">YES — reflexive (id), symmetric (f⁻¹), transitive (composition).</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Can a proper subset ~ the full set?</div><div class="flip-back">YES — for infinite sets only! E.g. even numbers ~ ℕ.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Schröder–Bernstein says?</div><div class="flip-back">Injections f:A→B AND g:B→A together imply A~B (no explicit bijection needed).</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is ℕ ~ ℤ?</div><div class="flip-back">YES — interleave: 0,1,-1,2,-2,3,-3,… gives a bijection.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is ℕ ~ ℝ?</div><div class="flip-back">NO — Cantor's diagonal argument shows no bijection can exist.</div></div></div>
+    </div>
+  </div>
+</div><!-- /T1 -->
+
+<!-- ════ T2 ════ -->
+<div id="T2" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('T2','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('T2','simulate',this)">🧪 Simulate</button>
+    <button class="tab" onclick="switchTab('T2','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="T2-learn" class="content-area">
+    <h3>Cardinality of Sets &amp; Countability</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Cardinality is the "size" of a set. For finite sets, it's just the number of elements. For infinite sets, it's subtler — some infinities are larger than others! We classify sets as finite, countably infinite, or uncountably infinite.</div>
+
+    <h4>Cardinal Numbers</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Cardinality</div>
+      <p>The <strong>cardinality</strong> of a set A, written <span class="math">|A|</span> or <span class="math">card(A)</span>, is a measure of its size.<br>
+      Two sets have the same cardinality iff they are equinumerous (<span class="math">A ~ B</span>).<br>
+      For finite sets: <span class="math">|{a,b,c}| = 3</span>. For infinite sets, we use special symbols.</p>
+    </div>
+
+    <h4>Finite Sets</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Finite Set</div>
+      <p>A set <span class="math">A</span> is <strong>finite</strong> if <span class="math">A = ∅</span> or <span class="math">A ~ {1, 2, …, n}</span> for some <span class="math">n ∈ ℕ</span>.<br>
+      Its cardinality is <span class="math">|A| = n</span> (or 0 for the empty set).</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Examples — Finite</div>
+      <ul>
+        <li><span class="math">|∅| = 0</span> — the empty set has zero elements.</li>
+        <li><span class="math">|{red, green, blue}| = 3</span></li>
+        <li><span class="math">|{x ∈ ℕ | x ≤ 100}| = 101</span></li>
+        <li><span class="math">|𝒫({a,b})| = 4</span> — power set of a 2-element set has 4 subsets.</li>
+      </ul>
+    </div>
+
+    <h4>Countably Infinite Sets — ℵ₀</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Countably Infinite</div>
+      <p>A set <span class="math">A</span> is <strong>countably infinite</strong> if <span class="math">A ~ ℕ</span> — there is a bijection between A and the natural numbers.<br>
+      The cardinality is denoted <span class="math">ℵ₀</span> (read "aleph-naught" or "aleph-zero").<br>
+      A set is <strong>countable</strong> if it is finite OR countably infinite.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Examples — Countably Infinite</div>
+      <ul>
+        <li><strong>ℕ = {0,1,2,3,…}</strong> — the natural numbers themselves. <span class="math">|ℕ| = ℵ₀</span></li>
+        <li><strong>ℤ (integers)</strong> — bijection: 0,1,-1,2,-2,… <span class="math">|ℤ| = ℵ₀</span></li>
+        <li><strong>Even numbers</strong> — bijection n↦2n. <span class="math">|E| = ℵ₀</span></li>
+        <li><strong>ℚ (rationals)</strong> — Cantor's diagonal enumeration of fractions. <span class="math">|ℚ| = ℵ₀</span></li>
+        <li><strong>Primes</strong> — infinitely many; can be listed p₁, p₂, p₃,… <span class="math">|Primes| = ℵ₀</span></li>
+        <li><strong>ℕ × ℕ</strong> — all pairs of natural numbers; Cantor's diagonal shows this is countable.</li>
+      </ul>
+    </div>
+
+    <h4>Cantor's Diagonal Enumeration of ℚ</h4>
+    <div class="note-box">
+      <div class="lbl">How to Count the Rationals</div>
+      <p style="font-size:.9rem;color:#3d3530;line-height:1.75">Arrange all positive fractions in a grid (rows = numerator, columns = denominator). Then zigzag diagonally through the grid, skipping fractions already seen. This produces a list 1/1, 1/2, 2/1, 3/1, 2/2, 1/3, 1/4, 2/3, 3/2, … that hits every rational number — proving ℚ is countable!</p>
+    </div>
+
+    <h4>Uncountable Sets — 𝔠</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Uncountably Infinite</div>
+      <p>A set is <strong>uncountable</strong> (or <em>uncountably infinite</em>) if it is infinite but NOT equinumerous to ℕ — no bijection with ℕ exists.<br>
+      The cardinality of ℝ is denoted <span class="math">𝔠</span> (the continuum) or <span class="math">2^{ℵ₀}</span>.<br>
+      We have <span class="math">ℵ₀ &lt; 𝔠</span> — the reals are a "bigger" infinity than the naturals.</p>
+    </div>
+
+    <div class="theorem">
+      <div class="lbl">Cantor's Diagonal Argument — ℝ is Uncountable</div>
+      <p>Suppose, for contradiction, that all real numbers in [0,1] can be listed: r₁, r₂, r₃, …<br>
+      Write each in decimal form. Build a new number d by making its n-th decimal digit different from the n-th decimal digit of rₙ.<br>
+      Then d ≠ rₙ for every n — so d is not on the list! Contradiction. Therefore ℝ is uncountable. □</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="lbl">Examples — Uncountable</div>
+      <ul>
+        <li><strong>ℝ</strong> (real numbers) — <span class="math">|ℝ| = 𝔠 = 2^{ℵ₀}</span></li>
+        <li><strong>(0,1)</strong> — same cardinality as ℝ via f(x) = tan(π(x−½))</li>
+        <li><strong>𝒫(ℕ)</strong> — power set of ℕ is uncountable (Cantor's theorem)</li>
+        <li><strong>ℝ²</strong> — the plane has the same cardinality as ℝ</li>
+        <li><strong>Irrational numbers</strong> — uncountable (rationals countable, reals uncountable ⟹ irrationals uncountable)</li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ The Continuum Hypothesis</div>
+      <p>Is there a set with cardinality strictly between ℵ₀ and 𝔠? This is the <strong>Continuum Hypothesis</strong>. It was shown to be <em>independent</em> of standard set theory (ZFC) — meaning it can be neither proved nor disproved!</p>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Set</th><th>Type</th><th>Cardinality</th><th>Bijection with ℕ?</th></tr>
+      <tr><td>∅</td><td>Finite</td><td>0</td><td class="cross">N/A</td></tr>
+      <tr><td>{1,2,…,n}</td><td>Finite</td><td>n</td><td class="cross">N/A</td></tr>
+      <tr><td>ℕ</td><td>Countably ∞</td><td>ℵ₀</td><td class="check">Yes (identity)</td></tr>
+      <tr><td>ℤ</td><td>Countably ∞</td><td>ℵ₀</td><td class="check">Yes (interleaving)</td></tr>
+      <tr><td>ℚ</td><td>Countably ∞</td><td>ℵ₀</td><td class="check">Yes (diagonal enum.)</td></tr>
+      <tr><td>ℝ</td><td>Uncountably ∞</td><td>𝔠 = 2^{ℵ₀}</td><td class="cross">No (diagonal arg.)</td></tr>
+      <tr><td>𝒫(ℕ)</td><td>Uncountably ∞</td><td>2^{ℵ₀}</td><td class="cross">No (Cantor's thm)</td></tr>
+    </table>
+  </div><!-- /T2-learn -->
+
+  <div id="T2-simulate" class="content-area" style="display:none">
+    <h3>🧪 Countability Explorer</h3>
+    <p style="color:var(--muted);font-size:.9rem">Visualize how natural numbers can be matched to various infinite sets.</p>
+
+    <div class="sim-box">
+      <h4>ℕ mapped to Even Numbers (n ↦ 2n)</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Natural numbers (top row) paired with even numbers (bottom row).</p>
+      <div id="countViz" style="font-family:'JetBrains Mono',monospace;font-size:.8rem;"></div>
+      <button class="s-btn" onclick="animateCount()" style="margin-top:.8rem">Animate Matching</button>
+    </div>
+
+    <div class="sim-box" style="margin-top:1rem;">
+      <h4>ℕ mapped to ℤ (Interleaving)</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">How do we list all integers? We interleave positives and negatives:</p>
+      <div id="intViz" style="font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:2.2;"></div>
+      <button class="s-btn" onclick="animateInt()" style="margin-top:.8rem">Show Bijection</button>
+    </div>
+
+    <div class="sim-box" style="margin-top:1rem;">
+      <h4>Cantor's Diagonal Argument (Sketch)</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Suppose we could list all reals in [0,1]. We construct a number NOT on the list by changing the diagonal digits:</p>
+      <div id="diagViz"></div>
+    </div>
+  </div>
+
+  <div id="T2-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is ℵ₀?</div><div class="flip-back">Cardinality of ℕ — the "smallest" infinite cardinal. Sets with |A|=ℵ₀ are countably infinite.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is ℚ countable?</div><div class="flip-back">YES — Cantor's diagonal enumeration lists all rationals. |ℚ| = ℵ₀.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is ℝ countable?</div><div class="flip-back">NO — Cantor's diagonal argument proves no bijection ℕ→ℝ exists. |ℝ| = 𝔠.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is 𝔠?</div><div class="flip-back">The cardinality of the continuum — |ℝ| = 𝔠 = 2^{ℵ₀}. Uncountably infinite.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Infinite set definition (Dedekind)?</div><div class="flip-back">A set is infinite iff it's equinumerous to one of its proper subsets.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Countable means?</div><div class="flip-back">Finite OR countably infinite (i.e. |A| ≤ ℵ₀).</div></div></div>
+    </div>
+  </div>
+</div><!-- /T2 -->
+
+<!-- ════ T3 ════ -->
+<div id="T3" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('T3','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('T3','simulate',this)">🧮 Calculator</button>
+    <button class="tab" onclick="switchTab('T3','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="T3-learn" class="content-area">
+    <h3>Arithmetic &amp; Ordering of Cardinal Numbers</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Cardinal numbers can be added, multiplied, and exponentiated — but the rules are very different from ordinary arithmetic, especially for infinite cardinals. Most strikingly: ℵ₀ + ℵ₀ = ℵ₀ and ℵ₀ × ℵ₀ = ℵ₀!</div>
+
+    <h4>Ordering Cardinal Numbers</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Cardinal Ordering</div>
+      <p><span class="math">|A| ≤ |B|</span> if there exists an injection <span class="math">f: A → B</span>.<br>
+      <span class="math">|A| &lt; |B|</span> if <span class="math">|A| ≤ |B|</span> but <span class="math">A</span> and <span class="math">B</span> are NOT equinumerous.<br>
+      By Schröder–Bernstein: if <span class="math">|A| ≤ |B|</span> and <span class="math">|B| ≤ |A|</span> then <span class="math">|A| = |B|</span>.</p>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Examples of Cardinal Ordering</div>
+      <ul>
+        <li><span class="math">0 &lt; 1 &lt; 2 &lt; … &lt; n &lt; … &lt; ℵ₀ &lt; 𝔠</span></li>
+        <li><span class="math">|ℕ| &lt; |ℝ|</span> — the reals are a strictly larger infinity than the naturals.</li>
+        <li><span class="math">|A| &lt; |𝒫(A)|</span> for any set A — power sets are always strictly larger (Cantor's theorem).</li>
+        <li>So: <span class="math">ℵ₀ &lt; 2^{ℵ₀} &lt; 2^{2^{ℵ₀}} &lt; …</span> — an endless tower of infinities!</li>
+      </ul>
+    </div>
+
+    <div class="theorem">
+      <div class="lbl">Cantor's Theorem</div>
+      <p>For any set A: <span class="math">|A| &lt; |𝒫(A)|</span>.<br>
+      There is no largest cardinal number — for every cardinal, there is a strictly larger one.</p>
+    </div>
+
+    <h4>Cardinal Addition</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Cardinal Addition</div>
+      <p>For disjoint sets A and B:<br>
+      <span class="math">|A| + |B| = |A ∪ B|</span><br>
+      (If not disjoint, use disjoint copies: A×{0} and B×{1}.)</p>
+    </div>
+    <div class="prop-box">
+      <div class="lbl">Rules for Cardinal Addition</div>
+      <ul>
+        <li><span class="math">m + n</span> = ordinary sum for finite cardinals.</li>
+        <li><span class="math">ℵ₀ + n = ℵ₀</span> for any finite n — adding finitely many to infinity changes nothing.</li>
+        <li><span class="math">ℵ₀ + ℵ₀ = ℵ₀</span> — two countable infinities merge into one (interleave them!).</li>
+        <li><span class="math">𝔠 + ℵ₀ = 𝔠</span> — adding countably many to an uncountable set doesn't grow it.</li>
+        <li><span class="math">𝔠 + 𝔠 = 𝔠</span> — two copies of ℝ have the same cardinality as one.</li>
+        <li>For infinite κ: <span class="math">κ + κ = κ</span> (assuming Choice).</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example — ℵ₀ + ℵ₀ = ℵ₀</div>
+      <p>Take ℕ (evens) ∪ ℕ (odds) = ℕ. More precisely: ℕ × {0} ∪ ℕ × {1} ~ ℕ via the bijection (n,0)↦2n and (n,1)↦2n+1. So two disjoint countable sets together are still countable!</p>
+    </div>
+
+    <h4>Cardinal Multiplication</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Cardinal Multiplication</div>
+      <p><span class="math">|A| × |B| = |A × B|</span> — the cardinality of the Cartesian product.</p>
+    </div>
+    <div class="prop-box">
+      <div class="lbl">Rules for Cardinal Multiplication</div>
+      <ul>
+        <li><span class="math">m × n</span> = ordinary product for finite cardinals.</li>
+        <li><span class="math">ℵ₀ × n = ℵ₀</span> for any finite n &gt; 0.</li>
+        <li><span class="math">ℵ₀ × ℵ₀ = ℵ₀</span> — ℕ × ℕ is countable! (Cantor's diagonal grid)</li>
+        <li><span class="math">𝔠 × 𝔠 = 𝔠</span> — the plane ℝ² has same cardinality as ℝ.</li>
+        <li><span class="math">0 × κ = 0</span> for any cardinal κ.</li>
+        <li>For infinite κ: <span class="math">κ × κ = κ</span> (assuming Choice).</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="lbl">Example — ℵ₀ × ℵ₀ = ℵ₀</div>
+      <p>ℕ × ℕ = {(0,0),(0,1),(1,0),(0,2),(1,1),(2,0),(0,3),…}<br>
+      Enumerate by diagonals: pairs (m,n) with m+n=0 first, then m+n=1, etc.<br>
+      This lists all pairs — so ℕ × ℕ is countable, |ℕ × ℕ| = ℵ₀.</p>
+    </div>
+
+    <h4>Cardinal Exponentiation</h4>
+    <div class="def-box">
+      <div class="lbl">Definition — Cardinal Exponentiation</div>
+      <p><span class="math">|A|^{|B|} = |A^B|</span> where <span class="math">A^B</span> is the set of all functions from B to A.</p>
+    </div>
+    <div class="prop-box">
+      <div class="lbl">Key Results</div>
+      <ul>
+        <li><span class="math">2^{ℵ₀} = 𝔠 = |ℝ|</span> — functions from ℕ to {0,1} correspond to real numbers (binary expansions).</li>
+        <li><span class="math">n^{ℵ₀} = 𝔠</span> for any finite n ≥ 2.</li>
+        <li><span class="math">ℵ₀^{ℵ₀} = 𝔠</span></li>
+        <li><span class="math">2^κ &gt; κ</span> for any cardinal κ (Cantor's theorem).</li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Operation</th><th>Finite</th><th>+ ℵ₀</th><th>ℵ₀ op ℵ₀</th><th>𝔠 op 𝔠</th></tr>
+      <tr><td>Addition (+)</td><td>Normal</td><td>ℵ₀</td><td>ℵ₀</td><td>𝔠</td></tr>
+      <tr><td>Multiplication (×)</td><td>Normal</td><td>ℵ₀</td><td>ℵ₀</td><td>𝔠</td></tr>
+      <tr><td>Exponentiation (^)</td><td>Normal</td><td>𝔠</td><td>𝔠</td><td>2^𝔠 &gt; 𝔠</td></tr>
+    </table>
+
+    <div class="warn-box">
+      <div class="lbl">⚠️ Key Intuition Break</div>
+      <p>In ordinary arithmetic: n + n > n and n × n > n. For infinite cardinals: ℵ₀ + ℵ₀ = ℵ₀ and ℵ₀ × ℵ₀ = ℵ₀. Only <strong>exponentiation</strong> produces a strictly larger cardinal: 2^{ℵ₀} > ℵ₀.</p>
+    </div>
+  </div><!-- /T3-learn -->
+
+  <div id="T3-simulate" class="content-area" style="display:none">
+    <h3>🧮 Cardinal Arithmetic Calculator</h3>
+    <p style="color:var(--muted);font-size:.9rem">Explore cardinal arithmetic by selecting values and operations.</p>
+    <div class="sim-box">
+      <h4>Cardinal Calculator</h4>
+      <div class="arith-row">
+        <select class="arith-select" id="cardA">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="5">5</option>
+          <option value="n">n (finite)</option>
+          <option value="aleph0" selected>ℵ₀</option>
+          <option value="c">𝔠</option>
+        </select>
+        <select class="arith-select" id="cardOp">
+          <option value="+">+</option>
+          <option value="*">×</option>
+          <option value="^">^</option>
+        </select>
+        <select class="arith-select" id="cardB">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="5">5</option>
+          <option value="n">n (finite)</option>
+          <option value="aleph0" selected>ℵ₀</option>
+          <option value="c">𝔠</option>
+        </select>
+        <span style="font-size:1.2rem;color:var(--muted)">=</span>
+        <div class="arith-result" id="arithResult">?</div>
+        <button class="s-btn" onclick="calcCardinal()">Calculate</button>
+      </div>
+      <div id="arithExplain" class="result-box" style="margin-top:.8rem;display:none;font-family:'Outfit',sans-serif;font-size:.88rem;color:#3d3530;"></div>
+    </div>
+
+    <div class="sim-box" style="margin-top:1rem;">
+      <h4>Cardinal Order Visualizer</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem">The hierarchy of infinite cardinals (from smallest to largest):</p>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:.85rem;">
+        <span style="background:var(--card);border:1px solid var(--border);padding:.3rem .7rem;border-radius:.3rem;color:var(--muted)">0&lt;1&lt;…&lt;n</span>
+        <span style="color:var(--teal);font-size:1.2rem">&lt;</span>
+        <span style="background:rgba(13,115,119,.12);border:1px solid rgba(13,115,119,.3);padding:.3rem .7rem;border-radius:.3rem;color:var(--teal);font-weight:600">ℵ₀</span>
+        <span style="color:var(--teal);font-size:1.2rem">&lt;</span>
+        <span style="background:var(--gold-soft);border:1px solid rgba(201,130,10,.3);padding:.3rem .7rem;border-radius:.3rem;color:var(--gold);font-weight:600">𝔠 = 2^{ℵ₀}</span>
+        <span style="color:var(--teal);font-size:1.2rem">&lt;</span>
+        <span style="background:var(--red-soft);border:1px solid rgba(192,57,43,.3);padding:.3rem .7rem;border-radius:.3rem;color:var(--red);font-weight:600">2^𝔠</span>
+        <span style="color:var(--teal);font-size:1.2rem">&lt;</span>
+        <span style="color:var(--muted);font-size:1.2rem">…</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:.8rem">Each arrow represents a strictly larger infinity. There is no largest cardinal number!</p>
+    </div>
+  </div>
+
+  <div id="T3-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">ℵ₀ + ℵ₀ = ?</div><div class="flip-back">ℵ₀ — two countable infinities combined are still countable.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">ℵ₀ × ℵ₀ = ?</div><div class="flip-back">ℵ₀ — ℕ×ℕ is countable via Cantor's diagonal grid.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">2^{ℵ₀} = ?</div><div class="flip-back">𝔠 — the cardinality of ℝ. This is STRICTLY greater than ℵ₀.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">|A| ≤ |B| means?</div><div class="flip-back">An injection f: A→B exists. "A is no larger than B."</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Cantor's Theorem?</div><div class="flip-back">|A| &lt; |𝒫(A)| for any set A. Power sets are always strictly bigger.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">𝔠 × 𝔠 = ?</div><div class="flip-back">𝔠 — the plane ℝ² has the same cardinality as ℝ itself.</div></div></div>
+    </div>
+  </div>
+</div><!-- /T3 -->
+</section><!-- /topics -->
+
+<!-- ═══ EXPLORE ═══ -->
+<section id="explore">
+  <div class="sec-label">5Es · Explore</div>
+  <div class="sec-title">Hands-On Discovery</div>
+  <p class="sec-desc">Use these interactive tools to build intuition. Experiment freely — the goal is discovery, not perfection.</p>
+
+  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--teal);margin-bottom:.6rem">🏨 Hilbert's Hotel Simulator</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">A hotel with ℵ₀ rooms — all occupied. Can we still accommodate new guests? Yes! Shift everyone, and room 1 opens up.</p>
+    <div class="sim-box" style="background:var(--bg);">
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:.8rem;">
+        <button class="s-btn" onclick="hilbertAddOne()">Add 1 Guest</button>
+        <button class="s-btn" onclick="hilbertAddInfinite()">Add ℵ₀ Guests</button>
+        <button class="s-btn" onclick="hilbertReset()" style="background:var(--muted)">Reset</button>
+      </div>
+      <div id="hilbertStrip" style="display:flex;gap:4px;overflow-x:auto;padding:.3rem 0;flex-wrap:nowrap;"></div>
+      <div id="hilbertMsg" style="font-size:.85rem;color:var(--teal);margin-top:.6rem;font-family:'JetBrains Mono',monospace;min-height:1.5rem;"></div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--gold);margin-bottom:.6rem">🔢 Set Cardinality Explorer</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Enter a finite set and explore its cardinality and power set size.</p>
+    <div class="sim-box" style="background:var(--bg);">
+      <div style="display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap;">
+        <div>
+          <label style="font-size:.76rem;color:var(--muted);display:block;margin-bottom:.25rem">Enter a set (comma-separated)</label>
+          <input class="s-input" id="cardSet" value="a,b,c,d">
+        </div>
+        <button class="s-btn" onclick="exploreCard()">Explore</button>
+      </div>
+      <div id="cardExplore" class="result-box" style="margin-top:.8rem;display:none;font-family:'Outfit',sans-serif;font-size:.88rem;color:#3d3530;line-height:1.9;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ELABORATE ═══ -->
+<section id="elaborate">
+  <div class="sec-label">5Es · Elaborate</div>
+  <div class="sec-title">Proof Workshop</div>
+  <p class="sec-desc">Read these proof sketches, then try the challenges on your own.</p>
+  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:.75rem;padding:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--gold);margin-bottom:1.1rem">📝 Proof Templates</h3>
+    <div style="margin-bottom:1.5rem;background:rgba(13,115,119,.05);border-radius:.6rem;padding:1.2rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--teal);text-transform:uppercase;margin-bottom:.5rem">Proof 1 — ℕ ~ ℤ</div>
+      <strong style="font-size:.92rem">Claim: The integers are countably infinite.</strong>
+      <div class="math-block">Define f: ℕ → ℤ by:
+  f(n) = n/2          if n is even
+  f(n) = -(n+1)/2     if n is odd
+
+Injective: If f(m)=f(n), case analysis shows m=n. ✓
+Surjective: 
+  For z ≥ 0: z = f(2z) since 2z is even. ✓
+  For z &lt; 0: z = f(-2z-1) since -2z-1 is odd. ✓
+Therefore f is a bijection, so ℕ ~ ℤ. □</div>
+    </div>
+    <div style="margin-bottom:1.5rem;background:var(--gold-soft);border-radius:.6rem;padding:1.2rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem">Proof 2 — Equinumerosity is Transitive</div>
+      <strong style="font-size:.92rem">Claim: If A~B and B~C then A~C.</strong>
+      <div class="math-block">Proof:
+  A~B means ∃ bijection f: A→B.
+  B~C means ∃ bijection g: B→C.
+  Define h: A→C by h = g∘f (composition).
+  
+  h is injective: h(a₁)=h(a₂) ⟹ g(f(a₁))=g(f(a₂))
+    ⟹ f(a₁)=f(a₂) [g injective] ⟹ a₁=a₂ [f injective]. ✓
+  h is surjective: Let c∈C. Since g surjective,
+    ∃b∈B: g(b)=c. Since f surjective, ∃a∈A: f(a)=b.
+    Then h(a)=g(f(a))=g(b)=c. ✓
+  Therefore h is a bijection, so A~C. □</div>
+    </div>
+    <div style="background:var(--green-soft);border-radius:.6rem;padding:1.2rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--green);text-transform:uppercase;margin-bottom:.5rem">Your Turn</div>
+      <strong style="font-size:.92rem">Prove: The set of all even integers is countably infinite.</strong>
+      <p style="font-size:.84rem;color:var(--muted);margin-top:.5rem;line-height:1.7">Hint: Define an explicit bijection f: ℕ → 2ℤ (even integers). Show it is injective and surjective. What is f(n)?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ QUIZ ═══ -->
+<section id="assess">
+  <div class="sec-label">5Es · Evaluate</div>
+  <div class="sec-title">Knowledge Check</div>
+  <p class="sec-desc">10 questions across all three topics. Read the feedback carefully — even for correct answers!</p>
+  <div class="quiz-wrap">
+    <h3>📊 Self-Assessment — 10 Questions</h3>
+    <div class="prog-bar"><div class="prog-fill" id="qProg" style="width:0%"></div></div>
+
+    <div class="q-item"><div class="q-text">1. Two sets A and B are equinumerous if:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(1,'A','C')"><span class="opt-l">A</span> A and B have the same elements</div>
+      <div class="q-opt" onclick="qa(1,'B','C')"><span class="opt-l">B</span> |A| and |B| are both infinite</div>
+      <div class="q-opt" onclick="qa(1,'C','C')"><span class="opt-l">C</span> There exists a bijection f: A → B</div>
+      <div class="q-opt" onclick="qa(1,'D','C')"><span class="opt-l">D</span> A is a subset of B</div>
+    </div>
+    <div class="q-fb" id="q1-fb">✅ C is correct. Equinumerosity means a bijection (perfect one-to-one correspondence) exists. Same elements would make them equal sets, not just equinumerous.</div></div>
+
+    <div class="q-item"><div class="q-text">2. Which of the following sets has cardinality ℵ₀?</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(2,'A','D')"><span class="opt-l">A</span> {1, 2, 3, …, 1000}</div>
+      <div class="q-opt" onclick="qa(2,'B','D')"><span class="opt-l">B</span> The set of all real numbers ℝ</div>
+      <div class="q-opt" onclick="qa(2,'C','D')"><span class="opt-l">C</span> 𝒫(ℕ) (power set of ℕ)</div>
+      <div class="q-opt" onclick="qa(2,'D','D')"><span class="opt-l">D</span> The set of all integers ℤ</div>
+    </div>
+    <div class="q-fb" id="q2-fb">✅ D is correct. ℤ ~ ℕ via the interleaving bijection, so |ℤ| = ℵ₀. ℝ and 𝒫(ℕ) have cardinality 𝔠 = 2^{ℵ₀} > ℵ₀. {1,...,1000} is finite.</div></div>
+
+    <div class="q-item"><div class="q-text">3. The function f: ℕ → E (even numbers) defined by f(n) = 2n proves:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(3,'A','B')"><span class="opt-l">A</span> The even numbers are uncountable</div>
+      <div class="q-opt" onclick="qa(3,'B','B')"><span class="opt-l">B</span> The even numbers are equinumerous to ℕ</div>
+      <div class="q-opt" onclick="qa(3,'C','B')"><span class="opt-l">C</span> There are fewer even numbers than natural numbers</div>
+      <div class="q-opt" onclick="qa(3,'D','B')"><span class="opt-l">D</span> ℕ is a subset of the even numbers</div>
+    </div>
+    <div class="q-fb" id="q3-fb">✅ B is correct. f(n)=2n is a bijection ℕ→E (injective and surjective), so |E| = |ℕ| = ℵ₀. The even numbers, despite being a proper subset of ℕ, are equinumerous to ℕ.</div></div>
+
+    <div class="q-item"><div class="q-text">4. Cantor's diagonal argument proves that:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(4,'A','C')"><span class="opt-l">A</span> ℚ is uncountable</div>
+      <div class="q-opt" onclick="qa(4,'B','C')"><span class="opt-l">B</span> ℕ and ℤ are equinumerous</div>
+      <div class="q-opt" onclick="qa(4,'C','C')"><span class="opt-l">C</span> ℝ is uncountable (no bijection ℕ → ℝ exists)</div>
+      <div class="q-opt" onclick="qa(4,'D','C')"><span class="opt-l">D</span> Every infinite set is countable</div>
+    </div>
+    <div class="q-fb" id="q4-fb">✅ C is correct. Cantor's diagonal argument assumes a complete list of reals exists and constructs a real number NOT on the list — proving no such list can exist, i.e., ℝ is uncountable.</div></div>
+
+    <div class="q-item"><div class="q-text">5. What is ℵ₀ + ℵ₀?</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(5,'A','C')"><span class="opt-l">A</span> 2 · ℵ₀ (a new, larger cardinal)</div>
+      <div class="q-opt" onclick="qa(5,'B','C')"><span class="opt-l">B</span> ℵ₁</div>
+      <div class="q-opt" onclick="qa(5,'C','C')"><span class="opt-l">C</span> ℵ₀</div>
+      <div class="q-opt" onclick="qa(5,'D','C')"><span class="opt-l">D</span> 𝔠</div>
+    </div>
+    <div class="q-fb" id="q5-fb">✅ C is correct. ℵ₀ + ℵ₀ = ℵ₀. Two countably infinite disjoint sets together form a countably infinite set (interleave their elements). Cardinal addition behaves very differently from ordinary addition!</div></div>
+
+    <div class="q-item"><div class="q-text">6. What is 2^{ℵ₀}?</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(6,'A','B')"><span class="opt-l">A</span> ℵ₀</div>
+      <div class="q-opt" onclick="qa(6,'B','B')"><span class="opt-l">B</span> 𝔠 (the cardinality of ℝ)</div>
+      <div class="q-opt" onclick="qa(6,'C','B')"><span class="opt-l">C</span> ℵ₁</div>
+      <div class="q-opt" onclick="qa(6,'D','B')"><span class="opt-l">D</span> ℵ₀²</div>
+    </div>
+    <div class="q-fb" id="q6-fb">✅ B is correct. 2^{ℵ₀} = 𝔠 = |ℝ|. The cardinality of all functions from ℕ to {0,1} equals the cardinality of the reals (think binary expansions).</div></div>
+
+    <div class="q-item"><div class="q-text">7. Equinumerosity is an equivalence relation because it is:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(7,'A','D')"><span class="opt-l">A</span> Reflexive only</div>
+      <div class="q-opt" onclick="qa(7,'B','D')"><span class="opt-l">B</span> Symmetric and transitive only</div>
+      <div class="q-opt" onclick="qa(7,'C','D')"><span class="opt-l">C</span> Reflexive and symmetric only</div>
+      <div class="q-opt" onclick="qa(7,'D','D')"><span class="opt-l">D</span> Reflexive, symmetric, and transitive</div>
+    </div>
+    <div class="q-fb" id="q7-fb">✅ D is correct. Reflexive: A~A (identity). Symmetric: A~B ⟹ B~A (inverse bijection). Transitive: A~B and B~C ⟹ A~C (compose bijections). All three hold!</div></div>
+
+    <div class="q-item"><div class="q-text">8. Which correctly describes the ordering of cardinals?</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(8,'A','C')"><span class="opt-l">A</span> ℵ₀ &gt; 𝔠</div>
+      <div class="q-opt" onclick="qa(8,'B','C')"><span class="opt-l">B</span> ℵ₀ = 𝔠</div>
+      <div class="q-opt" onclick="qa(8,'C','C')"><span class="opt-l">C</span> ℵ₀ &lt; 𝔠 &lt; 2^𝔠</div>
+      <div class="q-opt" onclick="qa(8,'D','C')"><span class="opt-l">D</span> 𝔠 &lt; ℵ₀</div>
+    </div>
+    <div class="q-fb" id="q8-fb">✅ C is correct. ℵ₀ &lt; 𝔠 (Cantor's diagonal argument). 𝔠 &lt; 2^𝔠 (Cantor's theorem applied to 𝔠). There's an infinite tower of strictly increasing cardinals!</div></div>
+
+    <div class="q-item"><div class="q-text">9. A set A is countable if and only if:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(9,'A','B')"><span class="opt-l">A</span> A is finite</div>
+      <div class="q-opt" onclick="qa(9,'B','B')"><span class="opt-l">B</span> A is finite or equinumerous to ℕ</div>
+      <div class="q-opt" onclick="qa(9,'C','B')"><span class="opt-l">C</span> A is infinite</div>
+      <div class="q-opt" onclick="qa(9,'D','B')"><span class="opt-l">D</span> A is equinumerous to ℝ</div>
+    </div>
+    <div class="q-fb" id="q9-fb">✅ B is correct. "Countable" includes both finite sets AND countably infinite sets (those with |A| = ℵ₀). Uncountable means infinite AND NOT equinumerous to ℕ.</div></div>
+
+    <div class="q-item"><div class="q-text">10. Cantor's theorem states that for any set A:</div>
+    <div class="q-opts">
+      <div class="q-opt" onclick="qa(10,'A','C')"><span class="opt-l">A</span> |A| = |𝒫(A)|</div>
+      <div class="q-opt" onclick="qa(10,'B','C')"><span class="opt-l">B</span> |A| &gt; |𝒫(A)|</div>
+      <div class="q-opt" onclick="qa(10,'C','C')"><span class="opt-l">C</span> |A| &lt; |𝒫(A)|</div>
+      <div class="q-opt" onclick="qa(10,'D','C')"><span class="opt-l">D</span> |𝒫(A)| = ℵ₀ always</div>
+    </div>
+    <div class="q-fb" id="q10-fb">✅ C is correct. |A| &lt; |𝒫(A)| for every set A. This means there is no largest cardinal — you can always get a bigger set by taking the power set!</div></div>
+
+    <div class="quiz-score" id="qScore"></div>
+    <button class="btn-main" onclick="submitQuiz()" id="submitBtn" style="margin-top:1rem">Submit &amp; See Score</button>
+  </div>
+</section>
+
+<!-- ═══ OUTCOMES ═══ -->
+<section id="outcomes">
+  <div class="sec-label">Learning Outcomes</div>
+  <div class="sec-title">By Week's End, You Can…</div>
+  <p class="sec-desc">These are the concrete skills you should be able to demonstrate as a pre-service teacher.</p>
+  <div class="outcomes-grid">
+    <div class="oc-card"><div class="oc-icon" style="background:rgba(13,115,119,.12);color:var(--teal)">①</div><div class="oc-text"><strong>Define equinumerosity</strong> — using bijections, verify whether two sets are equinumerous, and explain the surprising cases involving infinite sets.</div></div>
+    <div class="oc-card"><div class="oc-icon" style="background:var(--gold-soft);color:var(--gold)">②</div><div class="oc-text"><strong>Classify sets by cardinality</strong> — determine whether a set is finite, countably infinite (ℵ₀), or uncountably infinite (𝔠), and justify with explicit bijections or Cantor's argument.</div></div>
+    <div class="oc-card"><div class="oc-icon" style="background:var(--blue-soft);color:var(--blue)">③</div><div class="oc-text"><strong>Apply cardinal arithmetic</strong> — compute sums, products, and exponentials of cardinal numbers including ℵ₀ and 𝔠, and explain why infinite cardinal arithmetic defies ordinary intuition.</div></div>
+    <div class="oc-card"><div class="oc-icon" style="background:var(--green-soft);color:var(--green)">④</div><div class="oc-text"><strong>Order cardinal numbers</strong> — use injections and the Schröder–Bernstein theorem to compare cardinalities, and describe the hierarchy ℵ₀ &lt; 𝔠 &lt; 2^𝔠 &lt; …</div></div>
+    <div class="oc-card"><div class="oc-icon" style="background:var(--red-soft);color:var(--red)">⑤</div><div class="oc-text"><strong>Prove basic cardinality statements</strong> — including that ℕ~ℤ, that equinumerosity is an equivalence relation, and sketch Cantor's diagonal argument.</div></div>
+  </div>
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border);">
+  <p>Logic & Set Theory · Cardinal Numbers · 5Es Interactive Module</p>
+  <p style="margin-top:.3rem;opacity:.5">Designed for Pre-Service Mathematics Teachers</p>
+</footer>
+
+<script>
+// NAV PROGRESS
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('navBar').style.width=p+'%';
+  const secs=[document.getElementById('hero'),...document.querySelectorAll('section')];
+  const dots=document.querySelectorAll('.pdot');
+  secs.forEach((s,i)=>{if(!s||!dots[i])return;const r=s.getBoundingClientRect();dots[i].classList.toggle('active',r.top<=window.innerHeight/2&&r.bottom>0);});
+});
+
+// LESSON PANELS
+let openPanel=null;
+function openLesson(id){
+  if(openPanel&&openPanel!==id)document.getElementById(openPanel)?.classList.remove('open');
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+  openPanel=el.classList.contains('open')?id:null;
+  if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(id==='T1'&&!window.bijInited){initBij();window.bijInited=true;}
+  if(id==='T2'&&!window.diagInited){buildDiag();window.diagInited=true;}
+}
+function switchTab(lesson,tab,btn){
+  document.querySelectorAll('#'+lesson+'>div[id^="'+lesson+'-"]').forEach(d=>d.style.display='none');
+  const el=document.getElementById(lesson+'-'+tab);if(el)el.style.display='block';
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(lesson==='T1'&&tab==='explore'&&!window.bijInited){initBij();window.bijInited=true;}
+  if(lesson==='T2'&&tab==='simulate'&&!window.diagInited){buildDiag();window.diagInited=true;}
+}
+
+// BIJECTION BUILDER
+function initBij(){
+  const domE=['🐱','🐶','🐟','🐦'],codE=['1','2','3','4'];
+  const state={from:null,mapping:{},domElems:domE,codElems:codE};
+  const da=document.getElementById('bijA'),db=document.getElementById('bijB');
+  da.innerHTML='';db.innerHTML='';
+  domE.forEach(e=>{const d=document.createElement('div');d.className='bij-elem';d.textContent=e;d.onclick=function(){da.querySelectorAll('.bij-elem').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');state.from=e;};da.appendChild(d);});
+  codE.forEach(e=>{const d=document.createElement('div');d.className='bij-elem';d.textContent=e;d.onclick=function(){if(state.from){state.mapping[state.from]=e;da.querySelectorAll('.bij-elem').forEach(x=>{x.classList.remove('sel');x.classList.toggle('mapped',!!state.mapping[x.textContent]);});state.from=null;drawBijArrows(state);}};db.appendChild(d);});
+  window.bijState=state;
+}
+function drawBijArrows(state){
+  const cv=document.getElementById('bijCanvas');if(!cv)return;
+  const ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
+  const da=document.getElementById('bijA'),db=document.getElementById('bijB');
+  const cvr=cv.getBoundingClientRect();
+  ctx.strokeStyle='rgba(13,115,119,.7)';ctx.lineWidth=2;
+  Object.entries(state.mapping).forEach(([a,b])=>{
+    const di=state.domElems.indexOf(a),ci=state.codElems.indexOf(b);
+    const dEls=[...da.querySelectorAll('.bij-elem')],cEls=[...db.querySelectorAll('.bij-elem')];
+    if(di<0||ci<0||!dEls[di]||!cEls[ci])return;
+    const sr=dEls[di].getBoundingClientRect(),er=cEls[ci].getBoundingClientRect();
+    const sx=sr.right-cvr.left,sy=sr.top+sr.height/2-cvr.top,ex=er.left-cvr.left,ey=er.top+er.height/2-cvr.top;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.stroke();
+    ctx.beginPath();ctx.arc(ex,ey,4,0,Math.PI*2);ctx.fillStyle='rgba(13,115,119,.9)';ctx.fill();
+  });
+}
+function resetBij(){if(!window.bijState)return;window.bijState.mapping={};window.bijState.from=null;document.getElementById('bijA').querySelectorAll('.bij-elem').forEach(x=>x.classList.remove('sel','mapped'));const cv=document.getElementById('bijCanvas');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);document.getElementById('bijResult').style.display='none';}
+function checkBij(){
+  const s=window.bijState;if(!s)return;
+  const m=s.mapping,dom=s.domElems,cod=s.codElems;
+  if(!dom.every(a=>m[a])){showBijResult('⚠️ Not all elements of A are mapped yet.','var(--gold)');return;}
+  const vals=Object.values(m),inj=new Set(vals).size===vals.length,sur=cod.every(b=>vals.includes(b));
+  if(inj&&sur)showBijResult('🎉 Bijection confirmed! |A| = |B| — these sets are equinumerous.','var(--green)');
+  else if(!inj)showBijResult('✗ Not injective — two elements of A map to the same element. Reassign.','var(--red)');
+  else showBijResult('✗ Not surjective — some elements of B are not mapped to. Cover all of B.','var(--gold)');
+}
+function showBijResult(msg,color){const el=document.getElementById('bijResult');el.style.display='block';el.style.color=color;el.textContent=msg;}
+window.addEventListener('resize',()=>{if(window.bijState)drawBijArrows(window.bijState);});
+
+// COUNT ANIMATION
+function animateCount(){
+  const el=document.getElementById('countViz');
+  el.innerHTML='<div style="margin-bottom:.4rem;color:var(--muted)">ℕ: &nbsp;</div><div style="margin-bottom:.6rem;color:var(--muted)">E: &nbsp;</div>';
+  const n=8;let i=0;
+  const rows=el.querySelectorAll('div');
+  const interval=setInterval(()=>{
+    if(i>=n){clearInterval(interval);return;}
+    rows[0].innerHTML='ℕ: &nbsp;'+Array.from({length:i+1},(_,k)=>`<span style="color:var(--teal);margin-right:.4rem">${k}</span>`).join('')+'&nbsp;...';
+    rows[1].innerHTML='E: &nbsp;'+Array.from({length:i+1},(_,k)=>`<span style="color:var(--gold);margin-right:.4rem">${k*2}</span>`).join('')+'&nbsp;...';
+    i++;
+  },500);
+}
+function animateInt(){
+  const el=document.getElementById('intViz');
+  const mapping=[[0,0],[1,1],[2,-1],[3,2],[4,-2],[5,3],[6,-3],[7,4]];
+  let html='<table style="border-collapse:collapse;font-size:.82rem">';
+  html+='<tr><td style="padding:.25rem .6rem;color:var(--muted)">ℕ:</td>';
+  mapping.forEach(([n])=>html+=`<td style="padding:.25rem .5rem;text-align:center;color:var(--teal);border:1px solid var(--border)">${n}</td>`);
+  html+='<td style="padding:.25rem .4rem;color:var(--muted)">…</td></tr>';
+  html+='<tr><td style="padding:.25rem .6rem;color:var(--muted)">f(n):</td>';
+  mapping.forEach(([,z])=>html+=`<td style="padding:.25rem .5rem;text-align:center;color:var(--gold);border:1px solid var(--border)">${z}</td>`);
+  html+='<td style="padding:.25rem .4rem;color:var(--muted)">…</td></tr>';
+  html+='</table><p style="font-size:.8rem;color:var(--muted);margin-top:.6rem">Every integer appears exactly once — this IS a bijection ℕ→ℤ!</p>';
+  el.innerHTML=html;
+}
+function buildDiag(){
+  const el=document.getElementById('diagViz');if(!el)return;
+  const nums=[['0','4','1','5','9','…'],['2','7','1','8','2','…'],['8','2','8','1','8','…'],['4','5','9','0','4','…'],['…','…','…','…','…','…']];
+  let html='<table style="border-collapse:collapse;font-size:.8rem;margin:.5rem 0">';
+  nums.forEach((row,i)=>{
+    html+='<tr>';
+    if(i<4)html+=`<td style="padding:.25rem .5rem;color:var(--muted);font-family:'JetBrains Mono'">r${i+1} = 0.</td>`;
+    else html+=`<td style="padding:.25rem .5rem;color:var(--muted)">…</td>`;
+    row.forEach((d,j)=>{
+      const isDiag=i===j&&i<4;
+      html+=`<td style="padding:.25rem .45rem;border:1px solid var(--border);font-family:'JetBrains Mono';font-size:.8rem;${isDiag?'background:rgba(192,57,43,.15);color:var(--red);font-weight:700':'color:#3d3530'}">${d}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</table>';
+  html+='<p style="font-size:.82rem;color:#3d3530;margin-top:.6rem;line-height:1.7">The <span style="color:var(--red);font-weight:600">red diagonal digits</span> are 0, 7, 8, 0, … Change each one (e.g. add 1 mod 10): new number d = 0.<strong style="color:var(--teal)">1891…</strong> — this differs from every rₙ in the n-th digit. So d is NOT on the list. Contradiction!</p>';
+  el.innerHTML=html;
+}
+
+// HILBERT'S HOTEL
+let hotelState={rooms:8,guests:8,extra:0};
+function hilbertReset(){hotelState={rooms:8,guests:8,extra:0};renderHotel();document.getElementById('hilbertMsg').textContent='';}
+function hilbertAddOne(){
+  document.getElementById('hilbertMsg').textContent='Shifting: guest in room n → room n+1. Room 1 is now free!';
+  hotelState.extra=1;renderHotel(true);
+}
+function hilbertAddInfinite(){
+  document.getElementById('hilbertMsg').textContent='Shifting: guest in room n → room 2n. All odd rooms (1,3,5,…) are now free for ℵ₀ new guests!';
+  hotelState.extra=2;renderHotel(false,true);
+}
+function renderHotel(shifted=false,doubled=false){
+  const el=document.getElementById('hilbertStrip');el.innerHTML='';
+  for(let i=1;i<=hotelState.rooms+2;i++){
+    const d=document.createElement('div');
+    d.style.cssText='min-width:52px;height:52px;border-radius:.4rem;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.65rem;font-family:"JetBrains Mono",monospace;border:1px solid var(--border);flex-shrink:0;transition:all .3s;';
+    if(doubled&&i%2===1){d.style.background='rgba(13,115,119,.12)';d.style.borderColor='var(--teal)';d.innerHTML=`<div style="font-size:1rem">🆓</div><div style="color:var(--teal)">Room ${i}</div>`;}
+    else if(i===1&&shifted){d.style.background='rgba(13,115,119,.12)';d.style.borderColor='var(--teal)';d.innerHTML=`<div style="font-size:1rem">🆓</div><div style="color:var(--teal)">Room 1</div>`;}
+    else{d.style.background='var(--surface)';d.innerHTML=`<div style="font-size:1rem">👤</div><div style="color:var(--muted)">Room ${i}</div>`;}
+    el.appendChild(d);
+  }
+  const more=document.createElement('div');more.style.cssText='display:flex;align-items:center;padding:.5rem;font-family:"JetBrains Mono",monospace;font-size:.9rem;color:var(--muted);flex-shrink:0;';more.textContent='… ∞ …';el.appendChild(more);
+}
+hilbertReset();
+
+// CARDINALITY EXPLORER
+function exploreCard(){
+  const raw=document.getElementById('cardSet').value;
+  const elems=raw.split(',').map(s=>s.trim()).filter(Boolean);
+  const n=elems.length,ps=Math.pow(2,n);
+  let html=`<strong>Set A = {${elems.join(', ')}}</strong><br>`;
+  html+=`Cardinality: |A| = <strong style="color:var(--teal)">${n}</strong><br>`;
+  html+=`Power set |𝒫(A)| = 2^${n} = <strong style="color:var(--gold)">${ps}</strong><br>`;
+  html+=`Is A finite? <strong style="color:var(--green)">Yes</strong><br>`;
+  html+=`Is A countable? <strong style="color:var(--green)">Yes</strong><br>`;
+  html+=`Cantor's theorem: |A| &lt; |𝒫(A)|? <strong style="color:var(--green)">${n} &lt; ${ps} ✓</strong>`;
+  const el=document.getElementById('cardExplore');el.style.display='block';el.innerHTML=html;
+}
+
+// CARDINAL ARITHMETIC
+const cardNames={0:'0',1:'1',2:'2',5:'5','n':'n','aleph0':'ℵ₀','c':'𝔠'};
+function cardVal(s){if(s==='aleph0')return 'aleph0';if(s==='c')return 'c';if(s==='n')return 'n';return parseInt(s);}
+function calcCardinal(){
+  const a=cardVal(document.getElementById('cardA').value);
+  const b=cardVal(document.getElementById('cardB').value);
+  const op=document.getElementById('cardOp').value;
+  let result='',explain='';
+  function isInf(x){return x==='aleph0'||x==='c';}
+  function nameOf(x){return cardNames[x]||x;}
+
+  if(op==='+'){
+    if(a===0)result=nameOf(b);
+    else if(b===0)result=nameOf(a);
+    else if(a==='c'||b==='c')result='𝔠';
+    else if(a==='aleph0'||b==='aleph0')result='ℵ₀';
+    else if(a==='n'||b==='n')result='n+m (finite)';
+    else result=''+(a+b);
+    if(a==='aleph0'&&b==='aleph0')explain='ℵ₀+ℵ₀=ℵ₀: Interleave two countable sets — still countable!';
+    else if(isInf(a)||isInf(b))explain='Adding a finite or countable amount to an infinite cardinal doesn\'t change it.';
+  }
+  else if(op==='*'){
+    if(a===0||b===0)result='0';
+    else if(a===1)result=nameOf(b);
+    else if(b===1)result=nameOf(a);
+    else if(a==='c'||b==='c')result='𝔠';
+    else if(a==='aleph0'||b==='aleph0')result='ℵ₀';
+    else if(a==='n'||b==='n')result='n·m (finite)';
+    else result=''+(a*b);
+    if(a==='aleph0'&&b==='aleph0')explain='ℵ₀×ℵ₀=ℵ₀: ℕ×ℕ is countable via Cantor\'s diagonal grid!';
+    else if(isInf(a)||isInf(b))explain='Multiplying an infinite cardinal by any smaller cardinal doesn\'t change it.';
+  }
+  else if(op==='^'){
+    if(a===0&&b===0)result='1 (by convention)';
+    else if(a===0)result='0';
+    else if(b===0)result='1';
+    else if(a===1)result='1';
+    else if(b==='aleph0'&&(a===2||a===3||a===5||a==='n'))result='𝔠';
+    else if(a==='aleph0'&&b==='aleph0')result='𝔠';
+    else if(a==='aleph0'&&b==='c')result='2^𝔠';
+    else if(a==='c'&&b==='aleph0')result='𝔠';
+    else if(a==='c'&&b==='c')result='2^𝔠';
+    else if(a==='c'&&typeof b==='number')result='𝔠';
+    else if(a==='aleph0'&&typeof b==='number'&&b>0)result='ℵ₀';
+    else if(typeof a==='number'&&typeof b==='number')result=''+(Math.pow(a,b));
+    else result='?';
+    if(a===2&&b==='aleph0')explain='2^{ℵ₀} = 𝔠: This is the key result! Functions ℕ→{0,1} correspond to real numbers (binary).';
+    else if(b==='aleph0')explain='n^{ℵ₀} = 𝔠 for any finite n≥2. Exponentiation with infinite exponent gives the continuum.';
+  }
+
+  document.getElementById('arithResult').textContent=result||'?';
+  const exEl=document.getElementById('arithExplain');
+  if(explain){exEl.style.display='block';exEl.innerHTML='<strong>Why?</strong> '+explain;}
+  else exEl.style.display='none';
+}
+
+// QUIZ
+const correct={1:'C',2:'D',3:'B',4:'C',5:'C',6:'B',7:'D',8:'C',9:'B',10:'C'};
+const ua={};
+function qa(q,choice){
+  if(ua[q])return;ua[q]=choice;
+  const items=document.querySelectorAll('.q-item');
+  items[q-1].querySelectorAll('.q-opt').forEach((o,i)=>{
+    const l=String.fromCharCode(65+i);
+    if(l===correct[q])o.classList.add('correct');
+    else if(l===choice&&choice!==correct[q])o.classList.add('wrong');
+  });
+  const fb=document.getElementById(`q${q}-fb`);
+  if(choice===correct[q])fb.className='q-fb show ok';
+  else{fb.className='q-fb show bad';fb.textContent='✗ Incorrect. Correct answer: '+correct[q]+'. '+fb.textContent.replace('✅','');}
+  document.getElementById('qProg').style.width=(Object.keys(ua).length/10*100)+'%';
+}
+function submitQuiz(){
+  for(let q=1;q<=10;q++)if(!ua[q])qa(q,'_');
+  const score=Object.entries(ua).filter(([q,a])=>a===correct[+q]).length;
+  const pct=Math.round(score/10*100);
+  const el=document.getElementById('qScore');el.style.display='block';
+  el.innerHTML=(pct>=90?'🌟 Excellent!':pct>=70?'✅ Well done!':pct>=50?'📚 Keep reviewing!':'💪 Go back through the lessons!')+` Score: <strong>${score}/10</strong> (${pct}%)`;
+  document.getElementById('submitBtn').disabled=true;
+}
+</script>
+</body>
+</html>
