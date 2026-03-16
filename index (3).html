@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relations & Functions · Logic and Set Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a12;--surface:#12121e;--card:#1a1a2e;
+  --accent1:#7c3aed;--accent2:#06b6d4;--accent3:#f59e0b;--accent4:#10b981;--accent5:#ef4444;
+  --text:#e2e8f0;--muted:#64748b;--border:#2d2d4e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--accent1);border-radius:3px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;background:rgba(10,10,18,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:.9rem;color:#a78bfa;font-weight:700;}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{color:var(--muted);font-size:.88rem;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-progress{height:3px;background:linear-gradient(90deg,var(--accent1),var(--accent2));width:0%;transition:width .3s;position:absolute;bottom:0;left:0;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.22),transparent),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(6,182,212,.12),transparent);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.07) 1px,transparent 1px);background-size:40px 40px;animation:gridMove 22s linear infinite;}
+@keyframes gridMove{0%{background-position:0 0;}100%{background-position:40px 40px;}}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:orbFloat 9s ease-in-out infinite;}
+.orb1{width:420px;height:420px;background:rgba(124,58,237,.16);top:-12%;left:-10%;}
+.orb2{width:320px;height:320px;background:rgba(6,182,212,.11);bottom:0;right:-5%;animation-delay:3.5s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-28px);}}
+.hero-badge{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;background:rgba(124,58,237,.18);border:1px solid rgba(124,58,237,.4);color:#a78bfa;padding:.4rem 1rem;border-radius:2rem;margin-bottom:1.5rem;animation:fadeUp .8s ease both;}
+#hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7.5vw,5.8rem);font-weight:900;text-align:center;line-height:1.06;background:linear-gradient(135deg,#e2e8f0 25%,#a78bfa 58%,#67e8f9 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeUp .8s .15s ease both;}
+.hero-sub{font-size:1.1rem;color:var(--muted);max-width:560px;text-align:center;margin-top:1rem;line-height:1.75;animation:fadeUp .8s .3s ease both;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1.8rem;animation:fadeUp .8s .45s ease both;}
+.pill{font-family:'Space Mono',monospace;font-size:.72rem;padding:.35rem .9rem;border-radius:2rem;border:1px solid var(--border);background:rgba(255,255,255,.04);cursor:default;}
+.hero-cta{margin-top:2.4rem;display:flex;gap:1rem;animation:fadeUp .8s .6s ease both;}
+.btn-primary{padding:.75rem 2rem;border-radius:.5rem;background:linear-gradient(135deg,var(--accent1),#4f46e5);color:#fff;font-weight:600;border:none;cursor:pointer;font-size:1rem;transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.4);}
+.btn-ghost{padding:.75rem 2rem;border-radius:.5rem;border:1px solid var(--border);background:transparent;color:var(--text);font-size:1rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;}
+.btn-ghost:hover{border-color:var(--accent2);color:var(--accent2);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* MAIN */
+main{max-width:1080px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+section{margin-bottom:5rem;}
+.section-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:var(--accent2);text-transform:uppercase;margin-bottom:.4rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;margin-bottom:.5rem;}
+.section-desc{color:var(--muted);line-height:1.75;max-width:680px;margin-bottom:2rem;}
+
+/* TOPIC CARDS */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem;}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden;}
+.topic-card:hover{transform:translateY(-4px);border-color:var(--card-color,var(--accent1));box-shadow:0 12px 40px var(--card-glow,rgba(124,58,237,.15));}
+.card-num{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--card-color,var(--accent1));margin-bottom:.6rem;}
+.card-title{font-size:1.02rem;font-weight:600;margin-bottom:.4rem;}
+.card-desc{font-size:.86rem;color:var(--muted);line-height:1.6;}
+.card-tag{display:inline-block;margin-top:.8rem;font-family:'Space Mono',monospace;font-size:.62rem;padding:.2rem .6rem;border-radius:1rem;background:rgba(255,255,255,.05);color:var(--muted);}
+.card-arrow{position:absolute;right:1.1rem;bottom:1.1rem;opacity:.3;font-size:1.1rem;transition:opacity .2s,transform .2s;}
+.topic-card:hover .card-arrow{opacity:1;transform:translate(2px,-2px);}
+
+/* LESSON PANEL */
+.lesson-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;margin-top:1.2rem;animation:slideDown .3s ease;}
+.lesson-panel.open{display:block;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+
+/* TABS */
+.tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.tab{font-family:'Space Mono',monospace;font-size:.73rem;padding:.42rem .95rem;border-radius:.4rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.tab.active,.tab:hover{background:var(--accent1);border-color:var(--accent1);color:#fff;}
+
+/* CONTENT */
+.content-area{line-height:1.8;}
+.content-area h3{font-family:'Playfair Display',serif;font-size:1.5rem;margin:1.5rem 0 .8rem;color:#e2e8f0;}
+.content-area h4{font-size:1rem;font-weight:600;margin:1.4rem 0 .5rem;color:var(--accent2);}
+.content-area h5{font-size:.93rem;font-weight:600;margin:.9rem 0 .3rem;color:#a78bfa;}
+.content-area p{color:#cbd5e1;margin-bottom:.9rem;}
+.content-area ul,.content-area ol{padding-left:1.5rem;margin-bottom:1rem;}
+.content-area li{color:#cbd5e1;margin-bottom:.45rem;line-height:1.7;}
+.content-area strong{color:#e2e8f0;}
+.content-area em{color:#a78bfa;font-style:italic;}
+
+/* DEF BOX */
+.def-box{background:rgba(124,58,237,.08);border-left:3px solid var(--accent1);border-radius:0 .6rem .6rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.def-box .def-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent1);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;font-weight:700;}
+.def-box p{color:var(--text);margin:0;}
+
+/* PROPERTY BOX */
+.prop-box{background:rgba(6,182,212,.07);border-left:3px solid var(--accent2);border-radius:0 .6rem .6rem 0;padding:1rem 1.3rem;margin:1rem 0;}
+.prop-box .prop-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;font-weight:700;}
+.prop-box p,.prop-box ul{color:var(--text);margin:0;}
+.prop-box ul{padding-left:1.3rem;}
+.prop-box li{margin-bottom:.35rem;}
+
+/* EXAMPLE BOX */
+.ex-box{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:.7rem;padding:1.1rem 1.3rem;margin:1rem 0;}
+.ex-box .ex-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;font-weight:700;}
+.ex-box p,.ex-box ul,.ex-box ol{color:#cbd5e1;margin-bottom:.5rem;}
+.ex-box li{margin-bottom:.35rem;}
+
+/* COUNTER EXAMPLE */
+.counter-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:.7rem;padding:1.1rem 1.3rem;margin:1rem 0;}
+.counter-box .counter-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;font-weight:700;}
+
+/* THEOREM */
+.theorem{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:.7rem;padding:1.1rem 1.3rem;margin:1rem 0;}
+.theorem .th-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;font-weight:700;}
+.theorem p,.theorem ul{color:#cbd5e1;}
+
+/* NOTE / TIP */
+.note-box{background:rgba(240,171,252,.07);border:1px solid rgba(240,171,252,.2);border-radius:.7rem;padding:1rem 1.3rem;margin:1rem 0;}
+.note-box .note-label{font-family:'Space Mono',monospace;font-size:.68rem;color:#f0abfc;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:700;}
+
+/* MATH */
+.math{font-family:'Space Mono',monospace;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:.35rem;padding:.12rem .45rem;font-size:.88rem;color:#f0abfc;}
+.math-block{font-family:'Space Mono',monospace;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:.6rem;padding:1rem 1.4rem;margin:.8rem 0;font-size:.88rem;color:#f0abfc;overflow-x:auto;line-height:1.9;white-space:pre;}
+
+/* PROPERTY TABLE */
+.prop-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem;}
+.prop-table th{background:rgba(124,58,237,.15);color:#a78bfa;font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;padding:.6rem .9rem;text-align:left;border:1px solid var(--border);}
+.prop-table td{padding:.55rem .9rem;border:1px solid var(--border);color:#cbd5e1;vertical-align:top;}
+.prop-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.check{color:var(--accent4);font-weight:700;}
+.cross{color:var(--accent5);font-weight:700;}
+
+/* INTERACTIVE */
+.set-viz,.func-mapper,.rel-sim,.comp-sim{background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:.9rem;padding:1.5rem;margin:1.4rem 0;}
+.set-viz h4,.func-mapper h4,.rel-sim h4,.comp-sim h4{font-size:.98rem;font-weight:600;margin-bottom:.8rem;}
+.set-viz h4{color:var(--accent2);}
+.func-mapper h4{color:var(--accent3);}
+.rel-sim h4{color:var(--accent4);}
+.comp-sim h4{color:#f0abfc;}
+.set-controls{display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end;}
+.set-input{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:.4rem;padding:.5rem .8rem;color:var(--text);font-family:'Space Mono',monospace;font-size:.83rem;width:160px;}
+.set-btn{background:var(--accent1);border:none;border-radius:.4rem;padding:.5rem 1rem;color:#fff;cursor:pointer;font-size:.83rem;transition:opacity .2s;}
+.set-btn:hover{opacity:.8;}
+.op-btns{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.8rem;}
+.op-btn{padding:.38rem .8rem;border-radius:.4rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.78rem;transition:all .2s;}
+.op-btn.sel,.op-btn:hover{background:var(--accent2);border-color:var(--accent2);color:var(--bg);}
+#set-result{font-family:'Space Mono',monospace;font-size:.83rem;background:rgba(0,0,0,.3);border-radius:.4rem;padding:.6rem 1rem;margin-top:.8rem;color:#67e8f9;min-height:2rem;}
+
+/* FUNCTION MAPPER */
+.mapper-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.domain-set,.codomain-set{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:.6rem;padding:.9rem;min-width:130px;}
+.domain-set h5,.codomain-set h5{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;}
+.elem{background:var(--card);border:1px solid var(--border);border-radius:.4rem;padding:.32rem .65rem;margin-bottom:.35rem;font-family:'Space Mono',monospace;font-size:.83rem;cursor:pointer;transition:all .2s;user-select:none;}
+.elem:hover,.elem.sel{background:var(--accent1);border-color:var(--accent1);color:#fff;}
+.elem.mapped{background:rgba(16,185,129,.18);border-color:var(--accent4);color:var(--accent4);}
+.func-badge{display:inline-block;padding:.22rem .65rem;border-radius:2rem;font-family:'Space Mono',monospace;font-size:.7rem;margin-right:.35rem;border:1px solid;}
+.badge-inj{background:rgba(16,185,129,.1);border-color:var(--accent4);color:var(--accent4);}
+.badge-sur{background:rgba(6,182,212,.1);border-color:var(--accent2);color:var(--accent2);}
+.badge-bij{background:rgba(245,158,11,.1);border-color:var(--accent3);color:var(--accent3);}
+.badge-none{background:rgba(239,68,68,.1);border-color:var(--accent5);color:var(--accent5);}
+
+/* RELATION MATRIX */
+.rel-matrix{display:inline-grid;gap:2px;margin:1rem 0;}
+.rel-cell{width:38px;height:38px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:.8rem;transition:all .2s;background:rgba(255,255,255,.02);}
+.rel-cell.header{background:rgba(124,58,237,.13);color:var(--accent1);cursor:default;font-size:.75rem;}
+.rel-cell.on{background:rgba(124,58,237,.4);border-color:var(--accent1);color:#fff;}
+.rel-cell:not(.header):not(.on):hover{background:rgba(255,255,255,.08);}
+.rel-props{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.8rem;}
+.rel-prop{padding:.28rem .75rem;border-radius:2rem;font-size:.78rem;font-family:'Space Mono',monospace;border:1px solid;}
+.rel-prop.yes{background:rgba(16,185,129,.1);border-color:var(--accent4);color:var(--accent4);}
+.rel-prop.no{background:rgba(100,116,139,.07);border-color:var(--border);color:var(--muted);}
+
+/* QUIZ */
+.quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:2rem;margin:2rem 0;}
+.quiz-box h3{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:1.1rem;color:var(--accent3);}
+.q-item{margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.04);}
+.q-item:last-child{border-bottom:none;}
+.q-text{color:var(--text);font-size:.94rem;margin-bottom:.8rem;line-height:1.65;}
+.q-options{display:flex;flex-direction:column;gap:.45rem;}
+.q-opt{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:.5rem;padding:.62rem 1rem;cursor:pointer;font-size:.88rem;transition:all .2s;display:flex;align-items:center;gap:.65rem;}
+.q-opt:hover{border-color:var(--accent1);background:rgba(124,58,237,.08);}
+.q-opt.correct{background:rgba(16,185,129,.12);border-color:var(--accent4);color:var(--accent4);}
+.q-opt.wrong{background:rgba(239,68,68,.12);border-color:var(--accent5);color:var(--accent5);}
+.opt-letter{width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(255,255,255,.07);font-family:'Space Mono',monospace;font-size:.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.q-feedback{font-size:.84rem;margin-top:.5rem;padding:.5rem .85rem;border-radius:.4rem;display:none;line-height:1.6;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:rgba(16,185,129,.08);color:var(--accent4);}
+.q-feedback.bad{background:rgba(239,68,68,.08);color:#fca5a5;}
+.prog-bar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;margin:1.2rem 0;}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent1),var(--accent2));transition:width .5s ease;}
+.quiz-score{font-family:'Space Mono',monospace;font-size:.95rem;padding:1rem;background:rgba(124,58,237,.1);border-radius:.6rem;text-align:center;display:none;margin-top:1rem;}
+
+/* FLIP CARDS */
+.flip-grid{display:flex;flex-wrap:wrap;gap:.8rem;margin:1rem 0;}
+.flip-card{width:175px;height:100px;perspective:900px;cursor:pointer;}
+.flip-inner{width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;position:relative;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:.6rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:.6rem;font-size:.78rem;border:1px solid var(--border);}
+.flip-front{background:rgba(124,58,237,.09);color:#a78bfa;font-family:'Space Mono',monospace;font-size:.75rem;}
+.flip-back{background:rgba(6,182,212,.09);color:#67e8f9;transform:rotateY(180deg);line-height:1.5;font-size:.78rem;}
+
+/* COMPOSITION */
+.pipe-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.pipe-box{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:.5rem;padding:.48rem 1rem;font-family:'Space Mono',monospace;font-size:.83rem;color:var(--accent2);}
+.pipe-arrow{color:var(--muted);font-size:1.2rem;padding:0 .2rem;}
+.comp-input{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:.4rem;padding:.42rem .75rem;color:var(--text);font-family:'Space Mono',monospace;font-size:.83rem;width:90px;}
+.comp-btn{background:var(--accent1);border:none;border-radius:.4rem;padding:.42rem 1rem;color:#fff;cursor:pointer;font-size:.83rem;}
+.comp-result{font-family:'Space Mono',monospace;font-size:.9rem;color:#f0abfc;margin-top:.5rem;min-height:1.5rem;}
+
+/* PROGRESS SIDEBAR */
+.progress-sidebar{position:fixed;right:1.4rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.5rem;z-index:50;}
+.prog-dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:all .3s;cursor:pointer;border:2px solid transparent;}
+.prog-dot.active{background:var(--accent1);border-color:rgba(124,58,237,.35);transform:scale(1.4);}
+.prog-dot.done{background:var(--accent4);}
+
+/* OUTCOMES */
+.outcomes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.outcome-card{background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:1.2rem;display:flex;gap:.9rem;align-items:flex-start;}
+.outcome-icon{width:2.2rem;height:2.2rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.outcome-text{font-size:.87rem;color:#cbd5e1;line-height:1.65;}
+
+/* DIVIDER */
+.topic-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1.5rem 0;}
+
+/* READABLE NOTE */
+.plain-note{background:rgba(255,255,255,.03);border-radius:.6rem;padding:1rem 1.2rem;margin:.8rem 0;font-size:.9rem;color:#94a3b8;line-height:1.75;border-left:3px solid rgba(255,255,255,.1);}
+.plain-note strong{color:var(--text);}
+
+@media(max-width:640px){.progress-sidebar,.nav-links{display:none;}.mapper-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">𝕊et Theory Lab</div>
+  <div class="nav-links">
+    <a href="#topics">Topics</a>
+    <a href="#engage">Engage</a>
+    <a href="#explore">Explore</a>
+    <a href="#simulate">Simulate</a>
+    <a href="#assess">Quiz</a>
+    <a href="#outcomes">Outcomes</a>
+  </div>
+  <div class="nav-progress" id="navProgress"></div>
+</nav>
+
+<!-- PROGRESS DOTS -->
+<div class="progress-sidebar" id="progSidebar">
+  <div class="prog-dot active" onclick="scrollToSection(0)"></div>
+  <div class="prog-dot" onclick="scrollToSection(1)"></div>
+  <div class="prog-dot" onclick="scrollToSection(2)"></div>
+  <div class="prog-dot" onclick="scrollToSection(3)"></div>
+  <div class="prog-dot" onclick="scrollToSection(4)"></div>
+  <div class="prog-dot" onclick="scrollToSection(5)"></div>
+  <div class="prog-dot" onclick="scrollToSection(6)"></div>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="hero-badge">📐 Logic & Set Theory · Week Module</div>
+  <h1>Relations &<br>Functions</h1>
+  <p class="hero-sub">A complete, inquiry-driven exploration of set relations, functions, images, equivalence, and bijections — designed for pre-service mathematics teachers.</p>
+  <div class="hero-pills">
+    <span class="pill">5Es Framework</span>
+    <span class="pill">Interactive Simulations</span>
+    <span class="pill">Self-Assessment</span>
+    <span class="pill">PST Module</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#engage" class="btn-primary">🚀 Start Learning</a>
+    <a href="#topics" class="btn-ghost">Browse Topics</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════
+     TOPIC MAP
+═══════════════════════════════ -->
+<section id="topics">
+  <div class="section-label">Course Map</div>
+  <div class="section-title">Six Topics, One Big Idea</div>
+  <p class="section-desc">Everything here connects: relations generalize functions, functions have images, images respect set operations, and bijections have inverses. Click any card to open its full lesson.</p>
+  <div class="topic-grid">
+    <div class="topic-card" style="--card-color:#7c3aed;--card-glow:rgba(124,58,237,.15)" onclick="openLesson('L1')">
+      <div class="card-num">01 / 06</div>
+      <div class="card-title">Relations & Functions</div>
+      <div class="card-desc">Ordered pairs, Cartesian products, what makes a relation a function, and everyday examples.</div>
+      <div class="card-tag">Foundation</div><div class="card-arrow">↗</div>
+    </div>
+    <div class="topic-card" style="--card-color:#06b6d4;--card-glow:rgba(6,182,212,.15)" onclick="openLesson('L2')">
+      <div class="card-num">02 / 06</div>
+      <div class="card-title">Image & Inverse Image</div>
+      <div class="card-desc">How subsets travel forward (image) and backward (pre-image) through a function.</div>
+      <div class="card-tag">Mappings</div><div class="card-arrow">↗</div>
+    </div>
+    <div class="topic-card" style="--card-color:#f59e0b;--card-glow:rgba(245,158,11,.15)" onclick="openLesson('L3')">
+      <div class="card-num">03 / 06</div>
+      <div class="card-title">Domain & Range</div>
+      <div class="card-desc">What counts as input, what is the full target set, and what outputs are actually reached.</div>
+      <div class="card-tag">Fundamentals</div><div class="card-arrow">↗</div>
+    </div>
+    <div class="topic-card" style="--card-color:#10b981;--card-glow:rgba(16,185,129,.15)" onclick="openLesson('L4')">
+      <div class="card-num">04 / 06</div>
+      <div class="card-title">Equivalence & Order Relations</div>
+      <div class="card-desc">The three-property trio that creates equivalence classes, partitions, and orderings.</div>
+      <div class="card-tag">Structure</div><div class="card-arrow">↗</div>
+    </div>
+    <div class="topic-card" style="--card-color:#ef4444;--card-glow:rgba(239,68,68,.15)" onclick="openLesson('L5')">
+      <div class="card-num">05 / 06</div>
+      <div class="card-title">Inclusion, Restriction & Char. Functions</div>
+      <div class="card-desc">Special maps that shrink domains, embed subsets, and encode membership as 0 or 1.</div>
+      <div class="card-tag">Special Maps</div><div class="card-arrow">↗</div>
+    </div>
+    <div class="topic-card" style="--card-color:#f0abfc;--card-glow:rgba(240,171,252,.15)" onclick="openLesson('L6')">
+      <div class="card-num">06 / 06</div>
+      <div class="card-title">Injective, Surjective & Bijective</div>
+      <div class="card-desc">One-to-one, onto, and perfect — the classification every mathematician must know.</div>
+      <div class="card-tag">Classification</div><div class="card-arrow">↗</div>
+    </div>
+  </div>
+
+<!-- ════════ L1 ════════ -->
+<div id="L1" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L1','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L1','explore',this)">🔬 Explore</button>
+    <button class="tab" onclick="switchTab('L1','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <!-- LEARN -->
+  <div id="L1-learn" class="content-area">
+    <h3>Relations and Functions Between Sets</h3>
+
+    <div class="plain-note">
+      <strong>Big Picture:</strong> Before we define functions, we need a more general idea — a <em>relation</em>. Think of a relation as a rule that says "this element is connected to that element." A function is just a relation with a very specific rule: every input connects to <em>exactly one</em> output.
+    </div>
+
+    <h4>Step 1 — Building Blocks: Ordered Pairs</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Ordered Pair</div>
+      <p>An <strong>ordered pair</strong> <span class="math">(a, b)</span> is two objects listed in order. Order matters:<br>
+      <span class="math">(a, b) = (c, d)</span> if and only if <span class="math">a = c</span> and <span class="math">b = d</span>.<br>
+      In particular, <span class="math">(1, 2) ≠ (2, 1)</span> — these are different pairs.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Everyday Example</div>
+      <p>GPS coordinates: (latitude, longitude). The pair (14.5995° N, 120.9842° E) points to Manila. Swapping gives a different location entirely — order matters!</p>
+    </div>
+
+    <h4>Step 2 — The Cartesian Product</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Cartesian Product</div>
+      <p>For sets <span class="math">A</span> and <span class="math">B</span>, the <strong>Cartesian product</strong> is all possible ordered pairs:<br>
+      <span class="math">A × B = { (a, b) | a ∈ A  and  b ∈ B }</span></p>
+    </div>
+    <div class="prop-box">
+      <div class="prop-label">Key Properties</div>
+      <ul>
+        <li><span class="math">|A × B| = |A| · |B|</span> — the number of pairs equals the product of the set sizes.</li>
+        <li><span class="math">A × B ≠ B × A</span> in general (unless A = B).</li>
+        <li><span class="math">A × ∅ = ∅</span> — no pairs are possible with an empty set.</li>
+        <li><span class="math">A × (B ∪ C) = (A × B) ∪ (A × C)</span> — distributes over union.</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example</div>
+      <p>Let <span class="math">A = {1, 2}</span> and <span class="math">B = {a, b, c}</span>.<br>
+      <span class="math">A × B = { (1,a), (1,b), (1,c), (2,a), (2,b), (2,c) }</span><br>
+      <span class="math">|A × B| = 2 × 3 = 6</span> pairs.<br>
+      Notice: <span class="math">B × A = { (a,1),(a,2),(b,1),(b,2),(c,1),(c,2) }</span> — totally different pairs!</p>
+    </div>
+
+    <h4>Step 3 — Relations</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Binary Relation</div>
+      <p>A <strong>binary relation</strong> <span class="math">R</span> from set <span class="math">A</span> to set <span class="math">B</span> is any subset:<br>
+      <span class="math">R ⊆ A × B</span><br>
+      We write <span class="math">a R b</span> (or <span class="math">(a,b) ∈ R</span>) to say "a is related to b under R."<br>
+      A relation <strong>on</strong> A means both sets are the same: <span class="math">R ⊆ A × A</span>.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — "Is a sibling of"</div>
+      <p>Let <span class="math">A = {Ana, Ben, Clara, Diego}</span> where Ana &amp; Ben are siblings, and Clara &amp; Diego are siblings.<br>
+      The "is a sibling of" relation is: <span class="math">R = {(Ana,Ben),(Ben,Ana),(Clara,Diego),(Diego,Clara)}</span><br>
+      Note: this relation is <em>on</em> A (same set).</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — "Divides" on ℕ</div>
+      <p>Define <span class="math">a R b</span> iff <span class="math">a | b</span> (a divides b) on <span class="math">{1,2,3,4,6}</span>.<br>
+      <span class="math">R = {(1,1),(1,2),(1,3),(1,4),(1,6),(2,2),(2,4),(2,6),(3,3),(3,6),(4,4),(6,6)}</span></p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 3 — "Less than" on {1,2,3}</div>
+      <p><span class="math">R = {(1,2),(1,3),(2,3)}</span> — all pairs where the first is strictly less than the second.</p>
+    </div>
+
+    <h4>Step 4 — Functions (A Special Relation)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Function</div>
+      <p>A <strong>function</strong> <span class="math">f: A → B</span> is a relation <span class="math">R ⊆ A × B</span> satisfying two conditions:<br>
+      1. <strong>Total:</strong> Every element of <span class="math">A</span> appears as a first component in some pair.<br>
+      2. <strong>Single-valued:</strong> Each element of <span class="math">A</span> appears in at most <em>one</em> pair.<br>
+      Together: each <span class="math">a ∈ A</span> maps to <em>exactly one</em> <span class="math">b ∈ B</span>, written <span class="math">f(a) = b</span>.</p>
+    </div>
+
+    <div class="prop-box">
+      <div class="prop-label">Two-Part Test: Is R a function?</div>
+      <ul>
+        <li><strong>Totality:</strong> Does every domain element have at least one mapping?</li>
+        <li><strong>Single-valuedness:</strong> Does every domain element have at most one mapping?</li>
+      </ul>
+      <p style="margin-top:.5rem">Fail either ⟹ not a function.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example — Deciding Function vs. Not</div>
+      <p>Let <span class="math">A = {1,2,3}</span>, <span class="math">B = {p,q,r}</span>. Which of these is a function?</p>
+      <ol>
+        <li><span class="math">R₁ = {(1,p),(2,q),(3,r)}</span> — ✅ Function. Each of 1, 2, 3 maps to exactly one target.</li>
+        <li><span class="math">R₂ = {(1,p),(1,q),(2,r),(3,p)}</span> — ❌ Not a function. Element 1 maps to both p and q.</li>
+        <li><span class="math">R₃ = {(1,p),(2,p),(3,p)}</span> — ✅ Function. Multiple elements can share the same output — that's fine!</li>
+        <li><span class="math">R₄ = {(1,p),(2,q)}</span> — ❌ Not a function. Element 3 has no mapping at all.</li>
+      </ol>
+    </div>
+
+    <div class="note-box">
+      <div class="note-label">💡 Analogy</div>
+      <p>A function is like an assignment of teachers to classes. Each class (domain element) must have <em>exactly one</em> assigned teacher. Multiple classes can share the same teacher (that's fine), but no class can have two teachers, and no class can be left without one.</p>
+    </div>
+
+    <div class="topic-divider"></div>
+    <h4>Summary Table</h4>
+    <table class="prop-table">
+      <tr><th>Concept</th><th>Formal Definition</th><th>Plain Language</th></tr>
+      <tr><td>Ordered Pair (a,b)</td><td>Two objects where sequence matters</td><td>First and second positions are different</td></tr>
+      <tr><td>Cartesian Product A×B</td><td>All (a,b) with a∈A, b∈B</td><td>Every possible pairing of elements</td></tr>
+      <tr><td>Relation R</td><td>R ⊆ A×B</td><td>A selection of some pairings</td></tr>
+      <tr><td>Function f: A→B</td><td>Relation that is total &amp; single-valued</td><td>Each input has exactly one output</td></tr>
+    </table>
+  </div><!-- /L1-learn -->
+
+  <!-- EXPLORE -->
+  <div id="L1-explore" class="content-area" style="display:none">
+    <h3>🔬 Cartesian Product & Function Builder</h3>
+    <p style="color:var(--muted)">Build two sets, see their Cartesian product, then check whether a relation you define is a function.</p>
+    <div class="set-viz">
+      <h4>Interactive Set Builder</h4>
+      <div class="set-controls">
+        <div>
+          <label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">Set A (comma-separated)</label>
+          <input class="set-input" id="setA" value="1,2,3">
+        </div>
+        <div>
+          <label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">Set B (comma-separated)</label>
+          <input class="set-input" id="setB" value="a,b,c">
+        </div>
+        <button class="set-btn" onclick="buildCartesian()">Build A×B</button>
+      </div>
+      <div id="cartesian-output" style="margin-top:1rem;font-family:'Space Mono',monospace;font-size:.8rem;color:#67e8f9;line-height:2.1;"></div>
+      <div class="topic-divider"></div>
+      <div>
+        <label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">Enter a relation (e.g. <span style="color:#a78bfa">(1,a),(2,b),(3,a)</span>) — check if it's a function:</label>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+          <input class="set-input" id="relInput" value="(1,a),(2,b),(3,a)" style="width:260px">
+          <button class="set-btn" onclick="checkFunction()">Check</button>
+        </div>
+        <div id="funcCheck" style="margin-top:.6rem;font-family:'Space Mono',monospace;font-size:.83rem;min-height:1.5rem;"></div>
+      </div>
+    </div>
+  </div><!-- /L1-explore -->
+
+  <!-- PRACTICE -->
+  <div id="L1-practice" class="content-area" style="display:none">
+    <h3>✏️ Flashcards — Relations & Functions</h3>
+    <p style="color:var(--muted);margin-bottom:1rem">Click each card to flip and reveal the answer.</p>
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is a Cartesian product A×B?</div><div class="flip-back">All ordered pairs (a,b) with a∈A and b∈B. Size = |A|·|B|.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is a relation from A to B?</div><div class="flip-back">Any subset R ⊆ A×B. No restrictions — just a selection of pairs.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Two conditions for a function?</div><div class="flip-back">Total (every input has a mapping) AND single-valued (each input maps to exactly ONE output).</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Can two inputs share the same output?</div><div class="flip-back">YES — this is allowed. e.g. f(1)=a and f(2)=a is still a valid function.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is every function a relation?</div><div class="flip-back">YES. Every function is a special type of relation (a subset of A×B).</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Why is (1,a),(1,b) not a function?</div><div class="flip-back">Element 1 maps to TWO outputs. Violates single-valuedness.</div></div></div>
+    </div>
+  </div><!-- /L1-practice -->
+</div><!-- /L1 -->
+
+<!-- ════════ L2 ════════ -->
+<div id="L2" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L2','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L2','explore',this)">🔬 Explore</button>
+    <button class="tab" onclick="switchTab('L2','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L2-learn" class="content-area">
+    <h3>Image and Inverse Image</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> A function doesn't just map individual elements — it can "push" entire subsets forward, and "pull" subsets backward. These are called the <em>image</em> and the <em>inverse image (pre-image)</em>.</div>
+
+    <h4>The Image (Forward Direction)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Image of a Subset</div>
+      <p>For <span class="math">f: A → B</span> and a subset <span class="math">S ⊆ A</span>:<br>
+      <span class="math">f(S) = { f(x) | x ∈ S } = { b ∈ B | b = f(x) for some x ∈ S }</span><br>
+      Read: "the set of all outputs of f when inputs come from S."</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — Finite Set</div>
+      <p>Let <span class="math">f: {1,2,3,4} → {a,b,c}</span> defined by <span class="math">f(1)=a, f(2)=a, f(3)=b, f(4)=c</span>.<br>
+      <span class="math">f({1,2}) = {a}</span> — both 1 and 2 map to a, so image is just {a}.<br>
+      <span class="math">f({2,3,4}) = {a,b,c}</span> — covers all outputs.<br>
+      <span class="math">f({1,3}) = {a,b}</span> — 1→a, 3→b.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — f(x) = x² on ℝ</div>
+      <p><span class="math">f([-3, 3]) = [0, 9]</span> — squaring [-3,3] gives outputs in [0,9].<br>
+      <span class="math">f({-2, -1, 0, 1, 2}) = {0, 1, 4}</span> — outputs after squaring.<br>
+      <span class="math">f([1, 2]) = [1, 4]</span> — positive inputs squared.</p>
+    </div>
+
+    <h4>The Inverse Image (Backward Direction)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Inverse Image (Pre-image)</div>
+      <p>For <span class="math">f: A → B</span> and a subset <span class="math">T ⊆ B</span>:<br>
+      <span class="math">f⁻¹(T) = { x ∈ A | f(x) ∈ T }</span><br>
+      Read: "all inputs whose output lands inside T."<br>
+      <strong>Important:</strong> This notation does NOT mean f must be invertible — f⁻¹(T) is defined for ANY function.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 3 — Finite Function</div>
+      <p>Using the same <span class="math">f(1)=a, f(2)=a, f(3)=b, f(4)=c</span>:<br>
+      <span class="math">f⁻¹({a}) = {1, 2}</span> — both 1 and 2 map into {a}.<br>
+      <span class="math">f⁻¹({b,c}) = {3, 4}</span> — 3 maps to b, 4 maps to c.<br>
+      <span class="math">f⁻¹({a,b,c}) = {1,2,3,4}</span> — everything maps somewhere in {a,b,c}.<br>
+      <span class="math">f⁻¹(∅) = ∅</span> — nothing maps into the empty set.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 4 — f(x) = x² on ℝ</div>
+      <p><span class="math">f⁻¹({4, 9}) = {-3, -2, 2, 3}</span> — all x with x²=4 or x²=9.<br>
+      <span class="math">f⁻¹([0, 4]) = [-2, 2]</span> — all x with 0 ≤ x² ≤ 4.<br>
+      <span class="math">f⁻¹((-∞, 0)) = ∅</span> — x² is never negative.</p>
+    </div>
+
+    <h4>Key Properties</h4>
+    <div class="prop-box">
+      <div class="prop-label">Properties of Image f(S)</div>
+      <ul>
+        <li><span class="math">f(S₁ ∪ S₂) = f(S₁) ∪ f(S₂)</span> — union always distributes. ✅</li>
+        <li><span class="math">f(S₁ ∩ S₂) ⊆ f(S₁) ∩ f(S₂)</span> — only subset in general. ⚠️</li>
+        <li>Equality holds for intersection when f is injective.</li>
+        <li><span class="math">S₁ ⊆ S₂ ⟹ f(S₁) ⊆ f(S₂)</span> — monotone.</li>
+        <li><span class="math">f(A)</span> is the range of f.</li>
+      </ul>
+    </div>
+    <div class="prop-box">
+      <div class="prop-label">Properties of Inverse Image f⁻¹(T)</div>
+      <ul>
+        <li><span class="math">f⁻¹(T₁ ∪ T₂) = f⁻¹(T₁) ∪ f⁻¹(T₂)</span> — union distributes exactly. ✅</li>
+        <li><span class="math">f⁻¹(T₁ ∩ T₂) = f⁻¹(T₁) ∩ f⁻¹(T₂)</span> — intersection distributes exactly. ✅</li>
+        <li><span class="math">f⁻¹(Bᶜ \ T) = A \ f⁻¹(T)</span> — complements distribute exactly. ✅</li>
+        <li>Inverse image is better behaved than the forward image!</li>
+      </ul>
+    </div>
+
+    <div class="theorem">
+      <div class="th-label">Fundamental Inclusions</div>
+      <p><span class="math">S ⊆ f⁻¹(f(S))</span> for any S ⊆ A — equality iff f is injective.<br>
+      <span class="math">f(f⁻¹(T)) ⊆ T</span> for any T ⊆ B — equality iff f is surjective.</p>
+    </div>
+
+    <div class="counter-box">
+      <div class="counter-label">⚠️ Counterexample — Intersection Fails</div>
+      <p style="color:#fca5a5">Let f(1)=a, f(2)=a. Let S₁={1}, S₂={2}.<br>
+      S₁ ∩ S₂ = ∅, so f(S₁ ∩ S₂) = f(∅) = ∅.<br>
+      But f(S₁) ∩ f(S₂) = {a} ∩ {a} = {a} ≠ ∅.<br>
+      So f(S₁ ∩ S₂) ⊊ f(S₁) ∩ f(S₂) — strict subset!</p>
+    </div>
+  </div><!-- /L2-learn -->
+
+  <div id="L2-explore" class="content-area" style="display:none">
+    <h3>🔬 Image & Inverse Image Explorer</h3>
+    <p style="color:var(--muted)">Use f(x) = x mod 4 with domain {0..7}. Select a subset S from the domain and a subset T from the codomain to compute f(S) and f⁻¹(T) live.</p>
+    <div class="set-viz">
+      <h4>f(x) = x mod 4: domain {0,1,...,7} → codomain {0,1,2,3}</h4>
+      <div style="margin:.8rem 0">
+        <label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.4rem">Select subset <strong>S</strong> from domain (click to toggle):</label>
+        <div id="domainElems" style="display:flex;gap:.35rem;flex-wrap:wrap;"></div>
+      </div>
+      <div style="margin:.8rem 0">
+        <label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.4rem">Select subset <strong>T</strong> from codomain (click to toggle):</label>
+        <div id="codomainElems" style="display:flex;gap:.35rem;flex-wrap:wrap;"></div>
+      </div>
+      <div id="imageResult" style="font-family:'Space Mono',monospace;font-size:.83rem;background:rgba(0,0,0,.3);border-radius:.6rem;padding:1rem;margin-top:.8rem;line-height:2.2;min-height:3rem;"></div>
+    </div>
+  </div>
+
+  <div id="L2-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is f(S)?</div><div class="flip-back">All outputs f(x) where x comes from the subset S of the domain.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is f⁻¹(T)?</div><div class="flip-back">All inputs x whose output f(x) lands inside T ⊆ codomain.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Does f⁻¹(T) require f to be invertible?</div><div class="flip-back">NO. Pre-image is defined for any function, even non-bijections.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">f(S₁∩S₂) vs f(S₁)∩f(S₂)?</div><div class="flip-back">Only ⊆ in general. Equality holds iff f is injective.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">When does f(f⁻¹(T)) = T?</div><div class="flip-back">When f is surjective — every output is reached from the domain.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">f⁻¹(T₁∩T₂) = ?</div><div class="flip-back">f⁻¹(T₁) ∩ f⁻¹(T₂) — inverse image distributes over intersection exactly.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L2 -->
+
+<!-- ════════ L3 ════════ -->
+<div id="L3" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L3','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L3','practice',this)">✏️ Flashcards</button>
+  </div>
+  <div id="L3-learn" class="content-area">
+    <h3>Domain, Codomain, and Range</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> When we write f: A → B, three sets are at play — the inputs (A), the declared target (B), and the actual outputs (range). These are NOT always the same, and the distinction matters a lot.</div>
+
+    <h4>Three Key Sets</h4>
+    <div class="def-box">
+      <div class="def-label">Domain</div>
+      <p>The <strong>domain</strong> of f: A → B is the set <span class="math">A</span> — every element here must have exactly one output.<br>
+      Sometimes written <span class="math">dom(f)</span>.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Codomain</div>
+      <p>The <strong>codomain</strong> is the set <span class="math">B</span> declared in <span class="math">f: A → B</span>. It is the <em>intended</em> target — outputs must land here, but not every element of B needs to be hit.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Range (Image of the Domain)</div>
+      <p>The <strong>range</strong> (or <em>image</em>) is the set of all actual outputs:<br>
+      <span class="math">range(f) = f(A) = { f(a) | a ∈ A }</span><br>
+      Always: <span class="math">range(f) ⊆ codomain</span>. Equal only when f is surjective.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — Finite Function</div>
+      <p>Let <span class="math">f: {1,2,3} → {a,b,c,d}</span> with <span class="math">f(1)=a, f(2)=a, f(3)=b</span>.<br>
+      Domain = <span class="math">{1,2,3}</span><br>
+      Codomain = <span class="math">{a,b,c,d}</span><br>
+      Range = <span class="math">{a,b}</span> — only a and b are ever hit. c and d are "unused."</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — Real Function f(x) = x²</div>
+      <p>Defined as <span class="math">f: ℝ → ℝ</span> (codomain declared as all reals).<br>
+      Domain = <span class="math">ℝ</span><br>
+      Codomain = <span class="math">ℝ</span><br>
+      Range = <span class="math">[0, ∞)</span> — x² is never negative, so only non-negative reals are outputs.<br>
+      Range ≠ Codomain — f is NOT surjective.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 3 — f(x) = 2x on ℝ</div>
+      <p>Domain = ℝ, Codomain = ℝ, Range = ℝ (every real y = 2x for x = y/2).<br>
+      Here Range = Codomain — f is surjective onto ℝ.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 4 — Domain of a Relation</div>
+      <p>For a relation <span class="math">R = {(1,a),(3,b)} ⊆ {1,2,3} × {a,b,c}</span>:<br>
+      <span class="math">dom(R) = {1,3}</span> — only elements that appear as first components.<br>
+      <span class="math">range(R) = {a,b}</span> — only elements that appear as second components.<br>
+      Note: element 2 is in the full set A but not in dom(R). This relation is not a function!</p>
+    </div>
+
+    <h4>Important Note on Codomain vs. Range</h4>
+    <div class="prop-box">
+      <div class="prop-label">Why the Distinction Matters</div>
+      <ul>
+        <li>Two functions can have the same rule but different codomains, making them different functions mathematically.</li>
+        <li>Example: <span class="math">g: ℝ → [0,∞)</span> with <span class="math">g(x) = x²</span> is surjective; <span class="math">f: ℝ → ℝ</span> with the same rule is NOT surjective.</li>
+        <li>The codomain is part of the function's identity.</li>
+      </ul>
+    </div>
+
+    <table class="prop-table">
+      <tr><th>Term</th><th>Symbol</th><th>Meaning</th><th>Always ⊆ ?</th></tr>
+      <tr><td>Domain</td><td>A or dom(f)</td><td>Set of all valid inputs</td><td>—</td></tr>
+      <tr><td>Codomain</td><td>B</td><td>Declared target set</td><td>—</td></tr>
+      <tr><td>Range / Image</td><td>f(A)</td><td>Set of all actual outputs</td><td>⊆ Codomain</td></tr>
+    </table>
+  </div>
+
+  <div id="L3-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Domain vs Codomain?</div><div class="flip-back">Domain = inputs (A). Codomain = declared target (B) in f: A→B.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Range vs Codomain?</div><div class="flip-back">Range = actual outputs f(A). Always a subset of codomain.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">When Range = Codomain?</div><div class="flip-back">When f is surjective (onto): every b∈B is f(a) for some a.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Range of f(x)=x² on ℝ?</div><div class="flip-back">[0, ∞) — x² is never negative, so negative reals are never outputs.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L3 -->
+
+<!-- ════════ L4 ════════ -->
+<div id="L4" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L4','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L4','simulate',this)">🧪 Simulate</button>
+    <button class="tab" onclick="switchTab('L4','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L4-learn" class="content-area">
+    <h3>Equivalence Relations, Order Relations &amp; Partitions</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Not all relations are functions. Some relations on a single set have special structure. The most important: <em>equivalence relations</em> (which group similar things) and <em>order relations</em> (which rank things).</div>
+
+    <h4>Properties a Relation Can Have</h4>
+    <table class="prop-table">
+      <tr><th>Property</th><th>Formal Statement</th><th>Plain Meaning</th><th>Example</th></tr>
+      <tr><td>Reflexive</td><td>∀a ∈ A: aRa</td><td>Every element is related to itself</td><td>a ≤ a ✅</td></tr>
+      <tr><td>Irreflexive</td><td>∀a ∈ A: ¬(aRa)</td><td>No element is related to itself</td><td>a &lt; a ❌ so "&lt;" is irreflexive ✅</td></tr>
+      <tr><td>Symmetric</td><td>aRb ⟹ bRa</td><td>Relations go both ways</td><td>"is a sibling of" ✅</td></tr>
+      <tr><td>Antisymmetric</td><td>aRb ∧ bRa ⟹ a=b</td><td>Two-way only if equal</td><td>a ≤ b and b ≤ a ⟹ a=b ✅</td></tr>
+      <tr><td>Asymmetric</td><td>aRb ⟹ ¬(bRa)</td><td>Never goes both ways</td><td>a &lt; b ⟹ b ≮ a ✅</td></tr>
+      <tr><td>Transitive</td><td>aRb ∧ bRc ⟹ aRc</td><td>If A connects to B and B to C, then A to C</td><td>a≤b, b≤c ⟹ a≤c ✅</td></tr>
+    </table>
+
+    <h4>Equivalence Relations</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Equivalence Relation</div>
+      <p>A relation <span class="math">R</span> on set <span class="math">A</span> is an <strong>equivalence relation</strong> (written ~) if it is:<br>
+      1. <strong>Reflexive:</strong> <span class="math">∀a: a ~ a</span><br>
+      2. <strong>Symmetric:</strong> <span class="math">a ~ b ⟹ b ~ a</span><br>
+      3. <strong>Transitive:</strong> <span class="math">a ~ b  and  b ~ c ⟹ a ~ c</span></p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — "Same remainder mod 3" on ℤ</div>
+      <p>Define <span class="math">a ~ b</span> iff <span class="math">3 | (a - b)</span>.<br>
+      Reflexive: <span class="math">3 | (a-a) = 0</span> ✅<br>
+      Symmetric: if <span class="math">3|(a-b)</span> then <span class="math">3|(b-a)</span> ✅<br>
+      Transitive: if <span class="math">3|(a-b)</span> and <span class="math">3|(b-c)</span> then <span class="math">3|(a-c)</span> ✅<br>
+      So this IS an equivalence relation.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — "Same first letter" on words</div>
+      <p>Two English words are equivalent if they start with the same letter.<br>
+      Reflexive: "apple" starts with same letter as "apple" ✅<br>
+      Symmetric: if "apple"~"ant" then "ant"~"apple" ✅<br>
+      Transitive: "apple"~"ant" and "ant"~"anchor" ⟹ "apple"~"anchor" ✅<br>
+      Valid equivalence relation!</p>
+    </div>
+
+    <div class="counter-box">
+      <div class="counter-label">❌ Not an Equivalence — "Less than" on ℝ</div>
+      <p style="color:#fca5a5">The relation "&lt;" fails reflexivity (a ≮ a) and symmetry (a&lt;b does NOT imply b&lt;a). Not an equivalence relation.</p>
+    </div>
+
+    <h4>Equivalence Classes and Partitions</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Equivalence Class</div>
+      <p>For <span class="math">a ∈ A</span>, the equivalence class of a is:<br>
+      <span class="math">[a] = { x ∈ A | x ~ a }</span> — all elements equivalent to a.<br>
+      Also written <span class="math">ā</span> or <span class="math">[a]_R</span>.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Definition — Partition</div>
+      <p>A <strong>partition</strong> of A is a collection of subsets <span class="math">{A₁, A₂, …}</span> such that:<br>
+      1. Each <span class="math">Aᵢ ≠ ∅</span> (non-empty)<br>
+      2. <span class="math">Aᵢ ∩ Aⱼ = ∅</span> for <span class="math">i ≠ j</span> (pairwise disjoint)<br>
+      3. <span class="math">A₁ ∪ A₂ ∪ … = A</span> (covers everything)</p>
+    </div>
+
+    <div class="theorem">
+      <div class="th-label">Fundamental Theorem</div>
+      <p>Every equivalence relation on A creates a partition of A (the equivalence classes), and every partition of A defines an equivalence relation. These two concepts are in perfect correspondence.</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example — Mod 3 Classes</div>
+      <p>Equivalence classes of ℤ under mod 3:<br>
+      <span class="math">[0] = {…,-6,-3,0,3,6,…}</span><br>
+      <span class="math">[1] = {…,-5,-2,1,4,7,…}</span><br>
+      <span class="math">[2] = {…,-4,-1,2,5,8,…}</span><br>
+      These three classes partition ℤ: disjoint and their union is all of ℤ.</p>
+    </div>
+
+    <h4>Order Relations</h4>
+    <div class="def-box">
+      <div class="def-label">Partial Order (≤)</div>
+      <p>A relation R on A is a <strong>partial order</strong> if it is <strong>reflexive</strong>, <strong>antisymmetric</strong>, and <strong>transitive</strong>.<br>
+      Example: divisibility (a|b) on ℕ, subset inclusion (A⊆B) on sets.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Strict Order (&lt;)</div>
+      <p>A relation R is a <strong>strict order</strong> if it is <strong>irreflexive</strong>, <strong>asymmetric</strong>, and <strong>transitive</strong>.<br>
+      Example: the usual "&lt;" on ℝ, proper subset "⊊".</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Total (Linear) Order</div>
+      <p>A partial order where every two elements are comparable: for all a,b either aRb or bRa.<br>
+      Example: ≤ on ℝ is a total order. Divisibility on ℕ is NOT total (e.g., 2 and 3 are not comparable).</p>
+    </div>
+
+    <table class="prop-table">
+      <tr><th>Type</th><th>Reflexive</th><th>Symmetric</th><th>Antisymmetric</th><th>Transitive</th><th>Example</th></tr>
+      <tr><td>Equivalence</td><td class="check">✓</td><td class="check">✓</td><td>—</td><td class="check">✓</td><td>mod n</td></tr>
+      <tr><td>Partial Order</td><td class="check">✓</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td>≤ on ℝ</td></tr>
+      <tr><td>Strict Order</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td>&lt; on ℝ</td></tr>
+    </table>
+  </div><!-- /L4-learn -->
+
+  <div id="L4-simulate" class="content-area" style="display:none">
+    <h3>🧪 Relation Property Checker</h3>
+    <p style="color:var(--muted)">Click matrix cells to toggle whether pairs (row, column) are in the relation. Properties update live. Try building an equivalence relation!</p>
+    <div class="rel-sim">
+      <h4>Relation on {a, b, c, d} — click to toggle</h4>
+      <div id="relMatrix"></div>
+      <div class="rel-props" id="relProps"></div>
+      <div style="font-family:'Space Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:.8rem" id="relPairs"></div>
+      <div id="eqClasses" style="margin-top:.7rem;font-size:.84rem;"></div>
+    </div>
+  </div>
+
+  <div id="L4-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">3 properties of equivalence?</div><div class="flip-back">Reflexive + Symmetric + Transitive</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is [a]?</div><div class="flip-back">[a] = {x∈A | x~a} — all elements equivalent to a.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is a partition of A?</div><div class="flip-back">Non-empty, disjoint subsets whose union equals all of A.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Partial order properties?</div><div class="flip-back">Reflexive + Antisymmetric + Transitive</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Antisymmetric means?</div><div class="flip-back">aRb AND bRa together imply a=b. Not the same as "not symmetric"!</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is ≤ on ℝ an equivalence?</div><div class="flip-back">NO — it is not symmetric. (a≤b does not imply b≤a).</div></div></div>
+    </div>
+  </div>
+</div><!-- /L4 -->
+
+<!-- ════════ L5 ════════ -->
+<div id="L5" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L5','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L5','practice',this)">✏️ Flashcards</button>
+  </div>
+  <div id="L5-learn" class="content-area">
+    <h3>Inclusion Maps, Restriction Maps &amp; Characteristic Functions</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> These are three useful "built-in" maps that come naturally from a set and its subsets. They let us zoom in on parts of a function, embed subsets into larger sets, and convert set membership into a number (0 or 1).</div>
+
+    <h4>1. The Inclusion Map</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Inclusion Map</div>
+      <p>For sets <span class="math">A ⊆ B</span>, the <strong>inclusion map</strong> (also called the <em>embedding</em>) is:<br>
+      <span class="math">ι: A ↪ B,  defined by  ι(a) = a  for all  a ∈ A</span><br>
+      The hooked arrow ↪ signals it is always injective.</p>
+    </div>
+    <div class="prop-box">
+      <div class="prop-label">Properties of the Inclusion Map</div>
+      <ul>
+        <li>Always <strong>injective</strong> — distinct elements of A stay distinct in B.</li>
+        <li>Surjective iff A = B.</li>
+        <li>Bijective iff A = B.</li>
+        <li>Composition: if A ⊆ B ⊆ C, then ι_{B,C} ∘ ι_{A,B} = ι_{A,C}.</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — Numbers</div>
+      <p>The natural numbers embed in the integers: <span class="math">ι: ℕ ↪ ℤ</span> by <span class="math">ι(n) = n</span>.<br>
+      The integers embed in the rationals: <span class="math">ι: ℤ ↪ ℚ</span> by <span class="math">ι(z) = z</span>.<br>
+      Each embedding is injective but not surjective (e.g., -1 ∉ ℕ; ½ ∉ ℤ).</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — Finite Set</div>
+      <p>Let A = {1, 3, 5} ⊆ B = {1, 2, 3, 4, 5}.<br>
+      ι(1) = 1, ι(3) = 3, ι(5) = 5.<br>
+      As a set of pairs: ι = {(1,1), (3,3), (5,5)}.</p>
+    </div>
+
+    <h4>2. The Restriction Map</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Restriction</div>
+      <p>For <span class="math">f: A → B</span> and <span class="math">S ⊆ A</span>, the <strong>restriction</strong> of f to S is:<br>
+      <span class="math">f|_S: S → B,  defined by  f|_S(x) = f(x)  for all  x ∈ S</span><br>
+      Same rule as f, but only applies to inputs in S.</p>
+    </div>
+    <div class="prop-box">
+      <div class="prop-label">Key Properties</div>
+      <ul>
+        <li>If f is injective, then f|_S is injective.</li>
+        <li>f|_S may or may not be surjective even if f is.</li>
+        <li>f|_A = f (restricting to the full domain changes nothing).</li>
+        <li>f|_S = f ∘ ι where ι: S ↪ A is the inclusion map.</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 3 — Restriction</div>
+      <p>Let <span class="math">f: ℝ → ℝ</span> by <span class="math">f(x) = x²</span>. Restrict to <span class="math">S = [0, ∞)</span>.<br>
+      <span class="math">f|_{[0,∞)}: [0,∞) → ℝ</span> by <span class="math">f|_{[0,∞)}(x) = x²</span>.<br>
+      On the full domain ℝ, f is NOT injective (f(-2)=f(2)=4). But <span class="math">f|_{[0,∞)}</span> IS injective! Restriction can "fix" injectivity.</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 4 — Finite</div>
+      <p>Let <span class="math">f: {1,2,3,4,5} → {a,b,c}</span> with f(1)=a, f(2)=b, f(3)=a, f(4)=c, f(5)=b.<br>
+      S = {1,3,4}. Then <span class="math">f|_S = {(1,a),(3,a),(4,c)}</span>.</p>
+    </div>
+
+    <h4>3. Characteristic (Indicator) Functions</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Characteristic Function</div>
+      <p>For a set <span class="math">A</span> and subset <span class="math">S ⊆ A</span>, the <strong>characteristic function</strong> (or indicator function) is:<br>
+      <span class="math">χ_S: A → {0, 1}</span></p>
+      <div class="math-block">χ_S(x) = 1   if x ∈ S
+χ_S(x) = 0   if x ∉ S</div>
+    </div>
+    <div class="prop-box">
+      <div class="prop-label">Properties — Connecting Sets and Logic</div>
+      <ul>
+        <li><span class="math">χ_{A∩B}(x) = χ_A(x) · χ_B(x)</span> — intersection = multiplication</li>
+        <li><span class="math">χ_{A∪B}(x) = χ_A(x) + χ_B(x) − χ_A(x)·χ_B(x)</span> — inclusion-exclusion</li>
+        <li><span class="math">χ_{Aᶜ}(x) = 1 − χ_A(x)</span> — complement = 1 minus</li>
+        <li><span class="math">χ_∅(x) = 0</span> and <span class="math">χ_A(x) = 1</span> for the full set A</li>
+      </ul>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 5 — Characteristic Function</div>
+      <p>Let <span class="math">A = {1,2,3,4,5,6}</span>, <span class="math">S = {2,4,6}</span> (even numbers).<br>
+      <span class="math">χ_S(1)=0, χ_S(2)=1, χ_S(3)=0, χ_S(4)=1, χ_S(5)=0, χ_S(6)=1</span><br>
+      This is just a 0-or-1 flag for membership! The sum <span class="math">χ_S(1)+…+χ_S(6) = 3</span> equals |S|.</p>
+    </div>
+    <div class="note-box">
+      <div class="note-label">💡 Why Does This Matter?</div>
+      <p>Characteristic functions are the bridge between sets and numbers. In probability theory, χ_S is an indicator random variable. In computer science, it's a Boolean flag. In integration, ∫χ_S dμ = μ(S) (measure of S).</p>
+    </div>
+  </div><!-- /L5-learn -->
+
+  <div id="L5-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is ι: A↪B?</div><div class="flip-back">Inclusion map: ι(a)=a. Sends A into B as itself. Always injective.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">What is f|_S?</div><div class="flip-back">Restriction to S⊆A: same rule f, but only inputs from S are allowed.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">χ_S(x) = ?</div><div class="flip-back">1 if x∈S, 0 if x∉S. Encodes set membership as 0 or 1.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">χ_{A∩B} in terms of products?</div><div class="flip-back">χ_A(x) · χ_B(x) — both must be 1 for intersection to be 1.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Can restriction fix injectivity?</div><div class="flip-back">YES — restricting a non-injective function to a smaller domain can make it injective.</div></div></div>
+    </div>
+  </div>
+</div><!-- /L5 -->
+
+<!-- ════════ L6 ════════ -->
+<div id="L6" class="lesson-panel">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('L6','learn',this)">📖 Learn</button>
+    <button class="tab" onclick="switchTab('L6','simulate',this)">🧪 Simulate</button>
+    <button class="tab" onclick="switchTab('L6','compose',this)">⚙️ Compose</button>
+    <button class="tab" onclick="switchTab('L6','practice',this)">✏️ Flashcards</button>
+  </div>
+
+  <div id="L6-learn" class="content-area">
+    <h3>Injective, Surjective, Bijective &amp; Composition</h3>
+    <div class="plain-note"><strong>Big Picture:</strong> Functions can be classified by how they behave — do different inputs always produce different outputs? Is every possible output hit? Both? These three properties — injective, surjective, bijective — are fundamental to understanding function structure.</div>
+
+    <h4>Injective (One-to-one)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Injective</div>
+      <p><span class="math">f: A → B</span> is <strong>injective</strong> (one-to-one) if:<br>
+      <span class="math">f(a₁) = f(a₂)  ⟹  a₁ = a₂</span><br>
+      Equivalently (contrapositive): <span class="math">a₁ ≠ a₂ ⟹ f(a₁) ≠ f(a₂)</span><br>
+      Plain: <em>no two different inputs share the same output.</em></p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 1 — Injective Functions</div>
+      <ul>
+        <li><span class="math">f: ℝ → ℝ, f(x) = 2x + 3</span> — injective. If 2x+3 = 2y+3 then x=y. ✅</li>
+        <li><span class="math">f: {1,2,3} → {a,b,c,d}</span> with f(1)=a, f(2)=b, f(3)=c — injective. ✅</li>
+        <li><span class="math">f: ℝ → ℝ, f(x) = eˣ</span> — injective (exponential is strictly increasing). ✅</li>
+      </ul>
+    </div>
+    <div class="counter-box">
+      <div class="counter-label">❌ Not Injective</div>
+      <p style="color:#fca5a5"><span class="math">f(x) = x²</span> on ℝ: f(-2) = f(2) = 4. Two different inputs, same output!</p>
+    </div>
+
+    <h4>Surjective (Onto)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Surjective</div>
+      <p><span class="math">f: A → B</span> is <strong>surjective</strong> (onto) if:<br>
+      <span class="math">∀ b ∈ B, ∃ a ∈ A: f(a) = b</span><br>
+      Plain: <em>every element of B is hit by at least one element of A. Range = Codomain.</em></p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 2 — Surjective Functions</div>
+      <ul>
+        <li><span class="math">f: ℝ → ℝ, f(x) = 2x + 3</span> — surjective. For any y, x = (y-3)/2 works. ✅</li>
+        <li><span class="math">f: {1,2,3} → {a,b}</span> with f(1)=a, f(2)=b, f(3)=a — surjective (a and b both hit). ✅</li>
+        <li>f(x) = x³ on ℝ — surjective. Every real y is reached by x = ∛y. ✅</li>
+      </ul>
+    </div>
+    <div class="counter-box">
+      <div class="counter-label">❌ Not Surjective</div>
+      <p style="color:#fca5a5"><span class="math">f: ℝ → ℝ, f(x) = x²</span> — the output -1 is never reached. Range = [0,∞) ≠ ℝ.</p>
+    </div>
+
+    <h4>Bijective (Perfect Correspondence)</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Bijective</div>
+      <p><span class="math">f: A → B</span> is <strong>bijective</strong> if it is both injective AND surjective.<br>
+      Plain: <em>every element of B is hit by exactly one element of A.</em><br>
+      A bijection has an inverse function <span class="math">f⁻¹: B → A</span>.</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 3 — Bijective</div>
+      <ul>
+        <li><span class="math">f: ℝ → ℝ, f(x) = 2x + 3</span> — bijective. ✅</li>
+        <li><span class="math">f: {1,2,3} → {a,b,c}</span> with f(1)=a, f(2)=b, f(3)=c — bijective. ✅</li>
+        <li>f(x) = x³ on ℝ — bijective. ✅</li>
+        <li>The identity map <span class="math">id_A: A → A, id(a) = a</span> — always bijective. ✅</li>
+      </ul>
+    </div>
+
+    <table class="prop-table">
+      <tr><th>Type</th><th>Condition</th><th>Each output hit...</th><th>Inverse exists?</th></tr>
+      <tr><td>Injective</td><td>f(a₁)=f(a₂) ⟹ a₁=a₂</td><td>At most once</td><td>Left-inverse only</td></tr>
+      <tr><td>Surjective</td><td>∀b∃a: f(a)=b</td><td>At least once</td><td>Right-inverse only</td></tr>
+      <tr><td>Bijective</td><td>Both above</td><td>Exactly once</td><td><strong>Yes — full inverse</strong></td></tr>
+    </table>
+
+    <h4>Composition of Functions</h4>
+    <div class="def-box">
+      <div class="def-label">Definition — Composition</div>
+      <p>For <span class="math">f: A → B</span> and <span class="math">g: B → C</span>, the <strong>composition</strong> is:<br>
+      <span class="math">(g ∘ f): A → C,  (g ∘ f)(x) = g(f(x))</span><br>
+      Read "g after f" or "g composed with f." Apply f FIRST, then g.</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Example 4 — Composition</div>
+      <p>Let <span class="math">f(x) = 2x + 1</span> and <span class="math">g(x) = x²</span>.<br>
+      <span class="math">(g ∘ f)(x) = g(f(x)) = g(2x+1) = (2x+1)²</span><br>
+      <span class="math">(f ∘ g)(x) = f(g(x)) = f(x²) = 2x²+1</span><br>
+      Note: <span class="math">g∘f ≠ f∘g</span> in general — composition is NOT commutative!</p>
+    </div>
+
+    <div class="theorem">
+      <div class="th-label">Theorems on Composition</div>
+      <ul>
+        <li>f and g injective ⟹ g∘f injective</li>
+        <li>f and g surjective ⟹ g∘f surjective</li>
+        <li>f and g bijective ⟹ g∘f bijective (and (g∘f)⁻¹ = f⁻¹∘g⁻¹)</li>
+        <li>g∘f injective ⟹ f is injective (but g need not be)</li>
+        <li>g∘f surjective ⟹ g is surjective (but f need not be)</li>
+        <li>Composition is associative: <span class="math">h∘(g∘f) = (h∘g)∘f</span></li>
+      </ul>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Example 5 — Why g∘f Injective Doesn't Force g Injective</div>
+      <p>Let <span class="math">A={1}, B={1,2}, C={a}</span>. Define f(1)=1, g(1)=a, g(2)=a.<br>
+      g∘f: A→C is injective (only one element in A!). But g is NOT injective (g(1)=g(2)=a).</p>
+    </div>
+  </div><!-- /L6-learn -->
+
+  <div id="L6-simulate" class="content-area" style="display:none">
+    <h3>🧪 Function Type Visualizer</h3>
+    <p style="color:var(--muted)">Click a domain element, then click the codomain element you want to map it to. The app will tell you whether the result is injective, surjective, or bijective.</p>
+    <div class="func-mapper">
+      <h4>Build a function: A = {1,2,3} → B = {x,y,z}</h4>
+      <div class="mapper-row">
+        <div class="domain-set"><h5>Domain A</h5><div id="domA"></div></div>
+        <div style="flex:1;text-align:center;min-width:140px"><canvas id="arrowCanvas" width="180" height="140"></canvas></div>
+        <div class="codomain-set"><h5>Codomain B</h5><div id="codB"></div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem">
+        <button class="set-btn" onclick="resetMapper()" style="background:var(--muted)">Reset</button>
+        <button class="set-btn" onclick="analyzeFunction()">Analyze</button>
+      </div>
+      <div class="func-info" id="funcAnalysis" style="margin-top:.8rem;"></div>
+    </div>
+  </div>
+
+  <div id="L6-compose" class="content-area" style="display:none">
+    <h3>⚙️ Composition Calculator</h3>
+    <p style="color:var(--muted)">Enter f(x) and g(x) as arithmetic expressions, then provide an input to compute (g∘f)(x) step by step.</p>
+    <div class="comp-sim">
+      <h4>Compute g(f(x))</h4>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <div><label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">f(x) =</label><input class="comp-input" id="fDef" value="2*x+1" style="width:110px"></div>
+        <div><label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">g(x) =</label><input class="comp-input" id="gDef" value="x*x" style="width:110px"></div>
+        <div><label style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.25rem">Input x =</label><input class="comp-input" id="compX" value="3" type="number" style="width:80px"></div>
+        <div style="align-self:flex-end"><button class="comp-btn" onclick="calcCompose()">Compute</button></div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-box" id="pipeX">x = ?</div>
+        <div class="pipe-arrow">→ f →</div>
+        <div class="pipe-box" id="pipeFx">f(x) = ?</div>
+        <div class="pipe-arrow">→ g →</div>
+        <div class="pipe-box" id="pipeGfx">g(f(x)) = ?</div>
+      </div>
+      <div class="comp-result" id="compResult"></div>
+    </div>
+  </div>
+
+  <div id="L6-practice" class="content-area" style="display:none">
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Injective means?</div><div class="flip-back">f(a₁)=f(a₂) ⟹ a₁=a₂. No two inputs share the same output.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Surjective means?</div><div class="flip-back">∀b∈B ∃a∈A: f(a)=b. Every output is reached. Range = Codomain.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Bijective means?</div><div class="flip-back">Injective AND surjective. Perfect pairing. Inverse exists.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">(g∘f)(x) = ?</div><div class="flip-back">g(f(x)) — apply f first, then g to the result.</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">g∘f injective ⟹ ?</div><div class="flip-back">f must be injective. (g may or may not be.)</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">g∘f surjective ⟹ ?</div><div class="flip-back">g must be surjective. (f may or may not be.)</div></div></div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')"><div class="flip-inner"><div class="flip-front">Is composition commutative?</div><div class="flip-back">NO. g∘f ≠ f∘g in general. Order matters!</div></div></div>
+    </div>
+  </div>
+</div><!-- /L6 -->
+</section><!-- /topics -->
+
+<!-- ═══════════════════════════════
+     ENGAGE
+═══════════════════════════════ -->
+<section id="engage">
+  <div class="section-label">5Es · Engage</div>
+  <div class="section-title">Warm Up Your Thinking</div>
+  <p class="section-desc">Before diving into formal definitions, let's explore familiar situations through the lens of relations and functions.</p>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--accent3);margin-bottom:1.2rem">🌍 Real-World Connections</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:.8rem;padding:1.2rem;">
+        <div style="font-size:1.4rem;margin-bottom:.5rem">📱</div>
+        <strong style="font-size:.93rem">SIM Cards</strong>
+        <p style="font-size:.84rem;color:var(--muted);margin-top:.4rem;line-height:1.65">Each phone number maps to exactly one SIM. Is "phone number → subscriber" a function? What's the domain? Is it injective?</p>
+      </div>
+      <div style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:.8rem;padding:1.2rem;">
+        <div style="font-size:1.4rem;margin-bottom:.5rem">📦</div>
+        <strong style="font-size:.93rem">Package Delivery</strong>
+        <p style="font-size:.84rem;color:var(--muted);margin-top:.4rem;line-height:1.65">Each package has one tracking number (injective!), but multiple packages go to the same address (not injective from addresses). What's the inverse image of an address?</p>
+      </div>
+      <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:.8rem;padding:1.2rem;">
+        <div style="font-size:1.4rem;margin-bottom:.5rem">🧬</div>
+        <strong style="font-size:.93rem">DNA Codons</strong>
+        <p style="font-size:.84rem;color:var(--muted);margin-top:.4rem;line-height:1.65">64 codons map to 20 amino acids. This is a surjective function (all 20 are coded), but NOT injective (multiple codons map to the same acid).</p>
+      </div>
+      <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:.8rem;padding:1.2rem;">
+        <div style="font-size:1.4rem;margin-bottom:.5rem">🎓</div>
+        <strong style="font-size:.93rem">Students & Grades</strong>
+        <p style="font-size:.84rem;color:var(--muted);margin-top:.4rem;line-height:1.65">Relation "classmate of": symmetric? Yes. Transitive? Yes. Reflexive? Yes. So it's an equivalence relation — it partitions students into classes!</p>
+      </div>
+    </div>
+    <div style="background:rgba(124,58,237,.07);border:1px dashed rgba(124,58,237,.3);border-radius:.7rem;padding:1.1rem;">
+      <strong style="color:var(--accent1);font-size:.92rem">💬 Think-Pair-Share</strong>
+      <p style="font-size:.87rem;color:var(--muted);margin-top:.4rem;line-height:1.7">With a partner: (1) Name a real-world bijection — a situation where every input has exactly one output AND every output comes from exactly one input. (2) Name a relation that is symmetric but NOT transitive. Justify both with precise reasoning.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     EXPLORE
+═══════════════════════════════ -->
+<section id="explore">
+  <div class="section-label">5Es · Explore</div>
+  <div class="section-title">Discover Through Interaction</div>
+  <p class="section-desc">Play with the tools below to build intuition before formal study. Experiment freely — making mistakes here is part of the process.</p>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--accent2);margin-bottom:.6rem">🔷 Set Operations Lab</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Enter two sets of numbers or letters. Try each operation and predict the result before clicking!</p>
+    <div class="set-controls">
+      <div><label style="font-size:.76rem;color:var(--muted);display:block;margin-bottom:.25rem">Set P</label><input class="set-input" id="setP" value="1,2,3,4,5"></div>
+      <div><label style="font-size:.76rem;color:var(--muted);display:block;margin-bottom:.25rem">Set Q</label><input class="set-input" id="setQ" value="3,4,5,6,7"></div>
+    </div>
+    <div class="op-btns">
+      <button class="op-btn" onclick="setOp('union',this)">P ∪ Q (union)</button>
+      <button class="op-btn" onclick="setOp('inter',this)">P ∩ Q (intersection)</button>
+      <button class="op-btn" onclick="setOp('diffPQ',this)">P \ Q (difference)</button>
+      <button class="op-btn" onclick="setOp('diffQP',this)">Q \ P</button>
+      <button class="op-btn" onclick="setOp('sym',this)">P △ Q (symmetric diff.)</button>
+    </div>
+    <div id="set-result">← Choose an operation</div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;margin-bottom:1.5rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--accent4);margin-bottom:.6rem">🧩 Equivalence Relation Sandbox</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Toggle pairs in the matrix below. The properties update live. <strong>Challenge:</strong> can you construct an equivalence relation on {1,2,3,4}?</p>
+    <div id="relMatrix2"></div>
+    <div class="rel-props" id="relProps2" style="margin-top:1rem;"></div>
+    <div style="font-family:'Space Mono',monospace;font-size:.77rem;color:#67e8f9;margin-top:.7rem;" id="relPairs2"></div>
+    <div id="eqClasses2" style="margin-top:.7rem;font-size:.83rem;color:var(--muted);"></div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;color:#f0abfc;margin-bottom:.6rem">🔗 Bijection Builder</h3>
+    <p style="color:var(--muted);font-size:.87rem;margin-bottom:1rem">Map every element of A to exactly one element of B to create a bijection. Try being non-bijective first — see what fails!</p>
+    <div class="func-mapper">
+      <h4>A = {1,2,3} → B = {x,y,z}</h4>
+      <div class="mapper-row">
+        <div class="domain-set"><h5>Domain A</h5><div id="domA2"></div></div>
+        <div style="flex:1;text-align:center;min-width:140px"><canvas id="arrowCanvas2" width="180" height="140"></canvas></div>
+        <div class="codomain-set"><h5>Codomain B</h5><div id="codB2"></div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap;">
+        <button class="set-btn" onclick="resetMapper2()" style="background:var(--muted)">Reset</button>
+        <button class="set-btn" onclick="analyzeFunction2()">Check!</button>
+      </div>
+      <div id="funcAnalysis2" style="margin-top:.8rem;font-size:.9rem;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     ELABORATE
+═══════════════════════════════ -->
+<section id="elaborate">
+  <div class="section-label">5Es · Elaborate</div>
+  <div class="section-title">Proof Workshop</div>
+  <p class="section-desc">Extend your understanding by reading carefully structured proofs, then tackling your own. Rigorous justification is the mark of mathematical maturity.</p>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--accent3);margin-bottom:1.2rem">📝 Proof Templates</h3>
+
+    <div style="margin-bottom:1.6rem;background:rgba(124,58,237,.06);border-radius:.7rem;padding:1.2rem;">
+      <div style="font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent1);text-transform:uppercase;margin-bottom:.5rem">Proof 1 — Image of Union</div>
+      <strong style="font-size:.93rem;">Claim: f(S₁ ∪ S₂) = f(S₁) ∪ f(S₂)</strong>
+      <div class="math-block">Proof (⊆):
+  Let y ∈ f(S₁ ∪ S₂).
+  Then ∃x ∈ S₁ ∪ S₂ with f(x) = y.
+  Case 1: x ∈ S₁  ⟹  y = f(x) ∈ f(S₁) ⊆ f(S₁) ∪ f(S₂).
+  Case 2: x ∈ S₂  ⟹  y = f(x) ∈ f(S₂) ⊆ f(S₁) ∪ f(S₂).
+  Either way, y ∈ f(S₁) ∪ f(S₂). ✓
+
+Proof (⊇):
+  Let y ∈ f(S₁) ∪ f(S₂).
+  Case 1: y ∈ f(S₁) ⟹ ∃x ∈ S₁ ⊆ S₁∪S₂ with f(x)=y ⟹ y ∈ f(S₁∪S₂).
+  Case 2: y ∈ f(S₂) ⟹ ∃x ∈ S₂ ⊆ S₁∪S₂ with f(x)=y ⟹ y ∈ f(S₁∪S₂).
+  Either way, y ∈ f(S₁∪S₂). ✓   □</div>
+    </div>
+
+    <div style="margin-bottom:1.6rem;background:rgba(6,182,212,.06);border-radius:.7rem;padding:1.2rem;">
+      <div style="font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent2);text-transform:uppercase;margin-bottom:.5rem">Proof 2 — g∘f injective ⟹ f injective</div>
+      <strong style="font-size:.93rem;">Claim: If g∘f is injective, then f is injective.</strong>
+      <div class="math-block">Proof (direct):
+  Assume g∘f: A → C is injective.
+  Let a₁, a₂ ∈ A with f(a₁) = f(a₂).    [want to show a₁ = a₂]
+  Apply g to both sides:
+    g(f(a₁)) = g(f(a₂))
+    (g∘f)(a₁) = (g∘f)(a₂)
+  Since g∘f is injective:  a₁ = a₂.
+  Therefore f is injective.  □</div>
+    </div>
+
+    <div style="background:rgba(16,185,129,.06);border-radius:.7rem;padding:1.2rem;">
+      <div style="font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent4);text-transform:uppercase;margin-bottom:.5rem">Your Turn — Proof Challenge</div>
+      <strong style="font-size:.93rem;">Prove: f⁻¹(T₁ ∩ T₂) = f⁻¹(T₁) ∩ f⁻¹(T₂)</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.5rem;line-height:1.7">Hint: Show ⊆ and ⊇ separately. For ⊆: let x ∈ f⁻¹(T₁∩T₂), then f(x) ∈ T₁∩T₂ which means f(x) ∈ T₁ AND f(x) ∈ T₂... Continue from here!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     QUIZ
+═══════════════════════════════ -->
+<section id="assess">
+  <div class="section-label">5Es · Evaluate</div>
+  <div class="section-title">Knowledge Check</div>
+  <p class="section-desc">12 questions covering all six topics. Answers are checked immediately. Read every explanation — even for correct answers!</p>
+
+  <div class="quiz-box" id="mainQuiz">
+    <h3>📊 Self-Assessment — 12 Questions</h3>
+    <div class="prog-bar"><div class="prog-fill" id="quizProg" style="width:0%"></div></div>
+
+    <!-- Q1 -->
+    <div class="q-item"><div class="q-text">1. Which of the following is a valid function from A = {1,2,3} to B = {a,b,c}?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(1,'A','B')"><span class="opt-letter">A</span> {(1,a),(1,b),(2,c),(3,a)}</div>
+      <div class="q-opt" onclick="answer(1,'B','B')"><span class="opt-letter">B</span> {(1,b),(2,a),(3,c)}</div>
+      <div class="q-opt" onclick="answer(1,'C','B')"><span class="opt-letter">C</span> {(1,a),(2,b)}</div>
+      <div class="q-opt" onclick="answer(1,'D','B')"><span class="opt-letter">D</span> {(2,a),(3,b),(3,c)}</div>
+    </div>
+    <div class="q-feedback" id="q1-fb">✅ B is correct. Each of 1, 2, 3 maps to exactly one element. A: element 1 maps to both a and b (not single-valued). C: element 3 has no mapping (not total). D: element 3 maps to two outputs.</div></div>
+
+    <!-- Q2 -->
+    <div class="q-item"><div class="q-text">2. For f: ℝ→ℝ defined by f(x) = x², the inverse image f⁻¹({1, 4}) equals:</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(2,'A','C')"><span class="opt-letter">A</span> {1, 2}</div>
+      <div class="q-opt" onclick="answer(2,'B','C')"><span class="opt-letter">B</span> {1, 4}</div>
+      <div class="q-opt" onclick="answer(2,'C','C')"><span class="opt-letter">C</span> {−2, −1, 1, 2}</div>
+      <div class="q-opt" onclick="answer(2,'D','C')"><span class="opt-letter">D</span> {−1, 1}</div>
+    </div>
+    <div class="q-feedback" id="q2-fb">✅ C is correct. f⁻¹({1,4}) = {x | x²=1 or x²=4} = {-1,1,-2,2}. The negative values are included because (-1)²=1 and (-2)²=4.</div></div>
+
+    <!-- Q3 -->
+    <div class="q-item"><div class="q-text">3. Let f(1)=a, f(2)=a, f(3)=b with domain {1,2,3} and codomain {a,b,c}. What is the range of f?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(3,'A','A')"><span class="opt-letter">A</span> {a, b}</div>
+      <div class="q-opt" onclick="answer(3,'B','A')"><span class="opt-letter">B</span> {a, b, c}</div>
+      <div class="q-opt" onclick="answer(3,'C','A')"><span class="opt-letter">C</span> {1, 2, 3}</div>
+      <div class="q-opt" onclick="answer(3,'D','A')"><span class="opt-letter">D</span> {a}</div>
+    </div>
+    <div class="q-feedback" id="q3-fb">✅ A is correct. Range = actual outputs = {f(1),f(2),f(3)} = {a,a,b} = {a,b}. Element c is in the codomain but never actually output.</div></div>
+
+    <!-- Q4 -->
+    <div class="q-item"><div class="q-text">4. A relation R on set A is an equivalence relation if and only if it is:</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(4,'A','C')"><span class="opt-letter">A</span> Reflexive and Transitive</div>
+      <div class="q-opt" onclick="answer(4,'B','C')"><span class="opt-letter">B</span> Symmetric and Antisymmetric</div>
+      <div class="q-opt" onclick="answer(4,'C','C')"><span class="opt-letter">C</span> Reflexive, Symmetric, and Transitive</div>
+      <div class="q-opt" onclick="answer(4,'D','C')"><span class="opt-letter">D</span> Reflexive, Antisymmetric, and Transitive</div>
+    </div>
+    <div class="q-feedback" id="q4-fb">✅ C is correct. All three properties are needed. Option D describes a partial order, not equivalence.</div></div>
+
+    <!-- Q5 -->
+    <div class="q-item"><div class="q-text">5. The function f: ℝ→ℝ, f(x) = x³ is:</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(5,'A','D')"><span class="opt-letter">A</span> Injective only</div>
+      <div class="q-opt" onclick="answer(5,'B','D')"><span class="opt-letter">B</span> Surjective only</div>
+      <div class="q-opt" onclick="answer(5,'C','D')"><span class="opt-letter">C</span> Neither</div>
+      <div class="q-opt" onclick="answer(5,'D','D')"><span class="opt-letter">D</span> Bijective</div>
+    </div>
+    <div class="q-feedback" id="q5-fb">✅ D is correct. f(x)=x³ is injective (x³=y³ implies x=y since cube root is unique) and surjective (every real y = (∛y)³ is achieved). So it's bijective.</div></div>
+
+    <!-- Q6 -->
+    <div class="q-item"><div class="q-text">6. The characteristic function χ_S on A={1,2,3,4,5} where S={1,3,5} gives χ_S(4) = ?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(6,'A','B')"><span class="opt-letter">A</span> 1</div>
+      <div class="q-opt" onclick="answer(6,'B','B')"><span class="opt-letter">B</span> 0</div>
+      <div class="q-opt" onclick="answer(6,'C','B')"><span class="opt-letter">C</span> 4</div>
+      <div class="q-opt" onclick="answer(6,'D','B')"><span class="opt-letter">D</span> Undefined</div>
+    </div>
+    <div class="q-feedback" id="q6-fb">✅ B is correct. 4 ∉ S = {1,3,5}, so χ_S(4) = 0. The characteristic function outputs 1 only for elements IN S.</div></div>
+
+    <!-- Q7 -->
+    <div class="q-item"><div class="q-text">7. If g∘f is surjective, which must be true?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(7,'A','C')"><span class="opt-letter">A</span> f is surjective</div>
+      <div class="q-opt" onclick="answer(7,'B','C')"><span class="opt-letter">B</span> f is injective</div>
+      <div class="q-opt" onclick="answer(7,'C','C')"><span class="opt-letter">C</span> g is surjective</div>
+      <div class="q-opt" onclick="answer(7,'D','C')"><span class="opt-letter">D</span> g is injective</div>
+    </div>
+    <div class="q-feedback" id="q7-fb">✅ C is correct. If g∘f hits every element of C, then g alone must hit every element of C — so g is surjective. But f need not be (it might not fill all of B).</div></div>
+
+    <!-- Q8 -->
+    <div class="q-item"><div class="q-text">8. Which property distinguishes a partial order from an equivalence relation?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(8,'A','B')"><span class="opt-letter">A</span> Partial orders are reflexive; equivalence relations are not</div>
+      <div class="q-opt" onclick="answer(8,'B','B')"><span class="opt-letter">B</span> Partial orders are antisymmetric; equivalence relations are symmetric</div>
+      <div class="q-opt" onclick="answer(8,'C','B')"><span class="opt-letter">C</span> Partial orders are not transitive; equivalence relations are</div>
+      <div class="q-opt" onclick="answer(8,'D','B')"><span class="opt-letter">D</span> Equivalence relations require more than 3 properties</div>
+    </div>
+    <div class="q-feedback" id="q8-fb">✅ B is correct. Both are reflexive and transitive. The key difference: equivalence uses symmetry (aRb⟹bRa), while partial order uses antisymmetry (aRb AND bRa ⟹ a=b).</div></div>
+
+    <!-- Q9 -->
+    <div class="q-item"><div class="q-text">9. Let f: A→B and S ⊆ A. Which of the following is always true?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(9,'A','D')"><span class="opt-letter">A</span> f(f⁻¹(f(S))) = f(S)</div>
+      <div class="q-opt" onclick="answer(9,'B','D')"><span class="opt-letter">B</span> f⁻¹(f(S)) = S</div>
+      <div class="q-opt" onclick="answer(9,'C','D')"><span class="opt-letter">C</span> f(S) = B</div>
+      <div class="q-opt" onclick="answer(9,'D','D')"><span class="opt-letter">D</span> S ⊆ f⁻¹(f(S))</div>
+    </div>
+    <div class="q-feedback" id="q9-fb">✅ D is correct. S ⊆ f⁻¹(f(S)) is always true — every element x∈S satisfies f(x)∈f(S), so x∈f⁻¹(f(S)). Option B requires injectivity; C requires surjectivity.</div></div>
+
+    <!-- Q10 -->
+    <div class="q-item"><div class="q-text">10. The inclusion map ι: A↪B (where A ⊊ B, A ≠ B) is:</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(10,'A','C')"><span class="opt-letter">A</span> Bijective</div>
+      <div class="q-opt" onclick="answer(10,'B','C')"><span class="opt-letter">B</span> Surjective but not injective</div>
+      <div class="q-opt" onclick="answer(10,'C','C')"><span class="opt-letter">C</span> Injective but not surjective</div>
+      <div class="q-opt" onclick="answer(10,'D','C')"><span class="opt-letter">D</span> Neither injective nor surjective</div>
+    </div>
+    <div class="q-feedback" id="q10-fb">✅ C is correct. ι is injective (different elements stay different), but NOT surjective because A ⊊ B means there are elements in B not in A that ι cannot reach.</div></div>
+
+    <!-- Q11 -->
+    <div class="q-item"><div class="q-text">11. Which relation on ℤ is an equivalence relation?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(11,'A','C')"><span class="opt-letter">A</span> a R b iff a &lt; b</div>
+      <div class="q-opt" onclick="answer(11,'B','C')"><span class="opt-letter">B</span> a R b iff a divides b</div>
+      <div class="q-opt" onclick="answer(11,'C','C')"><span class="opt-letter">C</span> a R b iff a ≡ b (mod 4)</div>
+      <div class="q-opt" onclick="answer(11,'D','C')"><span class="opt-letter">D</span> a R b iff a + b = 0</div>
+    </div>
+    <div class="q-feedback" id="q11-fb">✅ C is correct. Congruence mod 4 is reflexive (a≡a), symmetric (a≡b⟹b≡a), and transitive. Option A fails reflexivity and symmetry. B fails symmetry. D fails reflexivity (a+a=0 only for a=0).</div></div>
+
+    <!-- Q12 -->
+    <div class="q-item"><div class="q-text">12. Let f(x) = 2x and g(x) = x+5. Then (f∘g)(3) = ?</div>
+    <div class="q-options">
+      <div class="q-opt" onclick="answer(12,'A','B')"><span class="opt-letter">A</span> 11</div>
+      <div class="q-opt" onclick="answer(12,'B','B')"><span class="opt-letter">B</span> 16</div>
+      <div class="q-opt" onclick="answer(12,'C','B')"><span class="opt-letter">C</span> 13</div>
+      <div class="q-opt" onclick="answer(12,'D','B')"><span class="opt-letter">D</span> 6</div>
+    </div>
+    <div class="q-feedback" id="q12-fb">✅ B is correct. (f∘g)(3) = f(g(3)) = f(3+5) = f(8) = 2×8 = 16. Remember: apply g FIRST (inside), then f.</div></div>
+
+    <div class="quiz-score" id="quizScore"></div>
+    <button class="btn-primary" onclick="submitQuiz()" style="margin-top:1rem" id="submitBtn">Submit &amp; See Score</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     OUTCOMES
+═══════════════════════════════ -->
+<section id="outcomes">
+  <div class="section-label">Learning Outcomes</div>
+  <div class="section-title">By Week's End, You Can…</div>
+  <p class="section-desc">These are the concrete skills a pre-service teacher should demonstrate after completing this module.</p>
+  <div class="outcomes-grid">
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(124,58,237,.15);color:var(--accent1)">①</div><div class="outcome-text"><strong>Define and give examples of relations</strong> — using ordered pairs, Cartesian products, and relation as R ⊆ A×B.</div></div>
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(6,182,212,.15);color:var(--accent2)">②</div><div class="outcome-text"><strong>Define functions and compute images/pre-images</strong> — find f(S) and f⁻¹(T) for any subset, and explain the key properties.</div></div>
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(245,158,11,.15);color:var(--accent3)">③</div><div class="outcome-text"><strong>Determine domain, codomain, and range</strong> — and explain why range ≠ codomain in general.</div></div>
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(16,185,129,.15);color:var(--accent4)">④</div><div class="outcome-text"><strong>Verify equivalence relations and construct partitions</strong> — check all three properties and describe the resulting equivalence classes.</div></div>
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(239,68,68,.15);color:var(--accent5)">⑤</div><div class="outcome-text"><strong>Work with inclusion, restriction, and characteristic maps</strong> — apply each in context and use their properties in proofs.</div></div>
+    <div class="outcome-card"><div class="outcome-icon" style="background:rgba(240,171,252,.15);color:#f0abfc">⑥</div><div class="outcome-text"><strong>Prove statements about injective, surjective, and bijective functions</strong> — including composition theorems and image/pre-image identities.</div></div>
+  </div>
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.73rem;color:var(--muted);border-top:1px solid var(--border);">
+  <p>Logic & Set Theory · Relations and Functions · 5Es Interactive Module</p>
+  <p style="margin-top:.3rem;opacity:.5">Designed for Pre-Service Mathematics Teachers · PST Module</p>
+</footer>
+
+<script>
+// ── NAV PROGRESS ──
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('navProgress').style.width=p+'%';
+  const secs=[document.getElementById('hero'),...document.querySelectorAll('section')];
+  const dots=document.querySelectorAll('.prog-dot');
+  secs.forEach((s,i)=>{if(!s||!dots[i])return;const r=s.getBoundingClientRect();dots[i].classList.toggle('active',r.top<=window.innerHeight/2&&r.bottom>0);});
+});
+function scrollToSection(i){([document.getElementById('hero'),...document.querySelectorAll('section')])[i]?.scrollIntoView({behavior:'smooth'});}
+
+// ── LESSON OPEN/CLOSE ──
+let openPanel=null;
+function openLesson(id){
+  if(openPanel&&openPanel!==id)document.getElementById(openPanel)?.classList.remove('open');
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+  openPanel=el.classList.contains('open')?id:null;
+  if(el.classList.contains('open')){
+    el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    if(id==='L4'&&!window.relInited){initRelMatrix('relMatrix','relProps','relPairs',['a','b','c','d'],'eqClasses');window.relInited=true;}
+    if(id==='L6'&&!window.mapInited){initMapper('domA','codB','arrowCanvas',['1','2','3'],['x','y','z'],'funcAnalysis');window.mapInited=true;}
+    if(id==='L2'&&!window.imageInited){initImageExplorer();window.imageInited=true;}
+  }
+}
+function switchTab(lesson,tab,btn){
+  document.querySelectorAll('#'+lesson+'>div[id^="'+lesson+'-"]').forEach(d=>d.style.display='none');
+  const el=document.getElementById(lesson+'-'+tab);if(el)el.style.display='block';
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(lesson==='L4'&&tab==='simulate'&&!window.relInited){initRelMatrix('relMatrix','relProps','relPairs',['a','b','c','d'],'eqClasses');window.relInited=true;}
+  if(lesson==='L6'&&tab==='simulate'&&!window.mapInited){initMapper('domA','codB','arrowCanvas',['1','2','3'],['x','y','z'],'funcAnalysis');window.mapInited=true;}
+  if(lesson==='L2'&&tab==='explore'&&!window.imageInited){initImageExplorer();window.imageInited=true;}
+}
+
+// ── CARTESIAN ──
+function buildCartesian(){
+  const A=document.getElementById('setA').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const B=document.getElementById('setB').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const pairs=[];A.forEach(a=>B.forEach(b=>pairs.push(`(${a},${b})`)));
+  document.getElementById('cartesian-output').innerHTML=`<span style="color:var(--accent2)">A×B</span> = { ${pairs.join(', ')} }<br><span style="color:var(--muted)">|A×B| = ${A.length} × ${B.length} = ${pairs.length} pairs</span>`;
+}
+buildCartesian();
+
+function checkFunction(){
+  const A=document.getElementById('setA').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const raw=document.getElementById('relInput').value;
+  const matches=[...raw.matchAll(/\(([^,)]+),([^)]+)\)/g)];
+  const pairs=matches.map(m=>({a:m[1].trim(),b:m[2].trim()}));
+  const seen={};let ok=true,msg='';
+  for(const p of pairs){if(seen[p.a]&&seen[p.a]!==p.b){ok=false;msg=`❌ Element "${p.a}" maps to both "${seen[p.a]}" and "${p.b}" — violates single-valuedness.`;break;}seen[p.a]=p.b;}
+  if(ok&&!A.every(a=>seen[a])){ok=false;const missing=A.filter(a=>!seen[a]);msg=`❌ Element(s) {${missing.join(',')}} have no mapping — violates totality.`;}
+  if(ok&&!msg)msg=`✅ Valid function! Every element of A maps to exactly one element.`;
+  const el=document.getElementById('funcCheck');el.style.color=ok?'var(--accent4)':'var(--accent5)';el.textContent=msg;
+}
+
+// ── SET OPS ──
+function setOp(op,btn){
+  document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');
+  const P=new Set(document.getElementById('setP').value.split(',').map(s=>s.trim()).filter(Boolean));
+  const Q=new Set(document.getElementById('setQ').value.split(',').map(s=>s.trim()).filter(Boolean));
+  let result,label;
+  if(op==='union'){result=new Set([...P,...Q]);label='P ∪ Q';}
+  else if(op==='inter'){result=new Set([...P].filter(x=>Q.has(x)));label='P ∩ Q';}
+  else if(op==='diffPQ'){result=new Set([...P].filter(x=>!Q.has(x)));label='P \\ Q';}
+  else if(op==='diffQP'){result=new Set([...Q].filter(x=>!P.has(x)));label='Q \\ P';}
+  else{const u=new Set([...P,...Q]),i=new Set([...P].filter(x=>Q.has(x)));result=new Set([...u].filter(x=>!i.has(x)));label='P △ Q';}
+  document.getElementById('set-result').innerHTML=`<span style="color:var(--accent3)">${label}</span> = { ${[...result].join(', ')||'∅'} }  <span style="color:var(--muted)">(size: ${result.size})</span>`;
+}
+
+// ── IMAGE EXPLORER ──
+function initImageExplorer(){
+  const dom=document.getElementById('domainElems'),cod=document.getElementById('codomainElems');
+  for(let i=0;i<8;i++){const d=document.createElement('div');d.className='elem';d.textContent=i;d.dataset.val=i;d.onclick=function(){this.classList.toggle('sel');updateImageResult();};dom.appendChild(d);}
+  for(let i=0;i<4;i++){const d=document.createElement('div');d.className='elem';d.textContent=i;d.dataset.val=i;d.onclick=function(){this.classList.toggle('sel');updateImageResult();};cod.appendChild(d);}
+  updateImageResult();
+}
+function updateImageResult(){
+  const f=x=>x%4;
+  const domSel=[...document.querySelectorAll('#domainElems .elem.sel')].map(e=>+e.dataset.val);
+  const codSel=[...document.querySelectorAll('#codomainElems .elem.sel')].map(e=>+e.dataset.val);
+  const img=[...new Set(domSel.map(f))].sort((a,b)=>a-b);
+  const preimg=Array.from({length:8},(_,i)=>i).filter(i=>codSel.includes(f(i)));
+  document.getElementById('imageResult').innerHTML=
+    `<span style="color:var(--accent2)">S</span> = {${domSel.join(',')||'∅'}}  →  <span style="color:var(--accent3)">f(S)</span> = {${img.join(',')||'∅'}}\n`+
+    `<span style="color:var(--accent2)">T</span> = {${codSel.join(',')||'∅'}}  →  <span style="color:#f0abfc">f⁻¹(T)</span> = {${preimg.join(',')||'∅'}}`;
+}
+
+// ── RELATION MATRIX ──
+function initRelMatrix(mId,pId,pairsId,elems,ecId){
+  const n=elems.length,state=Array.from({length:n},()=>Array(n).fill(false));
+  const grid=document.getElementById(mId);if(!grid)return;
+  grid.style.display='inline-grid';grid.style.gridTemplateColumns=`repeat(${n+1},38px)`;grid.innerHTML='';
+  grid.appendChild(Object.assign(document.createElement('div'),{className:'rel-cell header',textContent:''}));
+  elems.forEach(e=>grid.appendChild(Object.assign(document.createElement('div'),{className:'rel-cell header',textContent:e})));
+  for(let i=0;i<n;i++){
+    grid.appendChild(Object.assign(document.createElement('div'),{className:'rel-cell header',textContent:elems[i]}));
+    for(let j=0;j<n;j++){
+      const c=document.createElement('div');c.className='rel-cell';c.dataset.i=i;c.dataset.j=j;
+      c.onclick=function(){state[+this.dataset.i][+this.dataset.j]=!state[+this.dataset.i][+this.dataset.j];this.classList.toggle('on');updateRelProps(state,elems,pId,pairsId,ecId);};
+      grid.appendChild(c);
+    }
+  }
+  updateRelProps(state,elems,pId,pairsId,ecId);
+}
+function updateRelProps(state,elems,pId,pairsId,ecId){
+  const n=elems.length;
+  let refl=true,sym=true,trans=true,antisym=true,irrefl=true;
+  for(let i=0;i<n;i++){
+    if(!state[i][i])refl=false;
+    if(state[i][i])irrefl=false;
+    for(let j=0;j<n;j++){
+      if(state[i][j]&&!state[j][i])sym=false;
+      if(state[i][j]&&state[j][i]&&i!==j)antisym=false;
+      for(let k=0;k<n;k++)if(state[i][j]&&state[j][k]&&!state[i][k])trans=false;
+    }
+  }
+  const equiv=refl&&sym&&trans,partial=refl&&antisym&&trans;
+  const pp=document.getElementById(pId);if(!pp)return;pp.innerHTML='';
+  [{lbl:'Reflexive',ok:refl},{lbl:'Symmetric',ok:sym},{lbl:'Antisymmetric',ok:antisym},{lbl:'Transitive',ok:trans},{lbl:'Equivalence',ok:equiv},{lbl:'Partial Order',ok:partial}]
+    .forEach(p=>{const d=document.createElement('div');d.className='rel-prop '+(p.ok?'yes':'no');d.textContent=(p.ok?'✓ ':'')+p.lbl;pp.appendChild(d);});
+  const pairs=[];for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(state[i][j])pairs.push(`(${elems[i]},${elems[j]})`);
+  const pairsEl=document.getElementById(pairsId);if(pairsEl)pairsEl.textContent='R = {'+(pairs.join(', ')||'∅')+'}';
+  const ecEl=document.getElementById(ecId);if(ecEl){
+    if(equiv){const cls=[],vis=Array(n).fill(false);for(let i=0;i<n;i++){if(!vis[i]){const cl=[elems[i]];vis[i]=true;for(let j=i+1;j<n;j++)if(state[i][j]){cl.push(elems[j]);vis[j]=true;}cls.push(cl);}}ecEl.innerHTML='<strong style="color:var(--accent4)">Equivalence Classes: </strong>'+cls.map(c=>`[${c[0]}] = {${c.join(', ')}}`).join(' | ');}else ecEl.innerHTML='';
+  }
+}
+
+// ── MAPPER ──
+function initMapper(domId,codId,cvId,domE,codE,analysisId){
+  const state={from:null,mapping:{},domElems:domE,codElems:codE,canvasId:cvId,analysisId};
+  const dom=document.getElementById(domId),cod=document.getElementById(codId);
+  dom.innerHTML='';cod.innerHTML='';
+  domE.forEach(e=>{const d=document.createElement('div');d.className='elem';d.textContent=e;d.onclick=function(){dom.querySelectorAll('.elem').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');state.from=e;};dom.appendChild(d);});
+  codE.forEach(e=>{const d=document.createElement('div');d.className='elem';d.textContent=e;d.onclick=function(){if(state.from){state.mapping[state.from]=e;dom.querySelectorAll('.elem').forEach(x=>{x.classList.remove('sel');x.classList.toggle('mapped',!!state.mapping[x.textContent]);});state.from=null;drawArrows(state);}};cod.appendChild(d);});
+  window['mapState_'+domId]=state;
+}
+function drawArrows(state){
+  const cv=document.getElementById(state.canvasId);if(!cv)return;
+  const ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
+  const suffix=state.canvasId.replace('arrowCanvas','');
+  const dom=document.getElementById('domA'+suffix),cod=document.getElementById('codB'+suffix);
+  if(!dom||!cod)return;
+  const cvr=cv.getBoundingClientRect();
+  ctx.strokeStyle='rgba(124,58,237,.8)';ctx.lineWidth=2;
+  Object.entries(state.mapping).forEach(([a,b])=>{
+    const di=state.domElems.indexOf(a),ci=state.codElems.indexOf(b);
+    const dEls=[...dom.querySelectorAll('.elem')],cEls=[...cod.querySelectorAll('.elem')];
+    if(di<0||ci<0||!dEls[di]||!cEls[ci])return;
+    const sr=dEls[di].getBoundingClientRect(),er=cEls[ci].getBoundingClientRect();
+    const sx=sr.right-cvr.left,sy=sr.top+sr.height/2-cvr.top,ex=er.left-cvr.left,ey=er.top+er.height/2-cvr.top;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.stroke();
+    ctx.beginPath();ctx.arc(ex,ey,4,0,Math.PI*2);ctx.fillStyle='rgba(124,58,237,.9)';ctx.fill();
+  });
+}
+function analyzeMapper(suffix,domId,codId,analysisId){
+  const s=window['mapState_'+domId];if(!s)return;
+  const m=s.mapping,dom=s.domElems,cod=s.codElems;
+  if(!dom.every(a=>m[a])){document.getElementById(analysisId).innerHTML='<span style="color:var(--accent5)">⚠️ Not all domain elements are mapped yet.</span>';return;}
+  const vals=Object.values(m),inj=new Set(vals).size===vals.length,sur=cod.every(b=>vals.includes(b)),bij=inj&&sur;
+  let html='';
+  if(bij)html='<span class="func-badge badge-bij">🎉 Bijective — perfect one-to-one correspondence!</span>';
+  else{html+=(inj?'<span class="func-badge badge-inj">✓ Injective</span>':'<span class="func-badge badge-none">✗ Not Injective</span>');html+=(sur?'<span class="func-badge badge-sur">✓ Surjective</span>':'<span class="func-badge badge-none">✗ Not Surjective</span>');}
+  if(!bij&&inj&&!sur)html+='<br><small style="color:var(--muted)">Multiple elements of B are unreached. Try mapping to all of B.</small>';
+  if(!bij&&!inj&&sur)html+='<br><small style="color:var(--muted)">Two inputs share an output. Reassign for injectivity.</small>';
+  document.getElementById(analysisId).innerHTML=html;
+}
+function resetMapper(){const s=window['mapState_domA'];if(!s)return;s.mapping={};s.from=null;document.getElementById('domA').querySelectorAll('.elem').forEach(x=>x.classList.remove('sel','mapped'));const cv=document.getElementById('arrowCanvas');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);document.getElementById('funcAnalysis').innerHTML='';}
+function analyzeFunction(){analyzeMapper('','domA','codB','funcAnalysis');}
+function resetMapper2(){const s=window['mapState_domA2'];if(!s)return;s.mapping={};s.from=null;document.getElementById('domA2').querySelectorAll('.elem').forEach(x=>x.classList.remove('sel','mapped'));const cv=document.getElementById('arrowCanvas2');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);document.getElementById('funcAnalysis2').innerHTML='';}
+function analyzeFunction2(){analyzeMapper('2','domA2','codB2','funcAnalysis2');}
+window.addEventListener('resize',()=>{['mapState_domA','mapState_domA2'].forEach(k=>{if(window[k])drawArrows(window[k]);});});
+
+// ── COMPOSITION ──
+function calcCompose(){
+  try{
+    const f=new Function('x','return '+document.getElementById('fDef').value);
+    const g=new Function('x','return '+document.getElementById('gDef').value);
+    const x=parseFloat(document.getElementById('compX').value);
+    const fx=f(x),gfx=g(fx);
+    document.getElementById('pipeX').textContent=`x = ${x}`;
+    document.getElementById('pipeFx').textContent=`f(${x}) = ${fx}`;
+    document.getElementById('pipeGfx').textContent=`g(${fx}) = ${gfx}`;
+    document.getElementById('compResult').textContent=`(g∘f)(${x}) = g(f(${x})) = g(${fx}) = ${gfx}`;
+  }catch(e){document.getElementById('compResult').textContent='⚠️ Error — check your expressions: '+e.message;}
+}
+
+// ── QUIZ ──
+const correctAnswers={1:'B',2:'C',3:'A',4:'C',5:'D',6:'B',7:'C',8:'B',9:'D',10:'C',11:'C',12:'B'};
+const userAnswers={};
+function answer(q,choice,correct){
+  if(userAnswers[q])return;
+  userAnswers[q]=choice;
+  document.querySelectorAll(`#mainQuiz .q-item:nth-child(n+2)`);
+  const items=document.querySelectorAll('.q-item');
+  items[q-1].querySelectorAll('.q-opt').forEach((o,i)=>{
+    const letter=String.fromCharCode(65+i);
+    if(letter===correctAnswers[q])o.classList.add('correct');
+    else if(letter===choice&&choice!==correctAnswers[q])o.classList.add('wrong');
+  });
+  const fb=document.getElementById(`q${q}-fb`);
+  if(choice===correctAnswers[q]){fb.className='q-feedback show ok';}
+  else{fb.className='q-feedback show bad';fb.textContent='✗ Incorrect. Correct answer: '+correctAnswers[q]+'. '+fb.textContent.replace('✅','');}
+  document.getElementById('quizProg').style.width=(Object.keys(userAnswers).length/12*100)+'%';
+}
+function submitQuiz(){
+  for(let q=1;q<=12;q++)if(!userAnswers[q])answer(q,'_',correctAnswers[q]);
+  const score=Object.entries(userAnswers).filter(([q,a])=>a===correctAnswers[+q]).length;
+  const pct=Math.round(score/12*100);
+  const el=document.getElementById('quizScore');el.style.display='block';
+  const msg=pct>=90?'🌟 Excellent!':pct>=75?'✅ Well done!':pct>=55?'📚 Keep reviewing!':'💪 Go back through the lessons!';
+  el.innerHTML=`${msg} Score: <strong>${score}/12</strong> (${pct}%)`;
+  document.getElementById('submitBtn').disabled=true;
+}
+
+// ── INIT SIMULATIONS ON LOAD ──
+window.addEventListener('DOMContentLoaded',()=>{
+  initRelMatrix('relMatrix2','relProps2','relPairs2',['1','2','3','4'],'eqClasses2');
+  initMapper('domA2','codB2','arrowCanvas2',['1','2','3'],['x','y','z'],'funcAnalysis2');
+  buildCartesian();
+});
+</script>
+</body>
+</html>
